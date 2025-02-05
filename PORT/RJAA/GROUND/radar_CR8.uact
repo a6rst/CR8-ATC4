@@ -1,0 +1,19 @@
+[SYSTEM]
+actcount=1
+
+// anm
+[ACTION002]
+mode=SWITCH
+loop=-1
+time=9000
+reset=1,1,0,0,0
+sequence01_layer=ANM_line
+sequence01_blend=(0,0,0:0,nml),(180,0,0:1000,nml),(0,0,0:4000,nml)
+sequence01_texstage=1
+sequence01_textranslate_y=(600,0,0:0,nml),(-600,0,0:3000,nml),(-600,0,0:6000,nml)
+sequence01_textranslate_x=(600,0,0:0,nml),(-600,0,0:2000,nml),(-600,0,0:7000,nml)
+sequence02_layer=ANM_line
+sequence02_blend=(0,0,0:0,nml),(180,0,0:1000,nml),(0,0,0:4000,nml)
+sequence02_texstage=2
+sequence02_textranslate_y=(600,0,0:0,nml),(-600,0,0:3000,nml),(-600,0,0:4000,nml)
+sequence02_textranslate_x=(600,0,0:0,nml),(-600,0,0:2000,nml),(-600,0,0:3000,nml)
