@@ -1,0 +1,64 @@
+<?VoiceActManager version="1.0"?>
+<!-- GH Voice Script “ú–{Œê”Å -->
+<VoiceScript>
+	<Book name="GH">
+		<script no="0" string="TW_GH_01 $callsign $src_SPOT TW_GH_02 $dst_SPOT TW_GH_03"/>
+		<script no="1" string="$callsign TW_GND_01"/>
+		<script no="2" string="$callsign TW_GH_04"/>
+		<script no="3" string="$callsign TW_GND_02"/>
+		<script no="4" string="$callsign TW_GH_05"/>
+		<script no="5" string="TW_GH_01 $callsign TW_GH_06"/>
+		<script no="6" string="$callsign TW_GND_03"/>
+		<script no="7" string="$callsign TW_GH_07"/>
+		<script no="8" string="$callsign TW_GND_04"/>
+		<script no="9" string="$callsign TW_GND_05"/>
+		<script no="10" string="$callsign TW_GH_08"/>
+		<script no="11" string="$callsign TW_GND_06"/>
+		<script no="12" string="$callsign TW_GH_09"/>
+		<script no="13" string="TW_GH_01 $callsign TW_GH_10"/>
+		<script no="14" string="$callsign TW_GND_07"/>
+		<script no="15" string="TW_GH_01 $callsign TW_GH_11"/>
+		<script no="16" string="$callsign TW_GND_08"/>
+		<script no="17" string="$callsign TW_GND_09"/>
+		<script no="18" string="$callsign TW_GH_12"/>
+		<script no="19" string="$callsign TW_GH_13"/>
+		<script no="20" string="$callsign TW_GND_10"/>
+		<script no="21" string="TW_GH_01 $callsign $SPOT TW_GH_02 $dst_SPOT TW_GH_14"/>
+		<script no="22" string="$callsign TW_GND_11"/>
+		<script no="23" string="TW_GH_01 $callsign $src_SPOT TW_GH_02 $dst_SPOT TW_GH_14"/>
+		<script no="24" string="$callsign TW_GND_12"/>
+		<script no="25" string="$callsign TW_GH_15"/>
+		<script no="26" string="$callsign TW_GH_16"/>
+		<script no="100" string="TW_GH_18 $callsign $src_SPOT TW_GH_02 $dst_SPOT TW_GH_03"/>
+		<script no="101" string="$callsign TW_RMP_01"/>
+		<script no="102" string="$callsign TW_RMP_02"/>
+		<script no="103" string="TW_GH_18 $callsign TW_GH_06"/>
+		<script no="104" string="$callsign TW_RMP_03"/>
+		<script no="105" string="$callsign TW_RMP_07"/>
+		<script no="106" string="$callsign TW_RMP_05"/>
+		<script no="107" string="TW_GH_18 $callsign TW_GH_13"/>
+		<script no="108" string="$callsign TW_RMP_06"/>
+		<script no="109" string="TW_GH_18 $callsign TW_GH_19"/>
+		<script no="110" string="$callsign TW_RMP_13"/>
+		<script no="111" string="$callsign TW_GH_20"/>
+		<script no="112" string="$callsign TW_RMP_09"/>
+		<script no="113" string="TW_GH_18 $callsign TW_GH_21"/>
+		<script no="114" string="$callsign TW_RMP_14"/>
+		<script no="115" string="$callsign TW_GH_22"/>
+		<script no="116" string="TW_GH_18 $callsign TW_GH_11"/>
+		<script no="117" string="$callsign TW_RMP_08"/>
+		<script no="118" string="TW_GH_01 $callsign TW_GH_21"/>
+		<script no="119" string="TW_GH_01 $callsign TW_GH_19"/>
+		<script no="120" string="$callsign TW_GND_14"/>
+		<script no="121" string="$callsign TW_GND_13"/>
+		<script no="122" string="$callsign TW_GH_23"/>
+		<script no="123" string="$callsign TW_RMP_04"/>
+		<script no="124" string="$callsign TW_RMP_15"/>
+		<script no="125" string="$callsign TW_GH_24"/>
+		<script no="126" string="$callsign TW_GND_15"/>
+	</Script>
+</VoiceScript>
+
+
+
+

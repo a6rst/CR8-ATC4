@@ -1,0 +1,11 @@
+<?VoiceActManager version="1.0"?>
+<!-- AN Voice Script ‰pŒê”Å -->
+<VoiceScript>
+	<Book name="AN">
+		<script no="0" string="announcements_e_dep_01 announcements_e_dep_02 $FLIGHT announcements_e_dep_03 $CITY announcements_e_dep_04 $SPOT announcements_e_dep_05"/>
+		<script no="1" string="announcements_e_arr_01 $FLIGHT announcements_e_arr_02"/>
+		<!--script no="0" string="announcements_e_dep_01 $AIRLINES announcements_e_dep_02 $FLIGHT announcements_e_dep_03 $CITY announcements_e_dep_04 $SPOT announcements_e_dep_05"/>
+		<script no="1" string="$AIRLINES announcements_e_arr_01 $FLIGHT announcements_e_arr_02"/-->
+	</Script>
+</VoiceScript>
+

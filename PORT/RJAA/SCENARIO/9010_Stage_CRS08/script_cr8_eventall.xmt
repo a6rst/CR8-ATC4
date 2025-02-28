@@ -1,0 +1,17 @@
+<?VoiceActManager version="1.0"?>
+<!-- enginestop Voice Script JP -->
+<VoiceScript>
+	<Book name="cr8_eventall">
+		<script no="0" string="CR8_ghstall_000"/>
+		<script no="1" string="CR8_ghstall_010"/>
+		<script no="2" string="CR8_ghstall_020"/>
+		<script no="3" string="CR8_ghstall_030"/>
+		<script no="4" string="CR8_ghstall_040"/>
+		<script no="5" string="CR8_ghstall_050"/>
+		<script no="6" string="CR8_ghstall_060"/>
+	</Script>
+</VoiceScript>
+
+
+
+

@@ -1,0 +1,23 @@
+[HEADER]
+name=AR_MARTIN_1_ARR
+display=MARTIN_1_arrival
+x=140:23:08
+z=35:45:55
+staff=Instructor
+comment=No midpoint allowed between @H2 and LAKE holding pattern
+count=5
+[OPTION]
+hold=HD_LAKE_L272_SNE_CVCen.ard
+[RADAR]
+direction=10,50,90,170,210,250,290,330
+area=AA_RDR_LAKE_272
+areadistance=3000
+areaaltft=6000
+[OTHERS]
+CODE=MARTIN_1A
+[POINT]
+45183.71,2743.20,-14681.26,0,MARTIN@R0
+37383.33,2406.14,-4316.53,0,CVC
+21089.97,1828.80,10799.73,0,@X2@H2
+8873.81,1828.80,22133.34,0,LAKE@H0@J
+6701.31,1828.80,21986.41,0,LAKE

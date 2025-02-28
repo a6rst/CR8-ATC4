@@ -1,0 +1,69 @@
+<?effector version="1.0"?>
+<EffectData>
+<!-- ====================================================
+	INTRO AT START
+========================================================= -->
+	<Category name="INTRO_CUT">
+		<Effect trigger="start" overlap="once" area="telop">
+			<PvmLayer file="event_cr8">
+				<Action para="8,1" time="0"/>
+				<Wait time="2000"/>
+				<Action para="8,0"/>
+			</PvmLayer>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	BLOCKADE SIGN IMPORT
+========================================================= -->
+	<Category name="CR8_MODEL">
+		<!-- MODEL SET -->
+		<Effect trigger="start" overlap="once">
+			<!-- MODEL DISPLAY -->
+			<Model file="CR8_blockade\blockade_main" pos="0,0,0" rotate="0,0,0">
+				<Wait time="finish"/>
+			</Model>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	EVT: CONST AREA SETUP
+========================================================= -->
+	<!--Category name="CR8_AREA">
+		<!-- RISK AREA FILE -->
+		<!--Effect trigger="start" overlap="once" area="telop">
+			<!--Risk file="CR8_blockade_area"/>
+		<!--/Effect>
+	<!--/Category>
+<!-- ====================================================
+	EVT: CONST AREA VIOLATION
+========================================================= -->
+	<!--Category name="CR8_VIOLATION">
+		<!--Effect comstate="CR8_AREA_ENTRY" area="area">
+			<!--Ship commandfile="command" statefile="state"/>
+			<!--Command state="CR8_VIOLATION_STATE"/>
+		<!--/Effect>
+	<!--/Category>
+<!-- ====================================================
+	EVT : ENGINE TROUBLE
+========================================================= -->
+	<Category callsign="GH452" name="CR8_EV_GHSTALL2">
+	<!-- CAR MODEL IMPORT -->
+		<Effect trigger="start">
+			<Model file="CR8_blockade\others\car_jmn" ship="GH452" pos="35,-43,-30" rotate="0,45,0">
+				<Action para="10,1"/>
+				<Action para="50,1"/>
+					<Wait statOut="AL_RPGD_TAXI_REQ"/>
+				<Action para="10,0"/>
+			</Model>
+		</Effect>
+	<!-- RADAR BLOCKADE OVERLAY -->
+		<Effect trigger="start" overlap="once">
+			<RadarWindowAPL parts="closeanime" ship="GH452">
+				<Action para="3,1"/>
+				<Wait statOut="TW_RPGD_TAXI_TOW_EXECUTE"/>
+			</RadarWindowAPL>
+		</Effect>
+	</Category>
+<!-- ====================================================
+
+========================================================= -->
+</EffectData>

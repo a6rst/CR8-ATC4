@@ -1,0 +1,48 @@
+<?effector version="1.0"?>
+<EffectData>
+<!-- ====================================================
+	INTRO AT START
+========================================================= -->
+	<Category name="INTRO_CUT">
+		<Effect trigger="start" overlap="once" area="telop">
+			<PvmLayer file="event_cr8">
+				<Action para="8,1" time="0"/>
+				<Wait time="2000"/>
+				<Action para="8,0"/>
+			</PvmLayer>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	BLOCKADE SIGN IMPORT
+========================================================= -->
+	<Category name="CR8_MODEL">
+		<!-- MODEL SET -->
+		<Effect trigger="start" overlap="once">
+			<!-- MODEL DISPLAY -->
+			<Model file="CR8_blockade\blockade_main" pos="0,0,0" rotate="0,0,0">
+				<Wait time="finish"/>
+			</Model>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	EVT: CONST AREA SETUP
+========================================================= -->
+	<!--Category name="CR8_AREA">
+		<!-- RISK AREA FILE -->
+		<!--Effect trigger="start" overlap="once" area="telop">
+			<!--Risk file="CR8_blockade_area"/>
+		<!--/Effect>
+	<!--/Category>
+<!-- ====================================================
+	EVT: CONST AREA VIOLATION
+========================================================= -->
+	<!--Category name="CR8_VIOLATION">
+		<!--Effect comstate="CR8_AREA_ENTRY" area="area">
+			<!--Ship commandfile="command" statefile="state"/>
+			<!--Command state="CR8_VIOLATION_STATE"/>
+		<!--/Effect>
+	<!--/Category>
+<!-- ====================================================
+
+========================================================= -->
+</EffectData>

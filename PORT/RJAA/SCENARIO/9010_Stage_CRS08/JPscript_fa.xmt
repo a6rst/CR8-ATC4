@@ -1,0 +1,13 @@
+<?VoiceActManager version="1.0"?>
+<!-- CA Voice Script “ú–{Œê”Å -->
+<VoiceScript>
+	<Book name="FA">
+		<script no="0" string="fa_j_app"/>
+		<script no="1" string="fa_j_final_01"/>
+		<script no="2" string="fa_j_land_01 Narita_intl_AP fa_j_land_02"/>
+		<script no="3" string="fa_j_blockout_01 fa_j_blockout_02 #$FLIGHT fa_j_blockout_03 $CITY fa_j_blockout_04"/>
+		<!--script no="3" string="fa_j_blockout_01 $AIRLINES fa_j_blockout_02 #$FLIGHT fa_j_blockout_03 $CITY fa_j_blockout_04"/-->
+		<script no="4" string="fa_j_takeoff"/>
+	</Script>
+</VoiceScript>
+

@@ -1,0 +1,2050 @@
+
+
+; SAMPLE SUBCODE
+; #SUBCODE(TEST_STRING)
+; SUBCODE → ATC4APL_SUBCODE_SHIP_CTRLDEF
+; lpvoid1 → lpship , lpvoid2 → "TEST_STRING"
+
+; LOCAL SETTINGS #SETLOCAL(NO,*) {$LOCAL00}
+; 0 → PROCESSING STATE AT START OF SCENARIO (START READY FOR PUSHBACK=1)
+; 1 → ST9 EVENT FLAG
+; 2 → 
+; 3 → 
+; 4 → 
+
+; AIRPORT SPECIFIC LOCAL SETTINGS
+; 5 → NO. OF LAPS IN TRAFFIC PATTERN +1 COUNTDOWN, LAND WHEN VALUE REACHES 0
+; 6 → TAG TRAINING=1, LP TRAINING=2, ILS TRAINING=3
+; 7 → 
+
+; USERFLAG SETTINGS #SETUSERFLAG(NO,*) {$USERFLAG00}
+; 00 → RDR-CONTACT COMMANDED = 1
+; 01 → RDR-VECTOR COMMANDED AT LEAST ONCE = 1
+; 02 → RWY-CHANGE COMMANDED = 1
+; 03 → LANDING-CLR REQ ACTIVE = 1
+; 04 → AUTO RWY FAR TWY-EXIT = 1
+; 05 → TAXI-STANDBY	COMMANDED = 1
+; 06 → GND-HANDOFF BEFORE RWY EXIT = 1
+; 07 → NO GND-HANDOFF BEFORE RWY EXIT = 1
+; 08 → GO-AROUND COMMANDED = 1
+; 09 → TAXI-TO-SPOT COMMANDED BEFORE RWY EXIT = 1
+; 10 → SHORTCUT COMMANDED = 1
+; 11 → APCH-CLR REQ ACTIVE = 1
+; 12 → APCH-CLR COMMANDED = 1
+; 13 → RWY TWY-EXIT COMMANDED = 1
+; 14 → TOW-START COMMANDED AT LEAST ONCE = 1
+; 15 → HOLD-SHORT OF RWY CROSSING/GP-HOLD COMMANDED = 1
+; 16 → DEPARTURE RTE-CHANGE COMMANDED = 1
+; 17 → DEPARTURE ALT-REST CANCEL COMMANDED = 1
+; 18 → FLAG @98 SWITCH CODES 2&4, FOR CODE 2 (ACTIVE REQ) = 1
+; 19 → HOLD-SHORT RWY-TAKEOFF COMMANDED = 1
+; 20 → LINE-UP COMMANDED = 1
+; 21 → LANDING-CLR COMMANDED BEFORE TWR-HANDOFF FLAG = 1 (STATE AT START OF SCENARIO)
+
+; AIRPORT SPECIFIC USERFLAG SETTINGS
+; 22 → ACFT HOLD-SHORT OF GWY (N/A) = 1
+; 23 → GND-HANDOFF BEFORE GWY = 1
+; 24 → ST3 RWY-CHANGE EVENT COMPLETE = 1
+
+; CR8 USERFLAG SETTINGS
+; 05 → LANDING-CLR STANDBY COMMANDED = 1
+; 14 → MISSED-APCH HOLDING = 1
+; 16 → ARRIVAL RTE-CHANGE COMMANDED = 1
+; 25 → ENTER HOLDING = 1
+; 26 → IAF HOLDING STACK = 1
+; 27 → LEAVE HOLDING = 1
+; 28 → 
+; 29 → 
+; 30 → 
+
+; VALUE SETTINGS #SETVALUE(NO,*) {$VALUE00} -> $SHIP_UID
+; 0 → ST1 AMX79-RAMP GREETINGS
+; 1 → ST1 CSN7475-DEPARTURE GREETINGS
+; 2 → ST1 TNO62-APPROACH RTE-CHANGE REPEAT
+; 3 → ST3 TBA2719-RAMP RWY-CHANGE REQ
+; 4 → ST6 TEU242-APPROACH RTE-CHANGE REQ
+; 5 → ST6 TNO316-APPROACH RTE-CHANGE REQ
+; 6 → ST9 AMX75-DEPARTURE GREETINGS
+; 7 → ST9 TBA3983-DEPARTURE EMERGENCY RETURN
+; 8 → 
+; 9 → 
+
+; CR8 VALUE SETTINGS
+; 0 → 
+
+; ROUTE MARKERS #SETMARKER(X,*) {$ROUTE_MARKER_X}
+; @R → FOR RWY-CHANGE (RWY-CHANGE=1)
+; @H → FOR HOLDING PATTERN COMMAND (HOLDING=1) (IAF HOLDING STACK=2)
+; @X,@Y,@Z → GENERAL PURPOSE CODES
+; @X → APCH-CLR REQ ACTIVE=1, APCH-CLR POSSIBLE=2
+; @Y → TWR-HANDOFF REQ ACTIVE=1, ALT-REST CANCEL POSSIBLE=1
+; @Z → 
+
+; SUBCODE COMMANDS
+; #SUBCODE(@COMMAND-NO,STATE,ACTION-NO,TIME/POINTS)
+; ABOUT ACTION NUMBERS
+; 1 → START ATC RESPONSE TIME LIMIT (4th VALUE IS TIME LIMIT IN s)
+; 2 → ADD POINTS ON TIME LIMIT (4th VALUE IS POINTS)
+; 3 → TEMPORARILY PAUSE TIME LIMIT (4th VALUE IS TIME PAUSED IN s)
+; 4 → ADD POINTS WITHOUT TIME LIMIT (4th VALUE IS POINTS)
+; EXAMPLE:
+; #SUBCODE(@98,DEPARTURE_DELIVERY_REQUEST_WAIT,1,30)
+; IF STATE NAME IS ANYTHING OTHER THAN (NULL), MOVE TO THAT STATE AFTER TIME LIMIT ENDS
+; IF STATE NAME IS (NULL), DO NOT MOVE TO DIFFERENT STATE
+
+
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; Entry State
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のデリバリーコンタクト（出発機の開始）
+[%CONTACT_DEL]
+  {($LOCAL00 == 1) || ($LOCAL00 == 2)} #STATE(AL_RPGD_DELIVERY_T-ADJUST)
+  {($SHIP_SECTION == 4) && ($SHIP_MODE == 1)} #STATE(DP_DEL_DELIVERY_T-ADJUST)
+  {($SHIP_SECTION == 4) && ($SHIP_MODE == 3)} #STATE(TW_RPGD_DELIVERY_T-ADJUST)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発・トーイング機でプッシュバックルートが決定された
+[%PUSHBACK_EXECUTE:Pushback:プッシュバック中]
+  #SUBCODE(@98,,2,500)
+  #SETUSERFLAG(5,0)
+;  #DELAYEXECUTE(PUSHBACK,7)
+;  {$SHIP_MODE == 1} "[DP_RMP_PUSHBACK_CLEAR]"
+;  {$SHIP_MODE == 3} "[TW_RMP_PUSHBACK_CLEAR]"
+  {($SHIP_MODE == 1) && ($SHIP_RWY_RWY16R == 1)} "[DP_RMP_PUSHBACK_CLEAR_16]"
+  {($SHIP_MODE == 1) && ($SHIP_RWY_RWY34L == 1)} "[DP_RMP_PUSHBACK_CLEAR_34]"
+  {$SHIP_MODE == 3} "[TW_RMP_PUSHBACK_CLEAR]"
+  #EXECUTE(PUSHBACK)
+;  {($VALUE03 == $SHIP_UID) && ($USERFLAG24 == 1)} #SUBCODE(EV_R-CHANGE_SUCCESS)
+;  {($VALUE03 == $SHIP_UID) && ($USERFLAG24 == 0)} #SUBCODE(EV_R-CHANGE_FAILURE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発
+[%PUSHBACK_COMPLETE:Pushback complete:待機中]
+  #WAIT(10)
+  #STATE(AL_RPGD_TAXI_REQ)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 走行中
+[%TAXI]
+  #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のタクシー開始
+[%TAXI_RUNWAY]
+  #STATE(AL_RPGD_TAXI_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着・トーイング機のタクシー開始
+[%TAXI_SPOT]
+  #SETUSERFLAG(9,1)
+  #STATE(AL_RPGD_TAXI_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発・到着・トーイング機のタクシー中ルート変更
+[%NODE_POINT_CHANGE]
+  #SUBCODE(@98,,2,0)
+  #STATE(AL_RPGD_TAXI_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機が滑走路に近づく（TWRハンドオフコマンド表示に利用）
+[%NODE_NEARRUNWAY]
+  #SETUSERFLAG(18,1)
+  {$SHIP_SECTION == 12} #STATE(DP_TWR_TAKEOFF_LOOP)
+  #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機が滑走路前で自動停止
+[%HOLD_SHORT_OF_RUNWAY]
+  #SETUSERFLAG(19,1)
+  {$SHIP_SECTION == 8} #STATE(DP_RPGD_TWR-HANDOFF_REQ)
+  {$SHIP_SECTION == 12} #STATE(DP_TWR_HOLD-SHORT)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発・到着・移動機が滑走路横断前で自動停止
+[%HOLD_SHORT_OF_CROSS]
+  {$SHIP_SECTION == 8} #STATE(AL_RPGD_TAXI_CROSS)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発・到着・移動機がGP HOLD LINE前で自動停止
+[%GPHOLDLINE_OF_CROSS]
+ {$SHIP_SECTION == 8} #STATE(AL_RPGD_TAXI_GPCROSS)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------   
+; 滑走路を誘導路として使用する時にホールドに到着
+[%HOLD_SHORT_OF_PASS]
+  {$SHIP_SECTION == 8} #STATE(AL_RPGD_TAXI_PASS)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------   
+; ゲートウェイに到着
+[%HOLD_SHORT_OF_GATEWAY]
+  {($USERFLAG23 == 0) && ($SHIP_MODE == 1)} #STATE(DP_RPGD_GND-HANDOFF_REQ)
+  {($USERFLAG23 == 0) && ($SHIP_MODE == 2)} #STATE(AP_RPGD_RMP-HANDOFF_REQ)
+  {($USERFLAG23 == 0) && ($SHIP_MODE == 3) && ($SHIP_SECTION == 6)} #STATE(DP_RPGD_GND-HANDOFF_REQ)
+  {($USERFLAG23 == 0) && ($SHIP_MODE == 3) && ($SHIP_SECTION == 8)} #STATE(AP_RPGD_RMP-HANDOFF_REQ)
+  {$USERFLAG23 == 1} #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+;  {$USERFLAG23 == 0} #STATE(AL_GND_GWY_HOLD_REQ)
+;  {$USERFLAG23 == 1} #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------   
+; 滑走路を誘導路として使用中
+[%RUNWAY_PASSING:taxi via runway:滑走路通行中]
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発・到着・移動機が滑走路横断(とゲートウェイ通過)完了した時
+[%CROSS_COMPLETE]
+  #SETUSERFLAG(23,0)
+  #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機がディパーチャーコンタクトを行った後
+[%CONTACT_DEP]
+  #SETMARKER(X,0)
+  #STATE(DP_TWR_DEP-HANDOFF_BFORE_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機が、ルートからACCハンドオフを行いルートから離れた後
+[%RANGE_OUT]
+  #HANDOFF(END)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機が空域に進入してきた直後（到着機の開始）【0001S】
+[%APPROACH:In flight:飛行中]
+  #WAIT(3)
+  "[AP_APP_INI-CONTACT]"
+  #SUBCODE(approach)
+  #STATE(AP_APP_RDR-CONTACT)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発・到着機の空中ルート変更
+[%ROUTE_POINT_CHANGE]
+;  #SETUSERFLAG(1,1)
+  {$SHIP_MODE == 1} #STATE(DP_DEP_RTE-CHANGE_EXECUTE)
+  {$SHIP_MODE == 2} #STATE(AP_APP_RTE-CHANGE_EXECUTE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機がスレッショルド進入
+[%ROUTE_THRESHOLD:Landing:着陸中]
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機が滑走路に着陸
+[%LANDING]
+  #STATE(AP_TWR_TURN-PONT_SELECT)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機が滑走路から離脱
+[%RUNWAYOUT]
+  {$SHIP_SECTION == 8} #MESSAGE(Handoff:走行中)
+  {$SHIP_SECTION == 12} #STATE(AP_TWR_GND-HANDOFF)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機が強制ゴーアラウンド
+[%GOAROUND]
+  #STATE(AP_TWR_GA_EXECUTE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; TAG機が強制ゴーアラウンド
+[%ROUTE_LOWPASS]
+  #STATE(TG_TFP_BFORE_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着・トーイング機がスポットイン
+[%SPOTIN:Arrived:到着しました]
+  {$SHIP_MODE == 3} "[TW_RMP_TOW_SPOTIN]"
+;  {$SHIP_UID == $VALUE07} #SUBCODE(EV_EMG_SPOTIN_I-CAT)
+;  {$SHIP_UID == $VALUE07} #SUBCODE(EV_EMG_SPOTIN_VOICE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機がラインアップホールドした時
+[%LINEUPHOLD]
+  #SETUSERFLAG(18,1)
+  #STATE(DP_TWR_LINE-UP_COMP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機が滑走路変更したとき（現在不使用）
+;[%NODE_RUNWAYCHANGE]
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機が滑走路変更したとき
+[%PUSHBACK_RUNWAYCHANGE:Waiting:待機中]
+  #SETUSERFLAG(2,1)
+  #ROUTECHANGETABLE()
+  #COMMAND(DP_DELIVERY_CLEAR)
+  
+;  #SUBCODE(@98,,3,120)
+;  "[DP_RMP_RWY-CHANGE]"
+;  #SETUSERFLAG(2,1)
+;  #SETUSERFLAG(4,1)
+;  #ROUTECHANGETABLE()
+;  {($VALUE03 == $SHIP_UID) && ($SHIP_RWY_RWY16R == 1)} #SETUSERFLAG(24,1)
+;  {$SHIP_PUSHBACK == 1} #STATE(DP_RPGD_PUSHBACK_REQ_LOOP)
+;  {$SHIP_PUSHBACK == 0} #STATE(AL_RPGD_TAXI_REQ_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機の旋回待機コマンドを削除する時
+[%ROUTE_HOLDRANGEOUT]
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 滑走路に接近した
+[%NODE_NEARRUNWAYPOINT]
+  {$SHIP_SECTION == 8} #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+ 
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機が空中モードから地上モードに移行した場合
+[%MODE_SKY_GROUND:Landing:走行中]
+  #SUBCODE(runwayout)
+  #SETUSERFLAG(4,1)
+;  #SETUSERFLAG(7,1)
+;  {$SHIP_SECTION == 8} #STATE(AL_RPGD_TAXI_REQ)
+;  {($USERFLAG13 != 1) && ($SHIP_RWY_RWY16L == 1)} #COMMAND(AP_FAROUT-TWY_RIGHT_EXECUTE)
+;  {($USERFLAG13 != 1) && ($SHIP_RWY_RWY16L == 1)} #COMMAND(AP_FAROUT-TWY_LEFT_EXECUTE)
+  {($USERFLAG13 != 1) && ($SHIP_RWY_RWY16R == 1)} #COMMAND(AP_FAROUT-TWY_LEFT_EXECUTE)
+  {($USERFLAG13 != 1) && ($SHIP_RWY_RWY34L == 1)} #COMMAND(AP_FAROUT-TWY_RIGHT_EXECUTE)
+;  {($USERFLAG13 != 1) && ($SHIP_RWY_RWY34R == 1)} #COMMAND(AP_FAROUT-TWY_LEFT_EXECUTE)
+  {$SHIP_SECTION == 12} #STATE(AP_TWR_GND-HANDOFF)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機が地上モードから空中モードに移行した場合
+[%MODE_GROUND_SKY:Takeoff:離陸中]
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機が滑走路から離脱する場合
+[%RUNWAY_EXIT]
+  #SETUSERFLAG(7,1)
+  {$SHIP_SECTION == 12} #STATE(AP_TWR_GND-HANDOFF_REQ)
+;  {($SHIP_SECTION == 8) && ($USERFLAG09 == 1)} #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+;  {$SHIP_SECTION == 8} #STATE(AL_RPGD_TAXI_REQ_LOOP)
+;  {($SHIP_SECTION == 8) && ($USERFLAG05 == 1)} #STATE(AL_RPGD_TAXI_REQ_LOOP)
+  {$SHIP_SECTION == 8} #STATE(AL_RPGD_TAXI_REQ)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 滑走路から離脱する場合
+;[%ROUTE_RUNWAYCHANGERANGEOUT]
+;  #MAINMENU()
+;  #STATE(%APPROACH)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 滑走路から離脱する場合
+[%ROUTE_FINAL:Landing:最終進入中]
+  {$SHIP_TOUCHANDGO == 1} #MESSAGE(Touch and go:タッチアンドゴー中)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機がレーダー誘導したとき
+[%ROUTE_RADARVECTOR]
+  #ROUTECHANGERVECTOR()
+  {$USERFLAG01 == 0} "[AP_APP_RDR-VECTOR_1ST]"
+  {$USERFLAG01 == 1} "[AP_APP_RDR-VECTOR_2ND]"
+  #SETUSERFLAG(1,1)
+  #SETMARKER(R,0)
+  #SETMARKER(H,0)
+  #SETMARKER(X,0)
+  #SETMARKER(Y,0)
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機がレーダー誘導領域に入った
+[%ROUTE_RADARVECTOR_ENTER]
+  #FLAG(RADARVECTOR,1)
+  {($USERFLAG14 == 1) && ($USERFLAG27 != 1)} #STATE(AP_APP_HOLDING_LOOP)
+  {($USERFLAG25 == 1) && ($USERFLAG27 != 1)} #STATE(AP_APP_GA_HOLDING_INI)
+  {$USERFLAG27 == 1} #STATE(AP_APP_HOLDING_BLANK)
+  {($USERFLAG00 != 1) && ($SHIP_MODE == 2)} #STATE(AP_APP_RDR-CONTACT)
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機がレーダー誘導領域から出た
+[%ROUTE_RADARVECTOR_EXIT]
+  #MAINMENU()
+  #FLAG(RADARVECTOR,0)
+  {($USERFLAG14 == 1) && ($USERFLAG27 != 1)} #STATE(AP_APP_HOLDING_LOOP)
+  {($USERFLAG25 == 1) && ($USERFLAG27 != 1)} #STATE(AP_APP_GA_HOLDING_INI)
+  {$USERFLAG27 == 1} #STATE(AP_APP_HOLDING_BLANK)
+  {($USERFLAG01 == 1) && ($USERFLAG12 == 0)} #STATE(AP_APP_DIRECT-DP_CLEAR)
+  {($USERFLAG10 == 1) && ($USERFLAG11 == 1)} #STATE(AP_APP_APPROACH_CLEAR_LOOP)
+  {($USERFLAG10 == 1) && ($USERFLAG12 == 1)} #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+  {$USERFLAG12 == 1} #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機が滑走路変更可能領域に入った（不使用）
+;[%ROUTE_RWYCHANGE_ENTER]
+ 
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機が滑走路変更可能領域から出た（不使用）
+;[%ROUTE_RWYCHANGE_EXIT]
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機が直行可能領域に入った（不使用）
+;[%ROUTE_DIRECT_ENTER]
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機が直行可能領域から出た（不使用）
+;[%ROUTE_DIRECT_EXIT]
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------   
+; 到着機がアプローチ直行したとき   
+[%ROUTE_FINALCHANGE]
+  #ROUTECHANGEFINAL()
+;  #SUBCODE(@98,,2,500)
+  #STATE(AP_APP_FINAL-APP_CLEAR_EXECUTE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------   
+; 旋回待機ルートに入った時
+[%ROUTE_HOLDIN]
+  #SETUSERFLAG(25,1)
+  #STATE(AP_APP_HOLDING_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------   
+; 旋回待機ルートから出た時
+[%ROUTE_HOLDOUT]
+  #SETUSERFLAG(25,0)
+  #SETUSERFLAG(27,0)
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------   
+; ILSシミュレーションの選択後（不使用）
+[%ROUTE_TABLESELECT]
+  #SUBCODE(@98,,2,500)
+  #ROUTETABLESELECT()
+  #STATE(TG_TFP_TAG_CLEAR)
+  
+
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; Route Entry State
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; APPからTWRハンドオフ
+[%%HANDOFF_TWR]
+  {$USERFLAG21 == 1} #STATE(AP_TWR_FINAL-APP)
+  {$SHIP_SECTION == 12} #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+  #MAINMENU()
+  #FLAG(CONTACTTWR)
+  #ALT(0)
+  #OVERALT(0)
+  #SETMARKER(Y,0)
+  #STATE(AP_APP_TWR-HANDOFF_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; DEPからACCハンドオフ
+[%%HANDOFF_ACC]
+  {$USERFLAG18 == 1} #STATE(DP_DEP_ACC-HANDOFF_REQ_LOOP)
+  #MAINMENU()
+  #STATE(DP_DEP_ACC-HANDOFF_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 
+[%%GA_HOLD_INI]
+  #MAINMENU()
+  #SETUSERFLAG(14,1)
+  #STATE(AP_APP_GA_HOLDING_INI)
+
+[%%GA_HOLD_AUTOSTART]
+  {$SHIP_SECTION_AUTO == 1} #COMMAND(AP_GA_HOLD_INI_CANCEL)
+  {$USERFLAG27 == 1} #STATE(%ROUTE_HOLDOUT)
+  #SETUSERFLAG(25,1)
+  #EXECUTE(HOLDIN)
+  #STATE(AP_APP_HOLDING_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 
+[%%OVERALT_RECALC]
+  #ALT(0)
+  #OVERALT(0)
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; Delivery State（デリバリーからグランドハンドオフまで）
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のクリアランスデリバリー
+[DP_DEL_DELIVERY_T-ADJUST:Waiting:待機中]
+  {$SETUPVALUE != 0} #WAIT($SETUPVALUE)
+  {$SETUPVALUE == 0} #WAIT(180)
+  #STATE(DP_DEL_DELIVERY_CLEAR)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; グランドから開始する出発機（プッシュバックか自走かの選択)
+[AL_RPGD_DELIVERY_T-ADJUST:Waiting:待機中]
+  {$SHIP_READYRESTSEC != 0} #WAIT($SHIP_READYRESTSEC)
+  {$SHIP_SECTION == 4} #HANDOFF(RMP)
+;  {$SHIP_SECTION == 4} #HANDOFF(GND)
+  {$SHIP_PUSHBACK == 1} #STATE(DP_RPGD_PUSHBACK_REQ)
+  {$SHIP_PUSHBACK == 0} #STATE(AL_RPGD_TAXI_REQ)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; トーイング機の移動待機（プッシュバックか自走かの選択)
+[TW_RPGD_DELIVERY_T-ADJUST:Waiting:待機中]
+  #WAIT($SHIP_READYRESTSEC)
+  {$SHIP_SECTION == 4} #HANDOFF(RMP)
+;  {$SHIP_SECTION == 4} #HANDOFF(GND)
+  {$SHIP_PUSHBACK == 1} #STATE(DP_RPGD_PUSHBACK_REQ)
+  {$SHIP_PUSHBACK == 0} #STATE(AL_RPGD_TAXI_REQ)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のクリアランスデリバリー【0030S】
+[DP_DEL_DELIVERY_CLEAR:Waiting:待機中]
+;  {$VALUE03 == $SHIP_UID} #SUBCODE(EV_R-CHANGE_CPT_INSERT)
+;  {$VALUE03 == $SHIP_UID} #SUBCODE(EV_R-CHANGE_CPT_VOICE)
+;  {$VALUE03 == $SHIP_UID} #WAIT(45)
+  "[DP_DEL_DELIVERY_REQ]"
+  #STATE(DP_DEL_DELIVERY_CLEAR_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のデリバリー指示
+[DP_DEL_DELIVERY_CLEAR_LOOP:Clearance delivery:出発許可できます]
+  #SUBCODE(@98,DP_DEL_DELIVERY_CLEAR,1,30)
+  <DP_DELIVERY_CLEAR>
+  {($SHIP_MODE == 1) && ($USERFLAG02 == 0)} <DP_RWY-CHANGE_SELECT>
+  <DP_DELIVERY_STAND-BY>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のプッシュバック（自走出発）までの待機（時間選択）
+[DP_RPGD_TAXI_EXECUTE_T-ADJUST:Handoff:待機中]
+;  #HANDOFF(RMP)
+  #HANDOFF(GND)
+  {$SHIP_READYRESTSEC > 3} #WAIT($SHIP_READYRESTSEC)
+  {$SHIP_READYRESTSEC < 4} #WAIT(3)
+;  {$VALUE03 == $SHIP_UID} #STATE(EV_RMP_R-CHANGE_REQ)
+  {$SHIP_PUSHBACK == 1} #STATE(DP_RPGD_PUSHBACK_REQ)
+  {$SHIP_PUSHBACK == 0} #STATE(AL_RPGD_TAXI_REQ)
+
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; Pushback State
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発とトーイング機のプッシュバック要請【0033S】
+[DP_RPGD_PUSHBACK_REQ]
+  #SETUSERFLAG(15,1)
+  {$SHIP_MODE == 1} "[DP_RMP_PUSHBACK_REQ]"
+  {$SHIP_MODE == 3} "[TW_RMP_PUSHBACK_REQ]"
+;  {$SHIP_MODE == 1} "[DP_GND_PUSHBACK_REQ]"
+;  {$SHIP_MODE == 3} "[TW_GND_PUSHBACK_REQ]"
+  #STATE(DP_RPGD_PUSHBACK_REQ_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発とトーイング機のプッシュバックループ
+[DP_RPGD_PUSHBACK_REQ_LOOP:Waiting for pushback:プッシュバック許可できます]
+  #SUBCODE(@98,DP_RPGD_PUSHBACK_REQ,1,60)
+;  {$VALUE03 == $SHIP_UID} #SUBCODE(@98,EV_RMP_R-CHANGE_REQ,1,60)
+  {$USERFLAG15 == 1} #SUBCODE(@98,,3,5)
+  {$USERFLAG15 == 1} #SETUSERFLAG(15,0)
+  <DP_PUSHBACK_REQ_SELECT>
+;  {($SHIP_MODE == 1) && ($USERFLAG02 == 0)} <DP_RWY-CHANGE_SELECT>
+  <DP_PUSHBACK_REQ_STAND-BY>
+
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; Taxi State
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発と到着とトーイング機のタキシング許可
+[AL_RPGD_TAXI_REQ:Waiting to taxi:走行許可できます]
+  #SETUSERFLAG(15,1)
+  {($SHIP_MODE == 1) && ($SHIP_PUSHBACK == 0)} "[AL_RMP_TAXI_REQ2]"
+  {($SHIP_MODE == 1) && ($SHIP_PUSHBACK == 1)} "[AL_RMP_TAXI_REQ]"
+  {$SHIP_MODE == 2} "[AP_GND_INI-CONTACT]"
+  {($SHIP_MODE == 3) && ($SHIP_PUSHBACK == 0)} "[TW_RMP_TOW_REQ]"
+  {($SHIP_MODE == 3) && ($SHIP_PUSHBACK == 1)} "[TW_RMP_PUSHBACK_TOW_REQ]"
+  {($SHIP_MODE == 3) && ($USERFLAG05 == 1)} "[TW_GND_TOW_HOLD_REQ]"
+  #STATE(AL_RPGD_TAXI_REQ_LOOP)
+;  {($SHIP_MODE == 1) && ($SHIP_PUSHBACK == 0)} "[AL_GND_TAXI_REQ2]"
+;  {($SHIP_MODE == 1) && ($SHIP_PUSHBACK == 1)} "[AL_GND_TAXI_REQ]"
+;  {$SHIP_MODE == 2} "[AP_GND_INI-CONTACT]"
+;  {($SHIP_MODE == 3) && ($SHIP_PUSHBACK == 0) && ($USERFLAG05 != 1)} "[TW_GND_TOW_REQ]"
+;  {($SHIP_MODE == 3) && ($SHIP_PUSHBACK == 1) && ($USERFLAG05 != 1)} "[TW_GND_PUSHBACK_TOW_REQ]"
+;  {($SHIP_MODE == 3) && ($USERFLAG05 == 1)} "[TW_GND_TOW_HOLD_REQ]"
+;  #STATE(AL_RPGD_TAXI_REQ_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発と到着とトーイング機のタキシング許可メインループ
+[AL_RPGD_TAXI_REQ_LOOP:Waiting to taxi:走行許可できます]
+  #SUBCODE(@98,AL_RPGD_TAXI_REQ,1,60)
+  {$USERFLAG15 == 1} #SUBCODE(@98,,3,5)
+  {$USERFLAG15 == 1} #SETUSERFLAG(15,0)
+  {$SHIP_MODE == 1} <DP_TAXI_RWY_SELECT>
+;  {($SHIP_MODE == 1) && ($SHIP_PUSHBACK == 0) && ($USERFLAG02 == 0)} <DP_RWY-CHANGE_SELECT>
+  {$SHIP_MODE == 2} <AP_TAXI_SPOT_SELECT>
+  {$SHIP_MODE == 3} <TW_TAXI_TOW_SELECT>
+  <AL_TAXI_STAND-BY>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発と到着とトーイング機のタキシング処理判定
+[AL_RPGD_TAXI_JUDGE]
+  #SUBCODE(@98,,2,500)
+  #EXECUTE(TAXICHANGE)
+  {($SHIP_MODE == 1) && ($NODE_INTERSECTION == 0)} #STATE(DP_RPGD_TAXI_RWY_EXECUTE)
+  {($SHIP_MODE == 1) && ($NODE_INTERSECTION == 1)} #STATE(DP_RPGD_TAXI_RWY_ISD_EXECUTE)
+  {$SHIP_MODE == 2} #STATE(AP_RPGD_TAXI_SPOT_EXECUTE)
+  {$SHIP_MODE == 3} #STATE(TW_RPGD_TAXI_TOW_EXECUTE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機の走行許可及びルート変更
+[DP_RPGD_TAXI_RWY_EXECUTE:Start move:走行中]
+  {($NODE_NAMEPOINTCOUNT_GWY > 0) && ($SHIP_SECTION == 6)} "[DP_RMP_TAXI_GWY_LONG]"
+  {($NODE_NAMEPOINTCOUNT_GWY == 0) && ($SHIP_SECTION == 6)} "[DP_RMP_TAXI_GWY_SHORT]"
+  {($NODE_NAMEPOINTCOUNT_GWY > 0) && ($SHIP_SECTION == 8) && ($SHIP_RWY_RWY16R == 1)} "[DP_GND_TAXI_RWY_LONG_16]"
+  {($NODE_NAMEPOINTCOUNT_GWY > 0) && ($SHIP_SECTION == 8) && ($SHIP_RWY_RWY34L == 1)} "[DP_GND_TAXI_RWY_LONG_34]"
+  {($NODE_NAMEPOINTCOUNT_GWY == 0) && ($SHIP_SECTION == 8) && ($SHIP_RWY_RWY16R == 1)} "[DP_GND_TAXI_RWY_SHORT_16]"
+  {($NODE_NAMEPOINTCOUNT_GWY == 0) && ($SHIP_SECTION == 8) && ($SHIP_RWY_RWY34L == 1)} "[DP_GND_TAXI_RWY_SHORT_34]"
+  #EXECUTE(TAXI)
+  #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+
+;  {$NODE_NAMEPOINTCOUNT_GWY > 0} #DELAYEXECUTE(TAXI,10)
+;  {$NODE_NAMEPOINTCOUNT_GWY == 0} #DELAYEXECUTE(TAXI,7)
+;  {($NODE_NAMEPOINTCOUNT_GWY > 0) && ($SHIP_SECTION == 6)} "[DP_RMP_TAXI_GWY_LONG]"
+;  {($NODE_NAMEPOINTCOUNT_GWY == 0) && ($SHIP_SECTION == 6)} "[DP_RMP_TAXI_GWY_SHORT]"
+;  {($NODE_NAMEPOINTCOUNT_GWY > 0) && ($SHIP_SECTION == 8)} "[DP_GND_TAXI_RWY_LONG]"
+;  {($NODE_NAMEPOINTCOUNT_GWY == 0) && ($SHIP_SECTION == 8)} "[DP_GND_TAXI_RWY_SHORT]"
+;  #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+
+;  {($NODE_NAMEPOINTCOUNT > 0) && ($SHIP_RWY_RWY16R == 1)} "[DP_GND_TAXI_RWY_LONG_16]"
+;  {($NODE_NAMEPOINTCOUNT > 0) && ($SHIP_RWY_RWY34L == 1)} "[DP_GND_TAXI_RWY_LONG_34]"
+;  {($NODE_NAMEPOINTCOUNT == 0) && ($SHIP_RWY_RWY16R == 1)} "[DP_GND_TAXI_RWY_SHORT_16]"
+;  {($NODE_NAMEPOINTCOUNT == 0) && ($SHIP_RWY_RWY34L == 1)} "[DP_GND_TAXI_RWY_SHORT_34]"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機の走行許可及びルート変更（インターセクションディパーチャー
+[DP_RPGD_TAXI_RWY_ISD_EXECUTE:Start move:走行中]
+  {($NODE_NAMEPOINTCOUNT_GWY > 0) && ($SHIP_SECTION == 6)} "[DP_RMP_TAXI_GWY_LONG]"
+  {($NODE_NAMEPOINTCOUNT_GWY == 0) && ($SHIP_SECTION == 6)} "[DP_RMP_TAXI_GWY_SHORT]"
+  {($NODE_NAMEPOINTCOUNT_GWY > 0) && ($SHIP_SECTION == 8) && ($SHIP_RWY_RWY16R == 1)} "[DP_GND_TAXI_RWY_LONG_I16]"
+  {($NODE_NAMEPOINTCOUNT_GWY > 0) && ($SHIP_SECTION == 8) && ($SHIP_RWY_RWY34L == 1)} "[DP_GND_TAXI_RWY_LONG_I34]"
+  {($NODE_NAMEPOINTCOUNT_GWY == 0) && ($SHIP_SECTION == 8) && ($SHIP_RWY_RWY16R == 1)} "[DP_GND_TAXI_RWY_SHORT_I16]"
+  {($NODE_NAMEPOINTCOUNT_GWY == 0) && ($SHIP_SECTION == 8) && ($SHIP_RWY_RWY34L == 1)} "[DP_GND_TAXI_RWY_SHORT_I34]"
+  #EXECUTE(TAXI)
+  #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+
+;  {$NODE_NAMEPOINTCOUNT_GWY > 0} #DELAYEXECUTE(TAXI,13)
+;  {$NODE_NAMEPOINTCOUNT_GWY == 0} #DELAYEXECUTE(TAXI,10)
+;  {($NODE_NAMEPOINTCOUNT_GWY > 0) && ($SHIP_SECTION == 6)} "[DP_RMP_TAXI_GWY_LONG]"
+;  {($NODE_NAMEPOINTCOUNT_GWY == 0) && ($SHIP_SECTION == 6)} "[DP_RMP_TAXI_GWY_SHORT]"
+;  {($NODE_NAMEPOINTCOUNT_GWY > 0) && ($SHIP_SECTION == 8)} "[DP_GND_TAXI_RWY_LONG_ISD]"
+;  {($NODE_NAMEPOINTCOUNT_GWY == 0) && ($SHIP_SECTION == 8)} "[DP_GND_TAXI_RWY_SHORT_ISD]"
+;  #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+
+;  {($NODE_NAMEPOINTCOUNT > 0) && ($SHIP_RWY_RWY16R == 1)} "[DP_GND_TAXI_RWY_LONG_I16]"
+;  {($NODE_NAMEPOINTCOUNT > 0) && ($SHIP_RWY_RWY34L == 1)} "[DP_GND_TAXI_RWY_LONG_I34]"
+;  {($NODE_NAMEPOINTCOUNT == 0) && ($SHIP_RWY_RWY16R == 1)} "[DP_GND_TAXI_RWY_SHORT_I16]"
+;  {($NODE_NAMEPOINTCOUNT == 0) && ($SHIP_RWY_RWY34L == 1} "[DP_GND_TAXI_RWY_SHORT_I34]"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機の走行許可及びルート変更
+[AP_RPGD_TAXI_SPOT_EXECUTE:Start move:走行中]
+  {($NODE_NAMEPOINTCOUNT_GWY > 0) && ($SHIP_SECTION == 6)} "[AP_RMP_TAXI_SPOT_LONG]"
+  {($NODE_NAMEPOINTCOUNT_GWY == 0) && ($SHIP_SECTION == 6)} "[AP_RMP_TAXI_SPOT_SHORT]"
+  {($NODE_NAMEPOINTCOUNT_GWY > 0) && ($SHIP_SECTION == 8)} "[AP_GND_TAXI_GWY_LONG]"
+  {($NODE_NAMEPOINTCOUNT_GWY == 0) && ($SHIP_SECTION == 8)} "[AP_GND_TAXI_GWY_SHORT]"
+  #EXECUTE(TAXI)
+  #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+
+;  {($NODE_NAMEPOINTCOUNT_GWY > 0)} #DELAYEXECUTE(TAXI,7)
+;  {($NODE_NAMEPOINTCOUNT_GWY == 0)} #DELAYEXECUTE(TAXI,5)
+;  {($NODE_NAMEPOINTCOUNT_GWY > 0) && ($SHIP_SECTION == 6)} "[AP_RMP_TAXI_SPOT_LONG]"
+;  {($NODE_NAMEPOINTCOUNT_GWY == 0) && ($SHIP_SECTION == 6)} "[AP_RMP_TAXI_SPOT_SHORT]"
+;  {($NODE_NAMEPOINTCOUNT_GWY > 0) && ($SHIP_SECTION == 8)} "[AP_GND_TAXI_GWY_LONG]"
+;  {($NODE_NAMEPOINTCOUNT_GWY == 0) && ($SHIP_SECTION == 8)} "[AP_GND_TAXI_GWY_SHORT]"
+;  #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; トーイング機の走行許可及びルート変更
+[TW_RPGD_TAXI_TOW_EXECUTE:Start move:走行中]
+  #DELAYEXECUTE(TAXI,7)
+  {$USERFLAG14 == 0} "[TW_RMP_TOW_CLEAR]"
+  {($USERFLAG14 == 1) && ($SHIP_HOLD == 0)} "[TW_GND_TOW_RTE-CHANGE]"
+  {($USERFLAG14 == 1) && ($SHIP_HOLD != 0)} "[TW_GND_TOW_CONTINUE]"
+  #SETUSERFLAG(14,1)
+  #EXECUTE(TAXI)
+  #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+
+;  #DELAYEXECUTE(TAXI,7)
+;  {$USERFLAG14 == 0} "[TW_RMP_TOW_CLEAR]"
+;  {($USERFLAG14 == 1) && ($SHIP_HOLD == 0)} "[TW_GND_TOW_RTE-CHANGE]"
+;  {($USERFLAG14 == 1) && ($SHIP_HOLD != 0)} "[TW_GND_TOW_CONTINUE]"
+;  #SETUSERFLAG(14,1)
+;  #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発と到着とトーイング機のクロスランウェイの判定
+[AL_RPGD_TAXI_LOOP_JUDGE]
+  {$NODE_CROSS == 0} #STATE(AL_RPGD_TAXI_LOOP)
+  {($NODE_CROSS == 4) && ($APPROVAL_CROSS == 0)} #STATE(AL_RPGD_TAXI_LOOP_GWY)
+  {($NODE_CROSS == 4) && ($APPROVAL_CROSS != 0)} #STATE(AL_RPGD_TAXI_GWY_EXECUTE)
+  {($NODE_CROSS == 2) && ($APPROVAL_CROSS == 0)} #STATE(AL_RPGD_TAXI_LOOP_GP-CROSS)
+  {($NODE_CROSS == 2) && ($APPROVAL_CROSS != 0)} #STATE(AL_RPGD_TAXI_GP-CROSS_EXECUTE)
+;  {($NODE_CROSS == 1) && ($APPROVAL_CROSS == 0)} #STATE(AL_RPGD_TAXI_LOOP_CROSS)
+;  {($NODE_CROSS == 1) && ($APPROVAL_CROSS != 0)} #STATE(AL_RPGD_TAXI_CROSS_EXECUTE)
+;  {($NODE_CROSS == 3) && ($APPROVAL_CROSS == 0)} #STATE(AL_RPGD_TAXI_LOOP_PASS)
+;  {($NODE_CROSS == 3) && ($APPROVAL_CROSS != 0)} #STATE(AL_RPGD_TAXI_PASS_EXECUTE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発と到着とトーイング機のタクシー中指示（クロス無し）
+[AL_RPGD_TAXI_LOOP:Taxiing:走行中]
+  {$SHIP_MODE == 3} #MESSAGE(Towing:移動中)
+  {$SHIP_RUNWAYDISTANCE < 800} #MESSAGE(Handoff is possible:ハンドオフできます)
+  {$SHIP_RUNWAYDISTANCE < 800} <DP_TWR-HANDOFF_EXECUTE>
+  {($NODE_LASTDISTANCE > 400) && ($SHIP_MODE != 2)} <AL_TAXI-CHANGE_SELECT>
+  {$NODE_LASTDISTANCE > 400} <AL_TAXI_HOLD_EXECUTE>
+  {$NODE_LASTDISTANCE <= 400} #MAINMENU()
+  #WAITSTATE(AL_RPGD_TAXI_LOOP,10)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------   
+; 出発と到着とトーイング機のタクシー中指示（GATEWAY通過有り）   
+[AL_RPGD_TAXI_LOOP_GWY:Taxiing:走行中]   
+  {$SHIP_MODE == 3} #MESSAGE(Towing:移動中)   
+  {$NODE_GWYDISTANCE < 800} #MESSAGE(Handoff is possible:ハンドオフできます)
+  {($NODE_GWYDISTANCE < 800) && ($SHIP_SECTION == 6)} <DP_GND-HANDOFF_EXECUTE>
+  {($NODE_GWYDISTANCE < 800) && ($SHIP_SECTION == 8)} <AP_RMP-HANDOFF_EXECUTE>
+  {($NODE_GWYDISTANCE < 600) && ($SHIP_SECTION == 6)} #STATE(DP_RPGD_GND-HANDOFF)
+  {($NODE_GWYDISTANCE < 600) && ($SHIP_SECTION == 8)} #STATE(AP_RPGD_RMP-HANDOFF)
+  {$NODE_GWYDISTANCE > 600} <AL_TAXI-CHANGE_SELECT>
+  {$NODE_GWYDISTANCE > 600} <AL_TAXI_HOLD_EXECUTE>
+  {$NODE_LASTDISTANCE <= 600} #MAINMENU()
+  #WAITSTATE(AL_RPGD_TAXI_LOOP_GWY,10)
+
+;  {$NODE_GWYDISTANCE < 800} #MESSAGE(Gateway ahead:ゲートウェイ通行できます)
+;  {$NODE_GWYDISTANCE < 800} <AL_RPGD_GWY_PASS>
+;  {$NODE_GWYDISTANCE < 400} #STATE(AL_RPGD_GWY-CROSS)
+;  {$NODE_GWYDISTANCE > 400} <AL_TAXI-CHANGE_SELECT>
+;  {$NODE_GWYDISTANCE > 400} <AL_TAXI_HOLD_EXECUTE>
+;  {$NODE_LASTDISTANCE <= 400} #MAINMENU()
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------   
+; 出発と到着とトーイング機のタクシー中指示（GPクロス有り）   
+[AL_RPGD_TAXI_LOOP_GP-CROSS:Taxiing:走行中]   
+  {$SHIP_MODE == 3} #MESSAGE(Towing:移動中)   
+  {$NODE_CROSSDISTANCE < 600} #MESSAGE(GP holdline ahead:GPホールドライン通過許可できます)
+  {$NODE_CROSSDISTANCE < 600} <AL_TAXI_GP-CROSS_EXECUTE>
+  {$NODE_CROSSDISTANCE > 400} <AL_TAXI-CHANGE_SELECT>
+  {$NODE_CROSSDISTANCE > 400} <AL_TAXI_HOLD_EXECUTE>   
+  {$NODE_LASTDISTANCE <= 400} #MAINMENU()
+  #WAITSTATE(AL_RPGD_TAXI_LOOP_GP-CROSS,10)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発と到着とトーイング機のタクシー中指示（クロス有り）
+;[AL_RPGD_TAXI_LOOP_CROSS:Taxiing:走行中]
+;  {$SHIP_MODE == 3} #MESSAGE(Towing:移動中)
+;  {$NODE_CROSSDISTANCE < 400} #MESSAGE(RWY crossing ahead:滑走路横断許可できます)
+;  {$NODE_CROSSDISTANCE < 400} <AL_TAXI_CROSS_EXECUTE>
+;  {$NODE_CROSSDISTANCE < 400} <AL_TAXI_CROSS_HOLD_FLAG>
+;  {$NODE_CROSSDISTANCE > 400} <AL_TAXI-CHANGE_SELECT>
+;  {$NODE_CROSSDISTANCE > 400} <AL_TAXI_HOLD_EXECUTE>
+;  {$NODE_LASTDISTANCE <= 400} #MAINMENU()
+;  #WAITSTATE(AL_RPGD_TAXI_LOOP_CROSS,10)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------   
+; 出発と到着とトーイング機のタクシー中指示（滑走路通過有り）   
+;[AL_RPGD_TAXI_LOOP_PASS:Taxiing:走行中]   
+;  {$SHIP_MODE == 3} #MESSAGE(Towing:移動中)   
+;  {$NODE_CROSSDISTANCE < 600} #MESSAGE(Backtaxi ahead:滑走路通行許可できます)
+;  {$NODE_CROSSDISTANCE < 600} <AL_TAXI_PASS_EXECUTE>
+;  {$NODE_CROSSDISTANCE < 400} <AL_TAXI_PASS_HOLD_FLAG>
+;  {$NODE_CROSSDISTANCE > 400} <AL_TAXI-CHANGE_SELECT>
+;  {$NODE_CROSSDISTANCE > 400} <AL_TAXI_HOLD_EXECUTE>   
+;  {$NODE_LASTDISTANCE <= 400} #MAINMENU()
+;  #WAITSTATE(AL_RPGD_TAXI_LOOP_PASS,10)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発と到着とトーイング機の滑走路横断中指示
+[AL_RPGD_TAXI_GWY_EXECUTE:Taxiing:走行中]
+  {$SHIP_MODE == 3} #MESSAGE(Towing:移動中)
+
+[AL_RPGD_TAXI_GP-CROSS_EXECUTE:Taxiing:走行中]   
+  {$SHIP_MODE == 3} #MESSAGE(Towing:移動中)
+
+;[AL_RPGD_TAXI_CROSS_EXECUTE:Taxiing:走行中]
+;  {$SHIP_MODE == 3} #MESSAGE(Towing:移動中)
+
+;[AL_RPGD_TAXI_PASS_EXECUTE:Taxiing:走行中]
+;  {$SHIP_MODE == 3} #MESSAGE(Towing:移動中)
+
+
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; Cross Taxi State
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発・到着・トーイング機の滑走路横断要請
+[AL_RPGD_TAXI_CROSS:Taxiing:滑走路横断許可できます]
+  {$USERFLAG15 == 1} #STATE(AL_RPGD_TAXI_CROSS_LOOP)
+  {$SHIP_MODE != 3} "[AL_GND_TAXI_CROSS_REQ]"
+  {$SHIP_MODE == 3} "[TW_GND_TOW_HOLD-SHORT]"
+  #STATE(AL_RPGD_TAXI_CROSS_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発・到着・トーイング機の滑走路横断要請からの指示
+[AL_RPGD_TAXI_CROSS_LOOP:Taxiing:滑走路横断許可できます]
+  #SUBCODE(@98,AL_RPGD_TAXI_CROSS,1,30)
+  {$USERFLAG15 == 1} #SUBCODE(@98,,3,120)
+  {$USERFLAG15 == 1} #SETUSERFLAG(15,0)
+  {$SHIP_MODE == 3} #MESSAGE(taxi:走行再開できます)
+  <AL_TAXI_CROSS_CLEAR>
+  <AL_TAXI_CROSS_HOLD>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発・到着・トーイング機の滑走路通行要請
+[AL_RPGD_TAXI_PASS:Taxiing:滑走路通行許可できます]
+  {$USERFLAG15 == 1} #STATE(AL_RPGD_TAXI_PASS_LOOP)
+  "[AL_GND_TAXI_PASS_REQ]"
+  #STATE(AL_RPGD_TAXI_PASS_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発・到着・トーイング機の滑走路横断要請からの指示
+[AL_RPGD_TAXI_PASS_LOOP:Taxiing:滑走路通行許可できます]
+  #SUBCODE(@98,AL_RPGD_TAXI_PASS,1,30)
+  {$USERFLAG15 == 1} #SUBCODE(@98,,3,120)
+  {$USERFLAG15 == 1} #SETUSERFLAG(15,0)
+  {$SHIP_MODE == 3} #MESSAGE(Towing:走行再開できます)
+  <AL_TAXI_PASS_CLEAR>
+  <AL_TAXI_PASS_HOLD>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発と到着とトーイング機が停止中に走行許可リクエスト【0025S】
+[AL_RPGD_TAXI_HOLD:Waiting to taxi:走行再開できます]
+  {($SHIP_MODE != 3) && ($SHIP_SECTION == 6)} "[AL_RMP_TAXI_REQ]"
+  {($SHIP_MODE == 3) && ($SHIP_SECTION == 6)} "[TW_RMP_TOW_HOLD_REQ]"
+  {($SHIP_MODE != 3) && ($SHIP_SECTION == 8)} "[AL_GND_TAXI_REQ]"
+  {($SHIP_MODE == 3) && ($SHIP_SECTION == 8)} "[TW_GND_TOW_HOLD_REQ]"
+  #STATE(AL_RPGD_TAXI_HOLD_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発と到着とトーイング機へ停止中のタキシング指示
+[AL_RPGD_TAXI_HOLD_LOOP:Waiting to taxi:走行再開できます]
+  #SUBCODE(@98,AL_RPGD_TAXI_HOLD,11,60)
+  <AL_TAXI_CONTINUE_SELECT>
+  <AL_TAXI_CONTINUE_STAND-BY>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機がGWYで停止中に行われる走行許可
+[AL_RPGD_GWY_TAXI_REQ:Gateway hold:ゲートウェイ通行できます]
+  {($SHIP_MODE == 1) && ($SHIP_RWY_RWY16R == 1)} "[DP_GND_INI-CONTACT_HOLD_16]"
+  {($SHIP_MODE == 1) && ($SHIP_RWY_RWY34L == 1)} "[DP_GND_INI-CONTACT_HOLD_34]"
+  {$SHIP_MODE == 2} "[AP_RMP_INI-CONTACT_HOLD]"
+  {($SHIP_MODE == 3) && ($SHIP_SECTION == 6)} "[TW_RMP_TOW_HOLD_GWY]"
+  {($SHIP_MODE == 3) && ($SHIP_SECTION == 8)} "[TW_GND_TOW_HOLD_GWY]"
+  #STATE(AL_RPGD_GWY_TAXI_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機がGWYで停止中に行われる走行許可の操作
+;[AL_RPGD_GWY_TAXI_LOOP:Gateway Pass:ゲートウェイ通行できます]
+;  #SUBCODE(@98,AL_RPGD_GWY_TAXI_REQ,1,60)
+;  <AL_RPGD_GWY_PASS>
+;  <AL_RPGD_GWY_HOLD>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機がGWYで停止中に行われる走行許可
+[DP_GND_GWY_TAXI_REQ:Gateway hold:ゲートウェイ通行できます]
+  {$SHIP_RWY_RWY16R == 1} "[DP_GND_INI-CONTACT_HOLD_16]"
+  {$SHIP_RWY_RWY34L == 1} "[DP_GND_INI-CONTACT_HOLD_34]"
+  #STATE(DP_GND_GWY_TAXI_LOOP)
+
+[AL_GND_GWY_HOLD_REQ:Gateway hold:ゲートウェイ通行できます]
+  {$SHIP_MODE == 1} "[DP_GND_GWY-START_HOLD]"
+  {$SHIP_MODE == 2} "[AP_GND_GWY-START_HOLD]"
+  {$SHIP_MODE == 3} "[TW_GND_TOW_HOLD_GWY]"
+  #STATE(AL_GND_GWY_HOLD_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機がGWYで停止中に行われる走行許可の操作
+[DP_GND_GWY_TAXI_LOOP:Gateway hold:ゲートウェイ通行できます]
+  #SUBCODE(@98,DP_GND_GWY_TAXI_REQ,1,60)
+  <AL_RPGD_GWY_PASS>
+  <AL_RPGD_GWY_HOLD>
+
+[AL_GND_GWY_HOLD_LOOP:Gateway hold:ゲートウェイ通行できます]
+  #SUBCODE(@98,AL_GND_GWY_HOLD_REQ,1,60)
+  {$USERFLAG15 == 1} #SUBCODE(@98,,3,120)
+  {$USERFLAG15 == 1} #SETUSERFLAG(15,0)
+  <AL_RPGD_GWY_PASS>
+  <AL_RPGD_GWY_HOLD>
+
+[AL_RPGD_GWY_PASS:Gateway cross:ゲートウェイ通行できます]
+  #DELAYEXECUTE(TAXI/PASSGWY,5)
+  {($SHIP_MODE == 1) && ($NODE_INTERSECTION == 0) && ($NODE_NAMEPOINTCOUNT_GWY > 0)} "[DP_GND_TAXI_RWY_LONG]"
+  {($SHIP_MODE == 1) && ($NODE_INTERSECTION == 0) && ($NODE_NAMEPOINTCOUNT_GWY == 0)} "[DP_GND_TAXI_RWY_SHORT]"
+  {($SHIP_MODE == 1) && ($NODE_INTERSECTION == 1) && ($NODE_NAMEPOINTCOUNT_GWY > 0)} "[DP_GND_TAXI_RWY_LONG_ISD]"
+  {($SHIP_MODE == 1) && ($NODE_INTERSECTION == 1) && ($NODE_NAMEPOINTCOUNT_GWY == 0)} "[DP_GND_TAXI_RWY_SHORT_ISD]"
+  {($SHIP_MODE == 2) && ($NODE_NAMEPOINTCOUNT_GWY > 0)} "[AP_RMP_TAXI_SPOT_LONG]"
+  {($SHIP_MODE == 2) && ($NODE_NAMEPOINTCOUNT_GWY == 0)} "[AP_RMP_TAXI_SPOT_SHORT]"
+  {($SHIP_MODE == 3) && ($SHIP_SECTION == 6)} "[TW_RMP_INI-CONTACT_RES]"
+  {($SHIP_MODE == 3) && ($SHIP_SECTION == 8)} "[TW_GND_INI-CONTACT_RES]"
+  #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+
+[DP_RPGD_GWY_PASS:Gateway cross:ゲートウェイ通行できます]
+  #DELAYEXECUTE(TAXI/PASSGWY,5)
+  {($SHIP_RWY_RWY16R == 1) && ($NODE_NAMEPOINTCOUNT_GWY > 0)} "[DP_GND_TAXI_RWY_LONG_I16]"
+  {($SHIP_RWY_RWY34L == 1) && ($NODE_NAMEPOINTCOUNT_GWY > 0)} "[DP_GND_TAXI_RWY_LONG_I34]"
+  {($SHIP_RWY_RWY16R == 1) && ($NODE_NAMEPOINTCOUNT_GWY == 0)} "[DP_GND_TAXI_RWY_SHORT_I16]"
+  {($SHIP_RWY_RWY34L == 1) && ($NODE_NAMEPOINTCOUNT_GWY == 0)} "[DP_GND_TAXI_RWY_SHORT_I34]"
+  #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+
+[AP_RPGD_GWY_PASS:Gateway cross:ゲートウェイ通行できます]
+  #DELAYEXECUTE(TAXI/PASSGWY,5)
+  {$NODE_NAMEPOINTCOUNT_GWY > 0} "[AP_RMP_TAXI_SPOT_LONG]"
+  {$NODE_NAMEPOINTCOUNT_GWY == 0} "[AP_RMP_TAXI_SPOT_SHORT]"
+  #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+
+[TW_RPGD_GWY_PASS:Gateway cross:ゲートウェイ通行できます]
+  #DELAYEXECUTE(TAXI/PASSGWY,5)
+  {$SHIP_SECTION == 6} "[TW_RMP_INI-CONTACT_RES]"
+  {$SHIP_SECTION == 8} "[TW_GND_INI-CONTACT_RES]"
+  #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発・到着・トーイング機の滑走路横断要請
+[AL_RPGD_TAXI_GPCROSS:GP hold:GPホールドライン通過許可できます]
+  {$USERFLAG15 == 1} #STATE(AL_RPGD_TAXI_GPCROSS_LOOP)
+  "[AL_GND_TAXI_GPCROSS_REQ]"
+  #STATE(AL_RPGD_TAXI_GPCROSS_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発・到着・トーイング機の滑走路横断要請からの指示
+[AL_RPGD_TAXI_GPCROSS_LOOP:Waiting at GP holdline:GPホールドライン通過許可できます]
+  #SUBCODE(@98,AL_RPGD_TAXI_GPCROSS,1,30)
+  {$USERFLAG15 == 1} #SUBCODE(@98,,3,120)
+  {$USERFLAG15 == 1} #SETUSERFLAG(15,0)
+  <AL_TAXI_GP-CROSS_EXECUTE>
+  <AL_TAXI_GP-CROSS_HOLD>
+
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 
+[AL_RPGD_GWY-CROSS:Gateway crossing is possible:ゲートウェイ通行できます]
+  <AL_RPGD_GWY_PASS>
+  <AL_RPGD_GWY_HOLD_FLAG>
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; Handoff State
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のタワーハンドオフリクエスト
+[AP_APP_TWR-HANDOFF_REQ]
+  #MAINMENU()
+  #SETUSERFLAG(18,1)
+  "[AP_APP_TWR-HANDOFF_REQ]"
+  {$SHIP_LOCKIAS != 0} #IAS(0)
+  {($SHIP_RWY_RWY34L == 1) && ($SHIP_FLAG_GEARDOWN != 1)} #FLAG(GEARDOWN)
+  #STATE(AP_APP_TWR-HANDOFF_REQ_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のタワーハンドオフリクエスト(CORRECTION FOR HANDOFF/FAF POINT BYPASS ERROR AT COURSEWAY)
+[AP_APP_TWR-HANDOFF_BACKUP]
+  #MAINMENU()
+  #FLAG(CONTACTTWR)
+  #IAS(0)
+  #ALT(0)
+  #OVERALT(0)
+  #SETMARKER(Y,0)
+  #SETUSERFLAG(18,1)
+  "[AP_APP_TWR-HANDOFF_REQ]"
+  {$SHIP_FLAG_GEARDOWN != 1} #FLAG(GEARDOWN)
+  #STATE(AP_APP_TWR-HANDOFF_REQ_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のタワーハンドオフリクエスト
+[AP_APP_TWR-HANDOFF_REQ_LOOP:Tower handoff request:ハンドオフできます]
+  #SUBCODE(@98,AP_APP_TWR-HANDOFF_REQ_T-OUT,1,20)
+  <AP_TWR-HANDOFF_EXECUTE>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のタワーハンドオフリクエストの指示時間超過
+[AP_APP_TWR-HANDOFF_REQ_T-OUT]
+  #SCOREB(50)
+  #SUBCODE(@98,,2,0)
+  #COMMAND(AP_TWR-HANDOFF_COMMON)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のグランドハンドオフ
+[AP_TWR_GND-HANDOFF:Handoff is possible:ハンドオフできます]
+  <AP_GND-HANDOFF_EXECUTE>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のグランドハンドオフリクエスト
+[AP_TWR_GND-HANDOFF_REQ:Handoff is possible:ハンドオフできます]
+  #MAINMENU()
+  "[AP_TWR_GND-HANDOFF_REQ]"
+  #SETUSERFLAG(18,1)
+  #STATE(AP_TWR_GND-HANDOFF_REQ_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のグランドハンドオフリクエストループ
+[AP_TWR_GND-HANDOFF_REQ_LOOP:Ground handoff request:ハンドオフできます]
+  #SUBCODE(@98,AP_TWR_GND-HANDOFF_REQ,1,30)
+  <AP_GND-HANDOFF_EXECUTE>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のランプハンドオフ
+[AP_RPGD_RMP-HANDOFF:Handoff is possible:ハンドオフできます]
+  <AP_RMP-HANDOFF_EXECUTE>
+  <AL_RPGD_GWY_HOLD_FLAG>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のランプハンドオフリクエスト
+[AP_RPGD_RMP-HANDOFF_REQ]
+  #MAINMENU()
+  {($SHIP_MODE != 3) && ($USERFLAG15 != 1)} "[AP_GND_RMP-HANDOFF_REQ]"
+  {($SHIP_MODE == 3) && ($USERFLAG15 != 1)} "[TW_GND_TOW_HOLD_GWY]"
+  #SETUSERFLAG(18,1)
+  #STATE(AP_RPGD_RMP-HANDOFF_REQ_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のランプハンドオフリクエストループ
+[AP_RPGD_RMP-HANDOFF_REQ_LOOP:Ramp handoff request:ハンドオフできます]
+  #SUBCODE(@98,AP_RPGD_RMP-HANDOFF_REQ,1,30)
+  {$USERFLAG15 == 1} #SUBCODE(@98,,3,120)
+  {$USERFLAG15 == 1} #SETUSERFLAG(15,0)
+  <AP_RMP-HANDOFF_EXECUTE>
+  <AL_RPGD_GWY_HOLD>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のグランドハンドオフ
+[DP_RPGD_GND-HANDOFF:Handoff is possible:ハンドオフできます]
+  <DP_GND-HANDOFF_EXECUTE>
+  <AL_RPGD_GWY_HOLD_FLAG>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のグランドハンドオフリクエスト
+[DP_RPGD_GND-HANDOFF_REQ]
+  #MAINMENU()
+  {($SHIP_MODE != 3) && ($USERFLAG15 != 1) && ($SHIP_RWY_RWY16R == 1)} "[DP_RMP_GND-HANDOFF_REQ_16]"
+  {($SHIP_MODE != 3) && ($USERFLAG15 != 1) && ($SHIP_RWY_RWY34L == 1)} "[DP_RMP_GND-HANDOFF_REQ_34]"
+  {($SHIP_MODE == 3) && ($USERFLAG15 != 1)} "[TW_RMP_TOW_HOLD_GWY]"
+  #SETUSERFLAG(18,1)
+  #STATE(DP_RPGD_GND-HANDOFF_REQ_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のグランドハンドオフリクエストループ
+[DP_RPGD_GND-HANDOFF_REQ_LOOP:Ground handoff request:ハンドオフできます]
+  #SUBCODE(@98,DP_RPGD_GND-HANDOFF_REQ,1,30)
+  {$USERFLAG15 == 1} #SUBCODE(@98,,3,120)
+  {$USERFLAG15 == 1} #SETUSERFLAG(15,0)
+  <DP_GND-HANDOFF_EXECUTE>
+  <AL_RPGD_GWY_HOLD>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のタワーハンドオフリクエスト開始【0041S】
+[DP_RPGD_TWR-HANDOFF_REQ]
+  #MAINMENU()
+  "[DP_GND_TWR-HANDOFF_REQ]"
+  #SETUSERFLAG(18,1)
+  #STATE(DP_RPGD_TWR-HANDOFF_REQ_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のタワーハンドオフリクエスト
+[DP_RPGD_TWR-HANDOFF_REQ_LOOP:Tower handoff request:ハンドオフできます]
+  #SUBCODE(@98,DP_RPGD_TWR-HANDOFF_REQ,1,30)
+  <DP_TWR-HANDOFF_EXECUTE>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のディパーチャーハンドオフ指示
+[DP_TWR_DEP-HANDOFF_BFORE_LOOP:In flight:飛行中]
+  {$SHIP_ALT > 900} #STATE(DP_TWR_DEP-HANDOFF_LOOP)
+  #WAITSTATE(DP_TWR_DEP-HANDOFF_BFORE_LOOP,5)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のディパーチャーハンドオフ指示
+[DP_TWR_DEP-HANDOFF_LOOP:Handoff is possible:ハンドオフできます]
+  <DP_DEP-HANDOFF_EXECUTE>
+  #WAITSTATE(DP_TWR_DEP-HANDOFF_REQ,30)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のディパーチャーハンドオフリクエスト開始
+[DP_TWR_DEP-HANDOFF_REQ]
+  #MAINMENU()
+  #SETUSERFLAG(18,1)
+  "[DP_TWR_DEP-HANDOFF_REQ]"
+  #STATE(DP_TWR_DEP-HANDOFF_REQ_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のディパーチャーハンドオフリクエスト
+[DP_TWR_DEP-HANDOFF_REQ_LOOP:Departure handoff request:ハンドオフできます]
+  #SUBCODE(@98,DP_TWR_DEP-HANDOFF_REQ_T-OUT,1,30)
+  <DP_DEP-HANDOFF_EXECUTE>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のディパーチャーハンドオフ
+[DP_TWR_DEP-HANDOFF_REQ_T-OUT]
+  #SUBCODE(@98,,2,0)
+  #SETUSERFLAG(18,0)
+  #SCOREB(50)
+  #COMMAND(DP_DEP-HANDOFF_COMMON)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機の空中ルート変更指示後音声
+[DP_DEP_ACC-HANDOFF_LOOP:ACC handoff:ハンドオフできます]
+  #WAITSTATE(DP_DEP_ACC-HANDOFF_REQ,30)
+  <DP_ACC-HANDOFF_EXECUTE>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のエリアコントロールセンターハンドオフリクエスト開始【0054S】
+[DP_DEP_ACC-HANDOFF_REQ]
+  #MAINMENU()
+  #SETUSERFLAG(18,1)
+  {$SHIP_ARR_RJTT == 0} "[DP_DEP_ACC-HANDOFF_REQ]"
+  {$SHIP_ARR_RJTT == 1} "[DP_DEP_APP-HANDOFF_REQ]"
+  #STATE(DP_DEP_ACC-HANDOFF_REQ_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のエリアコントロールセンターハンドオフリクエスト
+[DP_DEP_ACC-HANDOFF_REQ_LOOP:ACC handoff request:ハンドオフできます]
+  #SUBCODE(@98,DP_DEP_ACC-HANDOFF_REQ_T-OUT,1,30)
+  <DP_ACC-HANDOFF_EXECUTE>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のエリアコントロールセンターハンドオフリクエスト●●●●
+[DP_DEP_ACC-HANDOFF_REQ_T-OUT]
+  #SUBCODE(@98,,2,0)
+  #SETUSERFLAG(18,0)
+  #SCOREB(50)
+;  #ALT(0)
+  #STATE(DP_DEP_ACC-HANDOFF_ATC)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のエリアコントロールセンターハンドオフのATC
+[DP_DEP_ACC-HANDOFF_ATC]
+;  {($SHIP_UID != $VALUE01) && ($SHIP_UID != $VALUE06)} "[DP_DEP_ACC-HANDOFF]"
+;  {($SHIP_UID != $VALUE01) && ($SHIP_UID != $VALUE06)} "[DP_DEP_ACC-HANDOFF_LAST]"
+;  {$SHIP_UID == $VALUE01} "[EV_DEP_GREETINGGS_02]"
+;  {$SHIP_UID == $VALUE06} "[EV_DEP_GREETINGGS_03]"
+;  {$SHIP_UID == $VALUE03} #SUBCODE(EV_R-CHANGE_CREAR)
+  {$USERFLAG17 != 1} #ALT(0)
+  {$SHIP_ARR_RJTT == 1} "[DP_DEP_APP-HANDOFF]"
+  {$SHIP_ARR_RJTT == 1} #HANDOFF(END)
+  "[DP_DEP_ACC-HANDOFF]"
+  "[DP_DEP_ACC-HANDOFF_LAST]"
+  #HANDOFF(END)
+
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; Takeoff State
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機の離陸許可指示（走行中）
+[DP_TWR_TAKEOFF_LOOP:Waiting for takeoff:離陸許可できます]
+  <DP_TAKEOFF_EXECUTE>
+  <DP_LINE-UP_EXECUTE>
+  <DP_HOLD-SHORT_FLAG>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機の離陸許可指示（滑走路進入中）
+[DP_TWR_LINE-UP_LOOP:Line up and wait:離陸許可できます]
+  <DP_TAKEOFF_EXECUTE>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機の離陸許可リクエスト開始（滑走路前待機)
+[DP_TWR_HOLD-SHORT]
+  #MAINMENU()
+  #SETUSERFLAG(18,1)
+  {$USERFLAG15 != 1} "[DP_TWR_HOLD-SHORT_REQ]"
+  #STATE(DP_TWR_HOLD-SHORT_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機の離陸許可リクエスト（滑走路前待機）
+[DP_TWR_HOLD-SHORT_LOOP:Hold short:離陸許可できます]
+  #SUBCODE(@98,DP_TWR_HOLD-SHORT,1,30)
+  {$USERFLAG15 == 1} #SUBCODE(@98,,3,120)
+  {$USERFLAG15 == 1} #SETUSERFLAG(15,0)
+  <DP_TAKEOFF_EXECUTE>
+  <DP_LINE-UP_EXECUTE>
+  <DP_HOLD-SHORT_EXECUTE>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機の離陸準備完了
+[DP_TWR_LINE-UP_COMP]
+  #MAINMENU()
+  "[DP_TWR_LINE-UP_REQ]"
+  #STATE(DP_TWR_LINE-UP_COMP_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機の離陸許可指示（滑走路内待機）
+[DP_TWR_LINE-UP_COMP_LOOP:Line up and wait:離陸許可できます]
+  #SUBCODE(@98,DP_TWR_LINE-UP_COMP,1,30)
+  <DP_TAKEOFF_EXECUTE>
+  <DP_TAKEOFF_HOLD>
+
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; Departure State
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機のレーダーコンタクト指示
+[DP_DEP_RDR-CONTACT:In flight:飛行中]
+  #SUBCODE(@98,DP_DEP_RDR-CONTACT_T-OUT,1,30)
+  <DP_RDR-CONTACT_EXECUTE>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機の自動レーダーコンタクト
+[DP_DEP_RDR-CONTACT_T-OUT]
+  #SCOREB(50)
+  #SUBCODE(@98,,2,0)
+  "[DP_DEP_RDR-CONTACT]"
+  #ALT(0)
+;  {$SHIP_UID == $VALUE07} #STATE(EV_DEP_EMG_LOOP)
+  #STATE(DP_DEP_DEPARTURE_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機の空中ルート変更指示
+[DP_DEP_DEPARTURE_LOOP:In flight:飛行中]
+;  {($USERFLAG17 != 1) && ($USERFLAG16 != 1) && ($ROUTE_TARGETCOUNT > 0)} <DP_RTE-CHANGE_SELECT>
+  {($USERFLAG17 != 1) && ($USERFLAG16 != 1) && ($SHIP_ALT > 4000) && ($SHIP_RWY_RWY16R == 1) && ($ROUTE_MARKER_Y != 1)} <DP_ALT-REST_CANCEL>
+  {($USERFLAG17 != 1) && ($USERFLAG16 != 1) && ($SHIP_ALT > 5000) && ($SHIP_RWY_RWY34L == 1) && ($ROUTE_MARKER_Y != 1)} <DP_ALT-REST_CANCEL>
+  {($SHIP_ALT > 12000) && ($SHIP_TYPE == 12)} #IAS(320)
+  {($SHIP_ALT > 12000) && ($SHIP_TYPE == 10)} #IAS(280)
+  {$SHIP_ALT > 14900} #STATE(DP_DEP_ACC-HANDOFF_ALT-SET)
+  #WAITSTATE(DP_DEP_DEPARTURE_LOOP,5)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機の空中ルート変更指示後音声【0047S】
+[DP_DEP_RTE-CHANGE_EXECUTE]
+  #EXECUTE(MAP_ROUTE_CHANGE)
+  #SETUSERFLAG(16,1)
+  "[DP_DEP_RTE-CHANGE]"
+  #STATE(DP_DEP_DEPARTURE_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発機の高度制限解除時の再設定
+[DP_DEP_ACC-HANDOFF_ALT-SET]
+  #MAINMENU()
+  #OVERALT(0)
+  #ALT(15000)
+  #STATE(DP_DEP_ACC-HANDOFF_LOOP)
+
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; Approach State
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のレーダーコンタクト指示
+[AP_APP_RDR-CONTACT:In flight:飛行中]
+  #SUBCODE(@98,AP_APP_RDR-CONTACT_T-OUT,1,30)
+  <AP_RDR-CONTACT_EXECUTE>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のレーダーコンタクトの指示時間超過
+[AP_APP_RDR-CONTACT_T-OUT]
+  #SUBCODE(@98,,2,0)
+  #SCOREB(50)
+  #COMMAND(AP_RDR-CONTACT_COMMON)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のTWRハンドオフ判定
+[AP_APP_TWR-HANDOFF_JUDGE]
+  {($USERFLAG14 == 1) && ($USERFLAG27 != 1)} #STATE(AP_APP_GA_HOLDING_INI)
+  {($USERFLAG25 == 1) && ($USERFLAG27 != 1)} #STATE(AP_APP_HOLDING_LOOP)
+  {$USERFLAG27 == 1} #STATE(AP_APP_HOLDING_BLANK)
+  {($SHIP_SECTION != 12) && ($SHIP_FLAG_CONTACTTWR != 1)} #STATE(AP_APP_APPROACH_LOOP)
+;  {($SHIP_SECTION != 12) && ($SHIP_FLAG_CONTACTTWR != 1) && ($SHIP_GOAROUNDED == 1)} #STATE(AP_APP_GA_LOOP)
+  {($SHIP_SECTION != 12) && ($SHIP_FLAG_CONTACTTWR == 1)} #STATE(AP_APP_TWR-HANDOFF_LOOP)
+  {$SHIP_SECTION == 12} #STATE(AP_TWR_LAND_CLEAR)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機の飛行中（メインループ）
+[AP_APP_APPROACH_LOOP:In flight:飛行中]
+  {($ROUTE_MARKER_X == 1) && ($USERFLAG01 == 0) && ($USERFLAG10 == 0) && ($USERFLAG12 == 0)} #STATE(AP_APP_APPROACH_CLEAR)
+  {($ROUTE_NAME_AP == 1) && ($SHIP_RWY_RWY34L == 1) && ($SHIP_DISTANCE <= 13) && ($SHIP_FLAG_CONTACTTWR != 1) && ($SHIP_SECTION == 20)} #STATE(AP_APP_TWR-HANDOFF_BACKUP)
+;  {($ROUTE_MARKER_R >= 2) && ($SHIP_RWY_RWY16R == 1) && ($USERFLAG01 == 0) && ($USERFLAG10 == 0) && ($USERFLAG12 == 0) && ($USERFLAG16 == 0)} <AP_STAR-REVISE_SELECT>
+  {($ROUTE_MARKER_X == 2) && ($USERFLAG01 == 0) && ($USERFLAG10 == 0) && ($USERFLAG12 == 0)} <AP_APPROACH_CLEAR_IDLE_EXECUTE>
+  {($SHIP_FLAG_RADARVECTOR == 1) && ($ROUTE_NAME_GA != 1) && ($USERFLAG10 == 0) && ($USERFLAG12 == 0) && ($USERFLAG25 == 0)} <AP_RDR-VECTOR_SELECT>
+  {($SHIP_FLAG_RADARVECTOR == 1) && ($ROUTE_NAME_GA != 1) && ($USERFLAG01 == 1) && ($USERFLAG10 == 0) && ($USERFLAG12 == 0)} <AP_FINAL-APP_EXECUTE>
+  {($ROUTE_MARKER_R >= 1) && ($USERFLAG02 == 0) && ($SHIP_GOAROUNDED == 0)} <AP_RWY-CHANGE_SELECT>
+  {($ROUTE_MARKER_R >= 1) && ($USERFLAG02 == 0) && ($SHIP_GOAROUNDED == 1)} <AP_GA_RWY-CHANGE_SELECT>
+  {($ROUTE_MARKER_H >= 1) && ($USERFLAG01 == 0) && ($USERFLAG10 == 0) && ($USERFLAG12 == 0)} #MESSAGE(Holding is possible:旋回待機できます)
+  {($ROUTE_MARKER_H == 1) && ($USERFLAG01 == 0) && ($USERFLAG10 == 0) && ($USERFLAG12 == 0)} <AP_HOLD_SELECT_STD>
+  {($ROUTE_MARKER_H == 2) && ($SHIP_RWY_RWY16R == 1) && ($USERFLAG01 == 0) && ($USERFLAG10 == 0) && ($USERFLAG12 == 0)} <AP_HOLD_SELECT_LAKES>
+  {($ROUTE_MARKER_H == 2) && ($SHIP_RWY_RWY34L == 1) && ($USERFLAG01 == 0) && ($USERFLAG10 == 0) && ($USERFLAG12 == 0)} <AP_HOLD_SELECT_CRSWY>
+  {($SHIP_ALT > 3000) && ($SHIP_ALT < 14000)} <AP_REDUCE-SPEED_SELECT>
+  {($SHIP_LOCKIAS >= 200) && ($ROUTE_NAME_AP == 1)} #IAS(0)
+  {($SHIP_ALT < 3000) && ($SHIP_LOCKIAS != 0)} #IAS(0)
+  #WAITSTATE(AP_APP_APPROACH_LOOP,10)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; ゴーアラウンド機の飛行中（メインループ）
+[AP_APP_GA_LOOP:In flight:飛行中]
+  #STATE(AP_APP_APPROACH_LOOP)
+
+;  {($ROUTE_MARKER_X == 1) && ($USERFLAG01 == 0) && ($USERFLAG10 == 0) && ($USERFLAG12 == 0)} #STATE(AP_APP_APPROACH_CLEAR)
+;  {$ROUTE_MARKER_Y == 1} #STATE(AP_APP_TWR-HANDOFF_BACKUP)
+;  {($ROUTE_NAME_AP == 1) && ($SHIP_RWY_RWY34L == 1) && ($SHIP_DISTANCE <= 13) && ($SHIP_FLAG_CONTACTTWR != 1) && ($SHIP_SECTION == 20)} #STATE(AP_APP_TWR-HANDOFF_BACKUP)
+;  {($ROUTE_MARKER_X == 2) && ($USERFLAG01 == 0) && ($USERFLAG10 == 0) && ($USERFLAG12 == 0)} <AP_APPROACH_CLEAR_IDLE_EXECUTE>
+;  {($SHIP_FLAG_RADARVECTOR == 1) && ($ROUTE_NAME_GA != 1) && ($USERFLAG10 == 0) && ($USERFLAG12 == 0) && ($USERFLAG25 == 0)} <AP_RDR-VECTOR_SELECT>
+;  {($SHIP_FLAG_RADARVECTOR == 1) && ($ROUTE_NAME_GA != 1) && ($USERFLAG01 == 1) && ($USERFLAG10 == 0) && ($USERFLAG12 == 0)} <AP_FINAL-APP_EXECUTE>
+;  {($ROUTE_MARKER_R == 1) && ($USERFLAG02 == 0)} <AP_GA_RWY-CHANGE_SELECT>
+;  {($ROUTE_MARKER_H >= 1) && ($USERFLAG01 == 0) && ($USERFLAG10 == 0) && ($USERFLAG12 == 0)} #MESSAGE(Holding is possible:旋回待機できます)
+;  {($ROUTE_MARKER_H == 1) && ($USERFLAG01 == 0) && ($USERFLAG10 == 0) && ($USERFLAG12 == 0)} <AP_HOLD_SELECT_STD>
+;  {($SHIP_ALT > 3000) && ($SHIP_ALT < 14000)} <AP_REDUCE-SPEED_SELECT>
+;  {($SHIP_LOCKIAS > 200) && (($ROUTE_NAME_AP == 1) || ($ROUTE_MARKER_X == 2))} #IAS(0)
+;  {($SHIP_ALT < 3000) && ($SHIP_LOCKIAS != 0)} #IAS(0)
+;  {$SHIP_ALT < 3000} #IAS(0)
+;  #WAITSTATE(AP_APP_GA_LOOP,10)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 
+[AP_APP_STAR-REVISE_MITO:STAR change:STARの変更]
+  #SETMARKER(R,0)
+  #SETUSERFLAG(16,1)
+  #ROUTECHANGETABLE(GP_AP16_MITO)
+  "[AP_APP_STAR-REVISE]"
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+[AP_APP_STAR-REVISE_DEJIMA:STAR change:STARの変更]
+  #SETMARKER(R,0)
+  #SETUSERFLAG(16,1)
+  #ROUTECHANGETABLE(GP_AP16_DEJIMA_NORTH)
+  "[AP_APP_STAR-REVISE]"
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+[AP_APP_STAR-REVISE_CRSWY:STAR change:STARの変更]
+  #SETMARKER(R,0)
+  #SETUSERFLAG(16,1)
+  #ROUTECHANGETABLE(GP_AP16_COURSEWAY)
+  "[AP_APP_STAR-REVISE]"
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機の減速
+[AP_REDUCE-SPEED_220:Reduce 220 knot:220減速]
+  #ENTRYSTATEPRIORITY()
+  "[AP_APP_REDUCE-SPEED_220]"
+  #IAS(220)
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+  
+[AP_REDUCE-SPEED_200:Reduce 200 knot:200減速]
+  #ENTRYSTATEPRIORITY()
+  "[AP_APP_REDUCE-SPEED_200]"
+  #IAS(200)
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+[AP_REDUCE-SPEED_180:Reduce 180 knot:180減速]
+  #ENTRYSTATEPRIORITY()
+  "[AP_APP_REDUCE-SPEED_180]"
+  #IAS(180)
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+[AP_REDUCE-SPEED_160:Reduce 160 knot:160減速]
+  #ENTRYSTATEPRIORITY()
+  "[AP_APP_REDUCE-SPEED_160]"
+  #IAS(160)
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+[AP_RESUME-SPEED_NORMAL:Resume normal speed:減速解除]
+  #ENTRYSTATEPRIORITY()
+  "[AP_APP_RESUME-SPEED]"
+  #IAS(0)
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機の旋回待機中の指示
+[AP_HOLD_EXECUTE_STD_A0000:Enter holding:飛行中]
+  #COMMAND(AP_HOLD_EXECUTE)
+
+[AP_HOLD_EXECUTE_STD_A1000:Enter holding:飛行中]
+  #OVERALT(1000)
+  #COMMAND(AP_HOLD_EXECUTE)
+
+[AP_HOLD_EXECUTE_STD_A2000:Enter holding:飛行中]
+  #OVERALT(2000)
+  #COMMAND(AP_HOLD_EXECUTE)
+
+[AP_HOLD_EXECUTE_STACK:Enter holding:飛行中]
+  #SETUSERFLAG(26,1)
+  #COMMAND(AP_HOLD_EXECUTE)
+
+[AP_HOLD_EXECUTE_STACK_7000:Enter holding:飛行中]
+  #SETUSERFLAG(26,1)
+  {$SHIP_RWY_RWY16R == 1} #OVERALT(1000)
+;  #ALT(7000)
+  #COMMAND(AP_HOLD_EXECUTE)
+
+[AP_HOLD_EXECUTE_STACK_6000:Enter holding:飛行中]
+  #SETUSERFLAG(26,1)
+  {$SHIP_RWY_RWY16R == 1} #OVERALT(0)
+  {$SHIP_RWY_RWY34L == 1} #OVERALT(2000)
+;  #ALT(6000)
+  #COMMAND(AP_HOLD_EXECUTE)
+
+[AP_HOLD_EXECUTE_STACK_5000:Enter holding:飛行中]
+  #SETUSERFLAG(26,1)
+  {$SHIP_RWY_RWY16R == 1} #OVERALT(-1000)
+  {$SHIP_RWY_RWY34L == 1} #OVERALT(1000)
+;  #ALT(5000)
+  #COMMAND(AP_HOLD_EXECUTE)
+
+[AP_HOLD_EXECUTE_STACK_4000:Enter holding:飛行中]
+  #SETUSERFLAG(26,1)
+  {$SHIP_RWY_RWY34L == 1} #OVERALT(0)
+;  #ALT(4000)
+  #COMMAND(AP_HOLD_EXECUTE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機の旋回待機中の指示
+[AP_HOLD_ALT_A1:Change altitude:高度変化]
+;  #ALT(7000)
+  #OVERALTREL(1000)
+  "[AP_APP_HOLD_ALT_CLIMB]"
+  {$ROUTE_NAME_HD == 1} #STATE(AP_APP_HOLDING_LOOP)
+  {$ROUTE_NAME_GA == 1} #STATE(AP_APP_GA_HOLDING_INI)
+
+[AP_HOLD_ALT_B1:Change altitude:高度変化]
+;  #ALT(4000)
+  #OVERALTREL(-1000)
+  "[AP_APP_HOLD_ALT_DESCEND]"
+  {$ROUTE_NAME_HD == 1} #STATE(AP_APP_HOLDING_LOOP)
+  {$ROUTE_NAME_GA == 1} #STATE(AP_APP_GA_HOLDING_INI)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機の旋回待機中の指示
+[AP_APP_HOLDING_LOOP:Holding:旋回待機中]
+  {($ROUTE_NAME_HD == 1) && ($USERFLAG26 == 1)} <AP_HOLD_STACK_ALT-CHANGE>
+  {($ROUTE_NAME_HD == 1) && ($USERFLAG26 == 1) && ($SHIP_OVERALT <= 0)} <AP_HOLD_CANCEL>
+;  {($ROUTE_NAME_HD == 1) && ($USERFLAG26 == 1) && ($SHIP_RWY_RWY16R == 1) && ($SHIP_LOCKALT <= 6000)} <AP_HOLD_CANCEL>
+;  {($ROUTE_NAME_HD == 1) && ($USERFLAG26 == 1) && ($SHIP_RWY_RWY34L == 1) && ($SHIP_LOCKALT == 4000)} <AP_HOLD_CANCEL>
+  {($ROUTE_NAME_HD == 1) && ($USERFLAG26 == 0)} <AP_HOLD_STD_ALT-CHANGE>
+  {($ROUTE_NAME_HD == 1) && ($USERFLAG26 == 0)} <AP_HOLD_CANCEL>
+  {($SHIP_ALT > 3000) && ($SHIP_ALT < 14000)} <AP_HOLD_SPEED_SELECT>
+  
+[AP_APP_GA_HOLDING_INI:Holding:旋回待機中]
+  {$ROUTE_NAME_HD == 1} #STATE(AP_APP_HOLDING_LOOP)
+  <AP_HOLD_STD_ALT-CHANGE>
+  <AP_GA_HOLD_INI_CANCEL>
+  {($SHIP_ALT > 3000) && ($SHIP_ALT < 14000)} <AP_HOLD_SPEED_SELECT>
+  
+; LOCKALT test variables
+;  {$SHIP_LOCKALT == 7000} #MESSAGE(SHIP_LOCKALT VAR 7k:SHIP_LOCKALT VAR 7k)
+;  {$SHIP_LOCKALT == 6000} #MESSAGE(SHIP_LOCKALT VAR 6k:SHIP_LOCKALT VAR 6k)
+;  {$SHIP_LOCKALT == 5000} #MESSAGE(SHIP_LOCKALT VAR 5k:SHIP_LOCKALT VAR 5k)
+;  {$SHIP_LOCKALT == 4000} #MESSAGE(SHIP_LOCKALT VAR 4k:SHIP_LOCKALT VAR 4k)
+;  {$SHIP_LOCKALT == 3000} #MESSAGE(SHIP_LOCKALT VAR 3k:SHIP_LOCKALT VAR 3k)
+; LOCAKLT (#ALT) and #ALTREL variables are unreliable, do not use
+
+[AP_APP_HOLDING_BLANK:Holding:飛行中]
+  {($SHIP_ALT > 3000) && ($SHIP_ALT < 14000)} <AP_REDUCE-SPEED_SELECT>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機の空中ルート変更指示後音声
+[AP_APP_RTE-CHANGE_EXECUTE:In flight:飛行中]
+;  {($VALUE04 == $SHIP_UID) || ($VALUE05 == $SHIP_UID) || ($VALUE07 == $SHIP_UID)} #SUBCODE(@98,,2,500)
+;  {$VALUE02 == $SHIP_UID} "[EV_APP_DELAY_01]"
+  #EXECUTE(MAP_ROUTE_CHANGE)
+  #SETMARKER(X,0)
+  #SETMARKER(R,0)
+  #SETUSERFLAG(10,1)
+;  {$SHIP_TYPE == 12} #IAS(250)
+;  {$VALUE02 == $SHIP_UID} "[EV_APP_DELAY_02]"
+;  {$VALUE02 == $SHIP_UID} #STATE(EV_DELAY_01_COP02)
+;  {($VALUE04 == $SHIP_UID) || ($VALUE05 == $SHIP_UID) || ($VALUE07 == $SHIP_UID)} "[EV_AP_APP_SHORTCUT_RWY34]"
+;  {($VALUE04 == $SHIP_UID) || ($VALUE05 == $SHIP_UID) || ($VALUE07 == $SHIP_UID)} #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+  "[AP_APP_SHORTCUT]"
+;  {($SHIP_RWY_RWY16L == 1) || ($SHIP_RWY_RWY16R == 1)} "[AP_APP_SHORTCUT_RWY16]"
+;  {($SHIP_RWY_RWY34L == 1) || ($SHIP_RWY_RWY34R == 1)} "[AP_APP_SHORTCUT_RWY34]"
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機が飛行中（タワーハンドオフのループ）
+[AP_APP_TWR-HANDOFF_LOOP:Handoff is possible:ハンドオフできます]
+  {$SHIP_LOCKIAS != 0} #IAS(0)
+  {($SHIP_RWY_RWY34L == 1) && ($SHIP_FLAG_GEARDOWN != 1)} #FLAG(GEARDOWN)
+  {$ROUTE_MARKER_Y == 1} #STATE(AP_APP_TWR-HANDOFF_REQ)
+  <AP_TWR-HANDOFF_EXECUTE>
+  #WAITSTATE(AP_APP_TWR-HANDOFF_LOOP,10)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機の着陸許可（タワーハンドオフの直後）
+[AP_TWR_LAND_CLEAR:Landing clearance possible:着陸許可できます]
+  #SUBCODE(@98,AP_TWR_LAND_CLEAR_T-OUT,1,20)
+  <AP_CLEARED-TO-LAND_EXECUTE>
+  <AP_GA_EXECUTE>
+  <AP_CONTINUE-APP_EXECUTE>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機の着陸許可のタイムアウト（コンテニューアプローチ）
+[AP_TWR_LAND_CLEAR_T-OUT]
+  #COMMAND(AP_CONTINUE-APP_EXECUTE)
+;  #SUBCODE(@98,,3,999)
+;  {$WIND_SPEED >= 4} "[AP_TWR_CONTINUE-APP]"
+;  {$WIND_SPEED < 4} "[AP_TWR_CONTINUE-APP_CM]"
+;  #STATE(AP_TWR_LAND_CLEAR_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機の着陸許可のメインループ
+[AP_TWR_LAND_CLEAR_LOOP:Landing clearance possible:着陸許可できます]
+  {$SHIP_DISTANCE <= 5} #STATE(AP_TWR_LAND_CLEAR_REQ)
+  <AP_CLEARED-TO-LAND_EXECUTE>
+  <AP_GA_EXECUTE>
+  {$SHIP_ALT < 3000} #IAS(0)
+  #WAITSTATE(AP_TWR_LAND_CLEAR_LOOP,5)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機の着陸許可リクエスト
+[AP_TWR_LAND_CLEAR_REQ]
+  #MAINMENU()
+  "[AP_TWR_CLEARED-TO-LAND_REQ]"
+  #SETUSERFLAG(3,1)
+  #SUBCODE(@98,,2,0)
+  #STATE(AP_TWR_LAND_CLEAR_REQ_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機の着陸許可リクエスト
+[AP_TWR_LAND_CLEAR_REQ_LOOP:Landing Clearance request:着陸許可できます]
+  #SUBCODE(@98,AP_TWR_LAND_CLEAR_REQ_T-OUT,1,20)
+  <AP_CLEARED-TO-LAND_EXECUTE>
+  <AP_GA_EXECUTE>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 着陸許可リクエスト（自動ゴーアラウンド）
+[AP_TWR_LAND_CLEAR_REQ_T-OUT:Go around:パイロット判断で着陸復行します]
+  #SUBCODE(@98,,2,0)
+  #EXECUTE(GOAROUND)
+  #SCOREB(50)
+  #STATE(AP_TWR_GA_AUTO_BFORE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; ルート変更をしなかった場合のアプローチクリアランス
+[AP_APP_APPROACH_CLEAR:In flight:飛行中]
+  #MAINMENU()
+  #SETUSERFLAG(10,1)
+  #SETUSERFLAG(11,1)
+  "[AP_APP_APPROACH_CLEAR_REQ]"  
+  #STATE(AP_APP_APPROACH_CLEAR_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; ルート変更をしなかった場合のアプローチクリアランス（ループ）
+[AP_APP_APPROACH_CLEAR_LOOP:In flight:飛行中]
+  #SUBCODE(@98,AP_APP_APPROACH_CLEAR_T-OUT,1,20)
+  <AP_APPROACH_CLEAR_EXECUTE>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; ルート変更をしなかった場合のアプローチクリアランスの指示時間超過
+[AP_APP_APPROACH_CLEAR_T-OUT:In flight:飛行中]
+  #SUBCODE(@98,,2,0)
+  #SCOREB(50)
+  #SETMARKER(Y,0)
+  #SETMARKER(X,0)
+  #SETUSERFLAG(11,0)
+  #SETUSERFLAG(12,1)
+  "[AP_APP_APPROACH_CLEAR]"
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------   
+; ルート変更をした場合のアプローチクリアランス（直行許可も同時に行う）
+[AP_APP_DIRECT-DP_CLEAR:In flight:飛行中]
+  #SETUSERFLAG(12,1)
+  "[AP_APP_APPROACH_CLEAR_REQ]" 
+  #STATE(AP_APP_DIRECT-DP_CLEAR_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------   
+; ルート変更をした場合のアプローチクリアランス（直行許可も同時に行う）（ループ）
+[AP_APP_DIRECT-DP_CLEAR_LOOP:In flight:飛行中]
+  #SUBCODE(@98,AP_APP_DIRECT-DP_CLEAR_T-OUT,1,20)
+  <AP_DIRECT-DP_CLEAR_SELECT>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------   
+; ルート変更をした場合のアプローチクリアランスの指示時間超過
+[AP_APP_DIRECT-DP_CLEAR_T-OUT:In flight:飛行中]
+  #SUBCODE(@98,,2,0)
+  #SCOREB(50)
+  #MAINMENU()
+  #FLAG(RADARVECTOR,0)
+  #SETUSERFLAG(12,1)
+  #ROUTECHANGEFINAL()
+;  "[AP_APP_RDR-VECTOR_END]"
+  {$SHIP_RWY_RWY16R == 1} "[AP_APP_RDR-VECTOR_END_LAKES]"
+  {$SHIP_RWY_RWY34L == 1} "[AP_APP_RDR-VECTOR_END_CRSWY]"
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------   
+; 到着機が最終進入したとき
+[AP_APP_FINAL-APP_CLEAR_EXECUTE]
+  #SUBCODE(@98,,2,500)
+  #MAINMENU()
+  #FLAG(RADARVECTOR,0)
+  #SETUSERFLAG(12,1)
+  #ROUTECHANGEFINAL()
+;  "[AP_APP_RDR-VECTOR_END]"
+  {$SHIP_RWY_RWY16R == 1} "[AP_APP_RDR-VECTOR_END_LAKES]"
+  {$SHIP_RWY_RWY34L == 1} "[AP_APP_RDR-VECTOR_END_CRSWY]"
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; Landing State
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機の着陸許可後のゴーアラウンド指示
+[AP_TWR_FINAL-APP:Landing authorized:最終進入中]
+  {($SHIP_ALT < 3000) && ($SHIP_LOCKIAS != 0)} #IAS(0)
+  {($SHIP_RWY_RWY34L == 1) && ($SHIP_FLAG_GEARDOWN != 1) && ($SHIP_DISTANCE <= 13)} #FLAG(GEARDOWN)
+  <AP_GA_EXECUTE>
+  #WAITSTATE(AP_TWR_FINAL-APP,10)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機の滑走路離脱タクシーウェイ選択
+[AP_TWR_TURN-PONT_SELECT:Instruct turning point:滑走路離脱ポイントを選択できます]
+;  {$SHIP_UNIQUE_HEAVY != 1} <AP_AVAILABLE-TWY_EXECUTE>
+  <AP_AVAILABLE-TWY_EXECUTE>
+  {$SHIP_RWY_RWY16L == 1} <AP_FAROUT-TWY_LEFT_EXECUTE>
+  {$SHIP_RWY_RWY16L == 1} <AP_FAROUT-TWY_RIGHT_EXECUTE>
+  {$SHIP_RWY_RWY16R == 1} <AP_FAROUT-TWY_LEFT_EXECUTE>
+  {$SHIP_RWY_RWY34L == 1} <AP_FAROUT-TWY_RIGHT_EXECUTE>
+  {$SHIP_RWY_RWY34R == 1} <AP_FAROUT-TWY_LEFT_EXECUTE>
+
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; Goaround State
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のゴーアラウンド指示後（滑走路進入前）
+[AP_TWR_GA_BFORE:Go around:着陸復行中]
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のゴーアラウンド指示後（滑走路進入前）
+[AP_TWR_GA_AUTO_BFORE:パイロット判断で着陸復行中]
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のゴーアラウンド実行（滑走路上を飛行中
+[AP_TWR_GA_EXECUTE:Go around:着陸復行中]
+  #WAIT(30)
+  "[AP_TWR_GA_EXECUTE]"
+  #SETUSERFLAG(8,1)
+  #SETUSERFLAG(2,0)
+  #SETUSERFLAG(3,0)
+  #SETUSERFLAG(5,0)
+  #SETUSERFLAG(10,0)
+  #SETUSERFLAG(12,0)
+  #SETUSERFLAG(21,0)
+  #SETMARKER(X,0)
+  #SETMARKER(Y,0)
+  #SETMARKER(Z,0)
+  #SETMARKER(R,0)
+  #SETMARKER(H,0)
+  #STATE(AP_TWR_GA_DEP-HANDOFF_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のゴーアラウンド後のDEPハンドオフ
+[AP_TWR_GA_DEP-HANDOFF_LOOP:Handoff is possible:ハンドオフできます]
+  #SUBCODE(@98,AP_TWR_GA_DEP-HANDOFF_T-OUT,1,30)
+  <AP_GA_DEP-HANDOFF_EXECUTE>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のゴーアラウンド後のDEPハンドオフの指示時間超過
+[AP_TWR_GA_DEP-HANDOFF_T-OUT:Go around:飛行中]
+  #SCOREB(50)
+  #SUBCODE(@98,,2,0)
+  "[AL_TWR_DEP-HANDOFF]"
+  #WAIT(3)
+  #HANDOFF(DEP)
+  "[AP_DEP_GA_INI-CONTACT]"
+  #STATE(AP_TWR_GA_APP-HANDOFF_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のゴーアラウンド後のAPPハンドオフ
+[AP_TWR_GA_APP-HANDOFF_LOOP:Contact approach:ハンドオフできます]
+  #SUBCODE(@98,AP_TWR_GA_APP-HANDOFF_T-OUT,1,30)
+  <AP_GA_APP-HANDOFF_EXECUTE>
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のゴーアラウンド後のAPPハンドオフの指示時間超過
+[AP_TWR_GA_APP-HANDOFF_T-OUT:Handoff:飛行中]
+  #SCOREB(50)
+  #SUBCODE(@98,,2,0)
+  "[AP_DEP_GA_APP-HANDOFF]"
+  #WAIT(3)
+  #HANDOFF(APP)
+;  {$SHIP_SECTION_AUTO == 1} #STATE(AP_APP_GA_SHIP-DELETE)
+  "[AP_APP_GA_INI-CONTACT]"
+  #STATE(AP_APP_RDR-CONTACT)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機のAPPがオートだった場合はゴーアラウンド時に削除(24hシナリオ用
+[AP_APP_GA_SHIP-DELETE:Approach:飛行中]
+  #WAIT(60)
+  #HANDOFF(END)
+
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; Active Request State
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; シナリオ発行用State
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 着陸直前
+[%SNA_FINAL]
+  #EXECUTE(LANDING)
+  #SETUSERFLAG(21,1)
+  #STATE(AP_TWR_FINAL-APP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 離陸直前
+[%SNA_LINEUP]
+  #EXECUTE(TAKEOFF)
+  #MESSAGE(Takeoff:離陸中)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; グランドから開始
+[%SNA_RPGD_START]
+  #MESSAGE(Waiting:待機中)
+  #SETLOCAL(0,1)
+  #WAIT($SETUPVALUE)
+  #STATE(%CONTACT_DEL)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 滑走路内待機
+[%SNA_LINEUP_WAIT]
+  #EXECUTE(LINEUPANDWAIT)
+  #STATE(DP_TWR_LINE-UP_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; アプローチクリアランス
+[%SNA_APP_CLEAR]
+  #SETUSERFLAG(0,1)
+  #STATE(AP_APP_APPROACH_CLEAR)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; アプローチクリアランス前
+[%SNA_APP_LOOP]
+  #SETMARKER(R,0)
+  #SETUSERFLAG(0,1)
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+[%SNA_APP_LOOP2]
+  #SETUSERFLAG(0,1)
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; アプローチクリアランス後
+[%SNA_APP_AFTERCLEAR_LOOP]
+  #SETMARKER(R,0)
+  #SETMARKER(Y,0)
+  #SETMARKER(X,0)
+  #SETUSERFLAG(0,1)
+  #SETUSERFLAG(10,1)
+  #SETUSERFLAG(12,1)
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; TWRハンドオフ
+[%SNA_APP_TWR-HANDOFF]
+  #HANDOFF(TWR)
+  #MESSAGE(Handoff:最終進入中)
+  #WAIT(3)
+;  "[AP_TWR_INI-CONTACT]"
+  {$SHIP_RWY_RWY16R == 1} "[AP_TWR_INI-CONTACT_16]"
+  {$SHIP_RWY_RWY34L == 1} "[AP_TWR_INI-CONTACT_34]"
+  {($SHIP_RWY_RWY34L == 1) && ($SHIP_FLAG_GEARDOWN != 1)} #FLAG(GEARDOWN)
+  #STATE(AP_TWR_LAND_CLEAR)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 出発・到着・トーイング機の地上走行中
+[SNA_TAXI:Taxiing:走行中]
+  #EXECUTE(TAXI)
+  #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+;滑走路変更State
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機の滑走路変更の実行
+;[AP_APP_RWY-CHANGE_RWY16L]
+;  #ROUTEREPLACERUNWAY(RWY16L)
+;  #STATE(AP_APP_RWY-CHANGE_ATC)
+
+[AP_APP_RWY-CHANGE_RWY16R]
+  #ROUTEREPLACERUNWAY(RWY16R)
+  #STATE(AP_APP_RWY-CHANGE_ATC)
+
+[AP_APP_RWY-CHANGE_RWY34L]
+  #ROUTEREPLACERUNWAY(RWY34L)
+  #STATE(AP_APP_RWY-CHANGE_ATC)
+  
+;[AP_APP_RWY-CHANGE_RWY34R]
+;  #ROUTEREPLACERUNWAY(RWY34R)
+;  #STATE(AP_APP_RWY-CHANGE_ATC)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 到着機が滑走路変更した時のATC
+[AP_APP_RWY-CHANGE_ATC]
+;  "[AP_APP_RWY-CHANGE]"
+  {$SHIP_RWY_RWY16R == 1} "[AP_APP_RWY-CHANGE_16]"
+  {$SHIP_RWY_RWY34L == 1} "[AP_APP_RWY-CHANGE_34]"
+  #SETUSERFLAG(2,1)
+  #STATE(AP_APP_APPROACH_LOOP)
+
+;-----------------------------------------------------------------------------------------------------------------------------
+; GA機の滑走路変更の実行
+;[AP_APP_GA_RWY-CHANGE_RWY16L]
+;  #GOAROUNDROUTE(RWY16L)
+;  #STATE(AP_APP_GA_RWY-CHANGE_ATC)
+
+[AP_APP_GA_RWY-CHANGE_RWY16R]
+  #GOAROUNDROUTE(RWY16R)
+  #STATE(AP_APP_GA_RWY-CHANGE_ATC)
+
+[AP_APP_GA_RWY-CHANGE_RWY34L]
+  #GOAROUNDROUTE(RWY34L)
+  #STATE(AP_APP_GA_RWY-CHANGE_ATC)
+
+;[AP_APP_GA_RWY-CHANGE_RWY34R]
+;  #GOAROUNDROUTE(RWY34R)
+;  #STATE(AP_APP_GA_RWY-CHANGE_ATC)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; GA機が滑走路変更した時のATC
+[AP_APP_GA_RWY-CHANGE_ATC]
+  #SUBCODE(@98,,2,200)
+;  "[AP_APP_GA_RWY-CHANGE]"
+  {$SHIP_RWY_RWY16R == 1} "[AP_APP_GA_RWY-CHANGE_16]"
+  {$SHIP_RWY_RWY34L == 1} "[AP_APP_GA_RWY-CHANGE_34]"
+  #SETMARKER(R,0)
+  #SETUSERFLAG(2,1)
+;  #STATE(AP_APP_GA_LOOP)
+  #STATE(AP_APP_APPROACH_LOOP)
+
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+;チュートリアルState
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[%TU_SNA_FINAL]
+  #STATE(%SNA_FINAL)
+
+[%TU_GND_TAXI_LOOP]
+  #STATE(AL_RPGD_TAXI_LOOP)
+
+[%TU_GND_TAXI_HOLD_LOOP]
+  #STATE(AL_RPGD_TAXI_HOLD_LOOP)
+
+[%TU_DEP_DEPARTURE_LOOP]
+  #STATE(DP_DEP_DEPARTURE_LOOP)
+
+[%TU_SNA_APP_LOOP]
+  #STATE(%SNA_APP_LOOP)
+
+[%TU_SNA_TWR-HANDOFF]
+  #STATE(%%HANDOFF_TWR)
+
+[%TU_TWR_LAND_CLEAR_LOOP]
+  #STATE(AP_TWR_LAND_CLEAR_LOOP)
+
+[%TU_APP_APPROACH_LOOP]
+  #STATE(AP_APP_APPROACH_LOOP)
+
+[%TU_APP_RWY-CHANGE_LOOP]
+  #SETMARKER(R,1)
+  #STATE(AP_APP_APPROACH_LOOP)
+
+[%TU_LINE-UP_WAIT]
+  #SHIPREADYTIME(1430)
+
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+;イベントState
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[%EV_GREETINGGS_01_START]
+  #SETVALUE(0,$SHIP_UID)
+  #STATE(%SNA_RPGD_START)
+
+[%EV_GREETINGGS_02_START]
+  #SETVALUE(1,$SHIP_UID)
+
+[%EV_GREETINGGS_03_START]
+  #SETVALUE(6,$SHIP_UID)
+
+[%EV_DELAY_01_START]
+  #SETVALUE(2,$SHIP_UID)
+  #STATE(%APPROACH)
+
+[%EV_HOLD_START_POS1]
+  #EXECUTE(HOLDIN)
+  #OVERALTREL(2000)
+  #SETMARKER(R,0)
+  #STATE(AP_APP_HOLDING_BLANK)
+
+[%EV_HOLD_START_POS2]
+  #EXECUTE(HOLDIN)
+  #OVERALTREL(1000)
+  #SETMARKER(R,0)
+  #STATE(AP_APP_HOLDING_BLANK)
+
+[EV_DELAY_01_COP01:In flight:飛行中]
+  #SUBCODE(EV_DELAY_COP01_VOICE)
+  #SUBCODE(EV_DELAY_COP01_INSERT)
+  #WAIT(20)
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+[EV_DELAY_01_COP02:In flight:飛行中]
+  #SUBCODE(EV_DELAY_COP02_VOICE)
+  #SUBCODE(EV_DELAY_COP02_INSERT)
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+[%EV_R-CHANGE_01_START]
+  #SETVALUE(3,$SHIP_UID)
+
+[EV_RMP_R-CHANGE_REQ:Runway change request:滑走路変更リクエスト]
+  "[EV_DEP_R-CHANGE_01]"
+  #STATE(DP_RPGD_PUSHBACK_REQ_LOOP)
+
+;[EV_RMP_R-CHANGE_REQ_LOOP:Runway change request:滑走路変更リクエスト]
+;  #SUBCODE(@98,EV_RMP_R-CHANGE_REQ_T-OUT,1,30)
+;  <DP_RWY-CHANGE_SELECT>
+
+[EV_RMP_R-CHANGE_REQ_T-OUT:Runway change request:滑走路変更リクエスト]
+  #SUBCODE(@98,,2,0)
+  #SOCOREB(50)
+  "[EV_RMP_RWY-CHANGE_RWY16R]"
+  #SETUSERFLAG(2,1)
+  #SETUSERFLAG(4,1)
+  #ROUTECHANGETABLE(GP_DP_16R_TETRA_A)
+  #STATE(DP_RPGD_PUSHBACK_REQ_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 燃料が少ない機体の初期設定
+[%EV_MDFUEL_START]
+  {$SHIP_SPEC_LETTER3_TEU == 1} #SETVALUE(4,$SHIP_UID)
+  {$SHIP_SPEC_LETTER3_TNO == 1} #SETVALUE(5,$SHIP_UID)
+  #STATE(%APPROACH)
+
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 燃料が少ない機体のショートカット指示
+[EV_MDFUEL_SHORTCUT_REQ]
+  {$SHIP_SPEC_LETTER3_TEU == 1} #SUBCODE(EV_OUT_OF_FUEL_TEU)
+  {$SHIP_SPEC_LETTER3_TNO == 1} #SUBCODE(EV_OUT_OF_FUEL_TNO)
+  {$SHIP_SPEC_LETTER3_TEU == 1} "[EV_APP_MDFUEL_REQ_TEU]"
+  {$SHIP_SPEC_LETTER3_TNO == 1} "[EV_APP_MDFUEL_REQ_TNO]"
+  #STATE(EV_MDFUEL_SHORTCUT_REQ_LOOP)
+
+[EV_MDFUEL_SHORTCUT_REQ_LOOP:Direct Request:直行許可リクエスト]
+  #SUBCODE(@98,EV_MDFUEL_SHORTCUT_REQ_T-OUT,1,30)
+  <EV_MDFUEL_SHORTCUT_CLEAR>
+
+[EV_MDFUEL_SHORTCUT_REQ_T-OUT]
+  #SUBCODE(@98,,2,500)
+  #SCOREB(50)
+  #ROUTECHANGEPOINT(@D)
+  #SETMARKER(X,0)
+  #SETMARKER(R,0)
+  #SETUSERFLAG(10,1)
+  {$SHIP_TYPE == 12} #IAS(250)
+  #ROUTECHANGETABLE()
+  {($SHIP_RWY_RWY34L == 1) || ($SHIP_RWY_RWY34R == 1)} "[AP_APP_SHORTCUT_RWY34]"
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 病人がでて引き返しの初期設定
+[%EV_EMG_START]
+  #SETVALUE(7,$SHIP_UID)
+  #SETLOCAL(1,0)
+  #STATE(AL_RPGD_TAXI_LOOP)
+
+[EV_DEP_EMG_LOOP:In flight:飛行中]
+  {$SHIP_ALT > 12000} #STATE(EV_DEP_EMG_CALL)
+  #WAITSTATE(EV_DEP_EMG_LOOP,5)
+
+[EV_DEP_EMG_CALL:In flight:飛行中]
+  #SUBCODE(EV_EMG_START_I-CAT)
+  "[EV_DP_DEP_EMG_01]"
+  #STATE(EV_DEP_EMG_CALL_LOOP)
+
+[EV_DEP_EMG_CALL_LOOP:In flight:飛行中]
+  #SUBCODE(@98,EV_DEP_EMG_CALL_T-OUT,1,30)
+  <EV_DEP_EMG_CALL_RUN>
+
+[EV_DEP_EMG_CALL_T-OUT:In flight:飛行中]
+  #SUBCODE(@98,,2,500)
+  #SCOREB(50)
+  "[EV_DP_DEP_EMG_02_A]"
+  #ALT(12000)
+  "[EV_DP_DEP_EMG_02_B]"
+  #SUBCODE(EV_EMG_START_BGMCHANGE)
+  "[EV_DP_DEP_EMG_02_C]"
+  #STRIPARR(RJAA)
+  #STRIPMODE(ARR)
+  #HANDOFF(APP)
+  #STATE(EV_APP_EMG_RDR-CONTACT)
+
+[EV_APP_EMG_RDR-CONTACT:In flight:飛行中]
+  #WAIT(3)
+  "[EV_DP_DEP_EMG_03]"
+  #STATE(EV_APP_EMG_RDR-CONTACT_LOOP)
+
+[EV_APP_EMG_RDR-CONTACT_LOOP:In flight:飛行中]
+  #SUBCODE(@98,EV_APP_EMG_RDR-CONTACT_T-OUT,1,30)
+  <EV_AP_RDR-CONTACT_EXECUTE>
+
+[EV_APP_EMG_RDR-CONTACT_T-OUT:In flight:飛行中]
+  #SUBCODE(@98,,2,500)
+  #SCOREB(50)
+  "[EV_DP_DEP_EMG_04]"
+  #ALT(10000)
+  #SETLOCAL(1,1)
+  #SUBCODE(EV_EMG_SHIP-ANNOUNCE)
+  #STATE(EV_APP_EMG_LOOP)
+
+[EV_APP_EMG_LOOP:Approach:飛行中]
+  {($SHIP_ALT < 10000) && ($LOCAL01 == 1)} #STATE(EV_EMG_R-VECTOR)
+  {($SHIP_ALT < 7000) && ($LOCAL01 == 2)} #STATE(EV_EMG_SHORTCUT_REQ)
+  #WAITSTATE(EV_APP_EMG_LOOP,10)
+
+[EV_EMG_R-VECTOR:Radar Vector:レーダーベクター指示]
+  "[EV_DP_DEP_EMG_05]"
+  #STATE(EV_EMG_R-VECTOR_LOOP)
+
+[EV_EMG_R-VECTOR_LOOP:Radar Vector:レーダーベクター指示]
+  #SUBCODE(@98,EV_EMG_R-VECTOR_T-OUT,1,30)
+  <EV_EMG_R-VECTOR_EXECUTE>
+
+[EV_EMG_R-VECTOR_T-OUT:Radar Vector:レーダーベクター指示]
+  #SUBCODE(@98,,2,500)
+  #SCOREB(50)
+  "[EV_DP_DEP_EMG_06]"
+  #HDG(80)
+  #ALT(7000)
+  #SETLOCAL(1,2)
+  #SUBCODE(EV_EMG_COMPANY-ATC)
+  #STATE(EV_APP_EMG_LOOP)
+
+[EV_EMG_SHORTCUT_REQ:Direct Request:直行許可リクエスト]
+  "[EV_DP_DEP_EMG_07]"
+  #STATE(EV_EMG_SHORTCUT_REQ_LOOP)
+
+[EV_EMG_SHORTCUT_REQ_LOOP:Direct Request:直行許可リクエスト]
+  #SUBCODE(@98,EV_EMG_SHORTCUT_REQ_T-OUT,1,30)
+  <EV_EMG_SHORTCUT_CLEAR>
+
+[EV_EMG_SHORTCUT_REQ_T-OUT]
+  #SUBCODE(@98,,2,500)
+  #SCOREB(50)
+  #SETMARKER(X,0)
+  #SETMARKER(R,0)
+  #SETUSERFLAG(10,1)
+  "[EV_DP_DEP_EMG_08]"
+  {$SHIP_TYPE == 12} #IAS(250)
+  #SHIPTIMELIMIT(6)
+  #STRIPMODE(ARR)
+  #ROUTECHANGETABLE(GP_AP_34L_RUTAS_T_EV)
+  #FLAG(CONTACTTWR)
+;  #ROUTECHANGEPOINT(@D)
+  #STATE(AP_APP_TWR-HANDOFF_JUDGE)
+
+

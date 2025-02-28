@@ -1,0 +1,17 @@
+[HEADER]
+name=RWY34L
+x=140:23:08.000
+z=35:45:55.000
+staff=
+comment=Threshold displaced 750m
+count=2
+[OPTION]
+mode=RUNWAY
+alt=1000
+angle=3
+length=3
+slide=450
+[POINT]
+;253.74,42.9994,-2074.75
+-125.38,42.9994,-1427.63
+-1554.52,42.9994,1011.74

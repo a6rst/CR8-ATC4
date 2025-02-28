@@ -1,0 +1,14 @@
+[HEADER]
+name=AC_CVC_LAKE
+x=140:23:08
+z=35:45:55
+staff=
+comment=No midpoint allowed between @H2 and LAKE holding pattern
+count=4
+[OPTION]
+hold=HD_LAKE_L272_SNE_CVCen.ard
+[POINT]
+37383.33,2743.20,-4316.53,0,CVC
+23128.57,2286.00,8908.40,0,@H2
+8873.81,1828.80,22133.34,0,LAKE@H0
+6701.31,1828.80,21986.41,0,LAKE

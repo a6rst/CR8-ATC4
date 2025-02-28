@@ -1,0 +1,17 @@
+[HEADER]
+name=AP_VISAP_RWY34_YQ
+display=Visual_approach_RWY34
+x=140:23:08
+z=35:45:55
+staff=Instructor
+comment=ProcAlt - 39.31m due to no implemetation of DTHR
+count=2
+[OTHERS]
+CODE=VISAPCH_RWY34
+[POINT]
+4428.46,472.14,-9201.87,0,YQ@L@Y2
+2265.84,251.32,-5509.17,145,
+
+;1886.72,251.32,-4862.05,145,CR8_MAPt
+;2683.17,333.78,-6221.50,0,MAPt
+;-125.38,42.9994,-1427.63,0,TDZ

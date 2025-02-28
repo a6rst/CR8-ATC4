@@ -1,0 +1,17 @@
+<?VoiceActManager version="1.0"?>
+<!-- FA Voice Script “ú–{Œê”Å -->
+<VoiceScript>
+	<Book name="FA">
+		<script no="0" string=""/>
+		<script no="1" string=""/>
+		<script no="2" string=""/>
+		<script no="3" string=""/>
+		<script no="4" string=""/>
+		<!--script no="0" string="cabinsigns cabinsigns cabinsigns cabinsigns"/>
+		<script no="1" string="cabinsigns cabinsigns cabinsigns cabinsigns"/>
+		<script no="2" string="cabinsigns cabinsigns"/>
+		<script no="3" string="cabinsigns cabinsigns cabinsigns cabinsigns"/>
+		<script no="4" string="cabinsigns cabinsigns"/-->
+	</Script>
+</VoiceScript>
+

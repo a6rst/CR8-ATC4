@@ -1,0 +1,10 @@
+[HEADER]
+name=D1_KF_RWY34
+x=140:23:08
+z=35:45:55
+staff=Instructor
+comment=
+count=2
+[POINT]
+-2273.27,450.00,2237.67,0,
+-5286.19,750.00,7355.20,0,KF

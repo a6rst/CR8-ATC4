@@ -1,0 +1,1147 @@
+
+
+; @NLPG - Route with GWY segregation
+; @NLPT - Route all across
+
+; ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; 到着用ATC
+; ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; APPへのイニシャルコンタクト
+[AP_APP_INI-CONTACT]
+  "SHIP:@LAPP, @SCSN, leaving @SALT descending, we_have_information @XATS.:東京アプローチ管制、こちらは@SCSNです。高度@SALTftを降下中です。空港情報は@XATSを取得しています。"
+  
+[AP_APP_RDR-CONTACT]
+  "APP:@SCSN, @LAPP, radar_contact, cleared_for @RDAR, landing_RWY @RRWN.:@SCSN、こちらは東京アプローチ管制です。レーダーで捕捉しました。@RDARでの進入を許可します。使用滑走路は@RRWNです。"
+  "SHIP:Cleared_for @RDAR, landing_RWY @RRWN, @SCSN.:@RDARでの進入許可を確認、使用滑走路は@RRWN、了解しました。@SCSN。"
+
+[AP_APP_RDR-CONTACT_16]
+  "APP:@SCSN, @LAPP, radar_contact, cleared_for @RDAR, landing RWY16, descend 6000, QNH @WQNH.:@SCSN、こちらは東京アプローチ管制です。レーダーで捕捉しました。@RDARでの進入を許可します。使用滑走路は16です。6000ftまで下昇してください、QNHは@WQNH。"
+  "SHIP:Cleared_for @RDAR, landing RWY16, descending_to 6000, @SCSN.:@RDARでの進入許可を確認、使用滑走路は16。6000ftまで下昇します。@SCSN。"
+[AP_APP_RDR-CONTACT_34]
+  "APP:@SCSN, @LAPP, radar_contact, cleared_for @RDAR, landing RWY34, descend 4000, QNH @WQNH.:@SCSN、こちらは東京アプローチ管制です。レーダーで捕捉しました。@RDARでの進入を許可します。使用滑走路は34です。4000ftまで下昇してください、QNHは@WQNH。"
+  "SHIP:Cleared_for @RDAR, landing RWY34, descending_to 4000, @SCSN.:@RDARでの進入許可を確認、使用滑走路は34。4000ftまで下昇します。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; レーダーベクター
+[AP_APP_RDR-VECTOR_1ST]
+  "APP:@SCSN, @AAPP, vector_for @RDAP, turn_heading @SVCT.:@SCSN、こちらはアプローチ管制です。@RDAPへ誘導します。方位@SVCT°へ飛行してください。"
+  "SHIP:Vector_for @RDAP, turn_heading @SVCT, @SCSN.:@RDAPへの誘導了解しました。方位@SVCT°へ飛行します。@SCSN。"
+
+[AP_APP_RDR-VECTOR_2ND]
+  "APP:@SCSN, @AAPP, turn_heading @SVCT.:@SCSN、こちらはアプローチ管制です。方位@SVCT°へ飛行してください。"
+  "SHIP:Turn_heading @SVCT, @SCSN.:方位@SVCT°へ飛行します。@SCSN。"
+
+[AP_APP_RDR-VECTOR_END]
+  "APP:@SCSN, @AAPP, resume_own_navigation, direct @RRTP, descend_via_STAR @RTAT, cleared_for @RDAP.:@SCSN、こちらはアプローチ管制です。@RRTPへ直行してください。高度制限を遵守してください。@RTATftに降下。@RDAPへの進入を許可します。"
+  "SHIP:Direct @RRTP, descend_via_STAR @RTAT, cleared_for @RDAP, @SCSN.:@RDAPへの進入許可を確認しました。高度制限を遵守してください。@RTATftに降下。@RRTPへ直行します。@SCSN。"
+
+[AP_APP_RDR-VECTOR_END_LAKES]
+  "APP:@SCSN, @AAPP, intercept Moriya_092_radial, cleared_for @RDAP.:@SCSN、こちらはアプローチ管制です。@RDAPでの進入を許可、守谷VORラジアル092に乗ってください。"
+  "SHIP:Intercept Moriya_092_radial, cleared_for @RDAP, @SCSN.:@RDAPでの進入許可を確認、守谷VORラジアル092に乗ります。@SCSN。"
+
+[AP_APP_RDR-VECTOR_END_COSMO]
+  "APP:@SCSN, @AAPP, intercept Narita_156_radial, cleared_for @RDAP.:@SCSN、こちらはアプローチ管制です。@RDAPでの進入を許可、成田VORラジアル156に乗ってください。"
+  "SHIP:Intercept Narita_156_radial, cleared_for @RDAP, @SCSN.:@RDAPでの進入許可を確認、成田VORラジアル156に乗ります。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 滑走路変更
+[AP_APP_RWY-CHANGE]
+  "APP:@SCSN, change_landing_RWY_to @RRWY, cleared_for @RDAR.:@SCSN、着陸滑走路を@RRWNに変更、@RDARでの進入を許可します。"
+  "SHIP:Landing_RWY @RRWN, cleared_for @RDAR, @SCSN.:着陸滑走路を@RRWNに変更および、@RDARでの進入許可を確認しました。@SCSN。"
+
+[AP_APP_RWY-CHANGE_16]
+  "APP:@SCSN, change_landing_RWY_to RWY16, cleared_for @RDAR, descend 6000, QNH @WQNH.:@SCSN、着陸滑走路を16に変更、@RDARでの進入を許可します。6000ftまで下昇してください、QNHは@WQNH。"
+  "SHIP:Landing RWY16, cleared_for @RDAR, descending_to 6000, @SCSN.:着陸滑走路を16に変更および、@RDARでの進入許可を確認しました。6000ftまで下昇します。@SCSN。"
+[AP_APP_RWY-CHANGE_34]
+  "APP:@SCSN, change_landing_RWY_to RWY34, cleared_for @RDAR, descend 4000, QNH @WQNH.:@SCSN、着陸滑走路を34に変更、@RDARでの進入を許可します。4000ftまで下昇してください、QNHは@WQNH。"
+  "SHIP:Landing RWY34, cleared_for @RDAR, descending_to 4000, @SCSN.:着陸滑走路を34に変更および、@RDARでの進入許可を確認しました。4000ftまで下昇します。@SCSN。"
+
+[AP_APP_ARQ_RWY-CHANGE_16]
+  "SHIP:@AAPP, @SCSN, request RWY16.:アプローチ管制、こちらは@SCSNです。滑走路16へ着陸滑走路の変更を要請します。"
+[AP_APP_ARQ_RWY-CHANGE_34]
+  "SHIP:@AAPP, @SCSN, request RWY34.:アプローチ管制、こちらは@SCSNです。滑走路34へ着陸滑走路の変更を要請します。"
+
+[AP_APP_ARQ_RWY-CHANGE_UNABLE]
+  "APP:@SCSN, @AAPP, unable, landing @RRWY:@SCSN、こちらはアプローチ管制です。着陸滑走路の変更は許可できません。現在の経路を維持してください。"
+  "SHIP:Roger, @SCSN.:了解しました。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; STARの変更
+[AP_APP_STAR-REVISE_16]
+  "APP:@SCSN, @AAPP, recleared @RDAR, landing RWY16, descend 6000, QNH @WQNH.:@SCSN、こちらはアプローチ管制です。初期承認を修正する。@RDARでの進入を許可します。使用滑走路は16です。6000ftまで下昇してください、QNHは@WQNH。"
+  "SHIP:Recleared @RDAR, landing RWY16, descending_to 6000, @SCSN.:初期承認を修正する、@RDARでの進入許可を確認、使用滑走路は16。6000ftまで下昇します。@SCSN。"
+
+[AP_APP_STAR-REVISE_34]
+  "APP:@SCSN, @AAPP, recleared @RDAR, landing RWY34, descend 4000, QNH @WQNH.:@SCSN、こちらはアプローチ管制です。初期承認を修正する。@RDARでの進入を許可します。使用滑走路は34です。4000ftまで下昇してください、QNHは@WQNH。"
+  "SHIP:Recleared @RDAR, landing RWY34, descending_to 4000, @SCSN.:初期承認を修正する、@RDARでの進入許可を確認、使用滑走路は34。4000ftまで下昇します。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 
+[AP_APP_ARQ_VIS-APCH_16]
+  "SHIP:@AAPP, @SCSN, request visual_approach RWY16.:アプローチ、@SCSNです。Visual_approach RWY16への変更を要請します。"
+[AP_APP_ARQ_VIS-APCH_34]
+  "SHIP:@AAPP, @SCSN, request visual_approach RWY34.:アプローチ、@SCSNです。Visual_approach RWY34への変更を要請します。"
+
+[AP_APP_ARQ_VIS-APCH_UNABLE]
+  "APP:@SCSN, @AAPP, unable, continue present heading.:@SCSN、こちらはアプローチ管制です。ビジュアルアプローチの許可はできません。現在の方位を維持して飛行してください。"
+  "SHIP:Roger, @SCSN.:了解しました。@SCSN。"
+
+[AP_APP_VIS-APCH_16_TFP]
+  "APP:@SCSN, @AAPP, cleared_for visual_approach RWY16, proceed_direct Choshi, depart Choshi then direct Narita.:@SCSN、こちらはアプローチ管制です。Visual approach RWY16での進入を許可します。銚子VORTACを経由して成田VORDMEに向かってください。"
+  "SHIP:Cleared_for visual_approach RWY16, direct Choshi, depart Choshi then direct Narita, @SCSN.:Visual approach RWY16での進入許可を確認しました。銚子VORTACを経由して成田VORDMEに向かいます。@SCSN。"
+[AP_APP_VIS-APCH_16_DCT]
+  "APP:@SCSN, @AAPP, cleared_for visual_approach RWY16, proceed_direct Kuzumi.:@SCSN、こちらはアプローチ管制です。Visual approach RWY16での進入を許可します。久住NDBに直行してください。"
+  "SHIP:Cleared_for visual_approach RWY16, direct Kuzumi, @SCSN.:Visual approach RWY16での進入許可を確認しました。久住NDBに直行します。@SCSN。"
+
+[AP_APP_VIS-APCH_34_TFP]
+  "APP:@SCSN, @AAPP, cleared_for visual_approach RWY34, proceed_direct Narita.:@SCSN、こちらはアプローチ管制です。Visual approach RWY34での進入を許可します。成田VORDMEに直行してください。"
+  "SHIP:Cleared_for visual_approach RWY34, direct Narita, @SCSN.:Visual approach RWY34での進入許可を確認しました。成田VORDMEに直行します。@SCSN。"
+[AP_APP_VIS-APCH_34_DCT]
+  "APP:@SCSN, @AAPP, cleared_for visual_approach RWY34, proceed_direct Yokoshiba.:@SCSN、こちらはアプローチ管制です。Visual approach RWY34での進入を許可します。横芝NDBに直行してください。"
+  "SHIP:Cleared_for visual_approach RWY34, direct Yokoshiba, @SCSN.:Visual approach RWY34での進入許可を確認しました。横芝NDBに直行します。@SCSN。"
+
+[AP_APP_VIS-APCH_REPORT]
+  "APP:@SCSN, descend_and_maintain 4500, report_airport_insight.:@SCSN、4500ftまで降下し、空港を視認次第通報してください。"
+  "SHIP:Descend_and_maintain 4500, report_airport_insight, @SCSN.:4500ftまで降下し、空港を視認次第通報します。@SCSN。"
+
+[AP_APP_VIS-APCH_RANGE]
+  "SHIP:APP, @SCSN, airport_insight.:アプローチ管制、こちらは@SCSNです。空港を視認しました。"
+
+[AP_APP_TWR_VIS-APCH_DCT]
+  "APP:@SCSN, descend_and_maintain 1500, contact @LTWR @FTWR.:@SCSN、1500ftまで降下し、成田タワー管制にコンタクトしてください。周波数は@FTWRです。"
+  "SHIP:Descend_and_maintain 1500, contact @LTWR, @SCSN.:1500ftまで降下し、成田タワー管制にコンタクトします。@SCSN。"
+[AP_APP_TWR_VIS-APCH_TFP_L]
+  "APP:@SCSN, descend_and_maintain 1700, join to left downwind, contact @LTWR @FTWR.:@SCSN、1700ftまで降下し、ダウンウインドに合流してください。成田タワー管制にコンタクトしてください。周波数は@FTWRです。"
+  "SHIP:Descend_and_maintain 1700, join to left downwind, contact @LTWR, @SCSN.:1700ftまで降下し、ダウンウインドに合流します。成田タワー管制にコンタクトします。@SCSN。"
+[AP_APP_TWR_VIS-APCH_TFP_R]
+  "APP:@SCSN, descend_and_maintain 1700, join to right downwind, contact @LTWR @FTWR.:@SCSN、1700ftまで降下し、ダウンウインドに合流してください。成田タワー管制にコンタクトしてください。周波数は@FTWRです。"
+  "SHIP:Descend_and_maintain 1700, join to right downwind, contact @LTWR, @SCSN.:1700ftまで降下し、ダウンウインドに合流します。成田タワー管制にコンタクトします。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; ショートカット
+[AP_APP_SHORTCUT]
+  "APP:@SCSN, recleared_direct @RRTP, descend_via_STAR @RTAT until @RRTP, cleared_for @RDAP.:@SCSN。@RRTPへ直行してください。@RRTPは高度@RTATftで通過してください。高度制限を遵守してください。@RDAPでの進入を許可します。"
+  "SHIP:Direct @RRTP, descend_via_STAR @RTAT, cleared_for @RDAP, @SCSN.:@RDAPへの進入許可を確認しました。@RRTPへ直行し、高度@RTATftで通過します、高度制限を遵守してください。@SCSN。"
+
+[AP_APP_SHORTCUT_RWY16]
+  "APP:@SCSN, APP, recleared_direct @RRTP, maintain 6000 until @RRTP, cleared_for @RDAP.:@SCSN、こちらはアプローチ管制です。@RRTPへ直行してください。@RRTPは高度6000ftで通過してください。@RDAPでの進入を許可します。"
+  "SHIP:Direct @RRTP, descend 6000, cleared_for @RDAP, @SCSN.:@RDAPへの進入許可を確認しました。@RRTPへ直行し、高度6000ftで通過します。@SCSN。"
+
+[AP_APP_SHORTCUT_RWY34]
+  "APP:@SCSN, APP, recleared_direct @RRTP, maintain 4000 until @RRTP, cleared_for @RDAP.:@SCSN、こちらはアプローチ管制です。@RRTPへ直行してください。@RRTPは高度4000ftで通過してください。@RDAPでの進入を許可します。"
+  "SHIP:Direct @RRTP, descend 4000, cleared_for @RDAP, @SCSN.:@RDAPへの進入許可を確認しました。@RRTPへ直行し、高度4000ftで通過します。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; アプローチルートの進入許可
+[AP_APP_APPROACH_CLEAR]
+  "APP:@SCSN, @AAPP, cleared_for @RDAP.:@SCSN、こちらはアプローチ管制です。@RDAPへの進入を許可します。"
+  "SHIP:Cleared_for @RDAP, @SCSN.:@RDAPへの進入許可を確認しました。@SCSN。"
+
+[AP_APP_APPROACH_CLEAR_REQ]
+  "SHIP:@AAPP, @SCSN, request_approach_clearance.:アプローチ管制、こちらは@SCSNです。アプローチのクリアランスを要請します。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 速度変更
+[AP_APP_REDUCE-SPEED_220]
+  "APP:@SCSN, reduce_speed_to 220.:@SCSN、220ノットに減速してください。"
+  "SHIP:Reducing_to 220, @SCSN.:220ノットに減速します。@SCSN。"
+
+[AP_APP_REDUCE-SPEED_200]
+  "APP:@SCSN, reduce_speed_to 200.:@SCSN、200ノットに減速してください。"
+  "SHIP:Reducing_to 200, @SCSN.:200ノットに減速します。@SCSN。"
+
+[AP_APP_REDUCE-SPEED_180]
+  "APP:@SCSN, reduce_speed_to 180.:@SCSN、180ノットに減速してください。"
+  "SHIP:Reducing_to 180, @SCSN.:180ノットに減速します。@SCSN。"
+
+[AP_APP_REDUCE-SPEED_160]
+  "APP:@SCSN, reduce_speed_to 160.:@SCSN、160ノットに減速してください。"
+  "SHIP:Reducing_to 160, @SCSN.:160ノットに減速します。@SCSN。"
+
+[AP_APP_RESUME-SPEED]
+  "APP:@SCSN, comply_with_procedure_speed.:@SCSN、手順の速度を守って飛行してください。"
+  "SHIP:Comply_with_procedure_speed, @SCSN.:手順の速度を守って飛行します。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 旋回待機
+[AP_APP_HOLD_EXECUTE]
+  "APP:@SCSN, hold_over @RRTP, maintain @SLKA[0].:@SCSN、@RRTPを@SLKA[0]ftで旋回待機してください。"
+  "SHIP:Hold @RRTP, maintain @SLKA[0], @SCSN.:@SCSNは@RRTPを@SLKA[0]ftで旋回待機します。"
+
+[AP_APP_HOLD_EXECUTE_A1000]
+  "APP:@SCSN, hold_over @RRTP, maintain @SLKA[1000].:@SCSN、@RRTPを@SLKA[1000]で旋回待機してください。"
+  "SHIP:Hold @RRTP, maintain @SLKA[1000], @SCSN.:@SCSNは@RRTPを@SLKA[1000]で旋回待機します。"
+
+[AP_APP_HOLD_EXECUTE_A2000]
+  "APP:@SCSN, hold_over @RRTP, maintain @SLKA[2000].:@SCSN、@RRTPを@SLKA[2000]で旋回待機してください。"
+  "SHIP:Hold @RRTP, maintain @SLKA[2000], @SCSN.:@SCSNは@RRTPを@SLKA[2000]で旋回待機します。"
+
+[AP_APP_HOLD_EXECUTE_B1000]
+  "APP:@SCSN, hold_over @RRTP, maintain @SLKA[-1000].:@SCSN、@RRTPを@SLKA[-1000]で旋回待機してください。"
+  "SHIP:Hold @RRTP, maintain @SLKA[-1000], @SCSN.:@SCSNは@RRTPを@SLKA[-1000]で旋回待機します。"
+
+[AP_APP_HOLD_CANCEL_APCH]
+  "APP:@SCSN, cancel_approach_clearance, hold @RRTP, maintain @RTAT.:@SCSN、進入を許可は取り消されました、@RRTPを@RTATftで旋回待機してください。"
+  "SHIP:Cancel_approach_clearance, hold @RRTP, maintain @RTAT, @SCSN.:進入を許可は取り消されました、@RRTPを@RTATftで旋回待機します、@SCSN。"
+
+[AP_APP_HOLD_ALT_CLIMB]
+  "APP:@SCSN, climb_and_maintain @SLKA[1000].:@SCSN、@SLKA[1000]ftまで上昇してください。"
+  "SHIP:Climb_and_maintain @SLKA[1000], @SCSN.:@SLKA[1000]ftまで上昇します、@SCSN。"
+
+[AP_APP_HOLD_ALT_DESCEND]
+  "APP:@SCSN, descend_and_maintain @SLKA[-1000].:@SCSN、@SLKA[-1000]ftまで下昇してください。"
+  "SHIP:Descend_and_maintain @SLKA[-1000], @SCSN.:@SLKA[-1000]ftまで下昇します、@SCSN。"
+
+[AP_APP_HOLD_CANCEL]
+  "APP:@SCSN, depart hold, continue approach.:@SCSN、旋回待機を解除して進入を継続してください。"
+  "SHIP:Continue approach, @SCSN.:進入を継続します。@SCSN。"
+
+[AP_APP_GA_HOLD_CANCEL_16]
+  "APP:@SCSN, depart hold, cleared_for @RDAR, landing RWY16, descend 6000, QNH @WQNH.:@SCSN、旋回待機を解除して進入を継続してください。@RDARでの進入を許可します。使用滑走路は16です。6000ftまで下昇してください、QNHは@WQNH。"
+  "SHIP:Cleared_for @RDAR, landing RWY16, descending_to 6000, @SCSN.:@RDARでの進入許可を確認、使用滑走路は16。6000ftまで下昇します。@SCSN。"
+[AP_APP_GA_HOLD_CANCEL_34]
+  "APP:@SCSN, depart hold, cleared_for @RDAR, landing RWY34, descend 6000, QNH @WQNH.:@SCSN、旋回待機を解除して進入を継続してください。@RDARでの進入を許可します。使用滑走路は34です。4000ftまで下昇してください、QNHは@WQNH。"
+  "SHIP:Cleared_for @RDAR, landing RWY34, descending_to 4000, @SCSN.:@RDARでの進入許可を確認、使用滑走路は34。4000ftまで下昇します。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; APPからTWRへのハンドオフ
+[AP_APP_TWR-HANDOFF]
+  "APP:@SCSN, contact @LTWR @FTWR.:@SCSN、成田タワー管制にコンタクトしてください。周波数は@FTWRです。"
+  "SHIP:Contact @LTWR, @SCSN.:成田タワー管制にコンタクトします。@SCSN。"
+
+[AP_APP_TWR-HANDOFF_APCH-CLEAR]
+  "APP:@SCSN, cleared_for @RDAP, contact @LTWR @FTWR.:@SCSN、@RDAPへの進入を許可します。成田タワー管制にコンタクトしてください。周波数は@FTWRです。"
+  "SHIP:Cleared_for @RDAP, contact @LTWR, @SCSN.:@RDAPへの進入許可を確認しました。成田タワー管制にコンタクトします。@SCSN。"
+
+[AP_APP_TWR-HANDOFF_REQ]
+  "SHIP:@AAPP, @SCSN, approaching_final.:アプローチ管制、こちらは@SCSNです。ファイナルが近づいています。タワー管制へのコンタクトを要請します。"
+
+[AP_TWR_APPROACH_FINAL]
+  "SHIP:@ATWR, @SCSN, approaching_final.:アプローチ管制、こちらは@SCSNです。ファイナルが近づいています。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; TWRへのイニシャルコンタクト
+[AP_TWR_INI-CONTACT]
+  "SHIP:@LTWR, @SCSN, @RRWY, @NSPT.:成田タワー管制、こちらは@SCSNです。使用滑走路は@RRWNです。@NSPTに到着予定です。"
+
+[AP_TWR_CONTINUE-APP]
+  "TWR:@SCSN, @LTWR, wind @WDIR at @WKNT, @RRWY, continue_approach.:@SCSN、成田タワー管制です。風は方位@WDIR°から@WKNTノットです、滑走路@RRWNへの進入を継続してください。"
+  "SHIP:Continue_approach, @RRWY, @SCSN.:滑走路@RRWNへの進入を継続します。@SCSN。"
+
+[AP_TWR_CONTINUE-APP_CM]
+  "TWR:@SCSN, @LTWR, wind_calm, @RRWY, continue_approach.:@SCSN、成田タワー管制です。風は微風です、滑走路@RRWNへの進入を継続してください。"
+  "SHIP:Continue_approach, @RRWY, @SCSN.:滑走路@RRWNへの進入を継続します。@SCSN。"
+
+[AP_TWR_INI-CONTACT_16]
+  "SHIP:@LTWR, @SCSN, RWY16, @NSPT.:成田タワー管制、こちらは@SCSNです。使用滑走路は16です。@NSPTに到着予定です。"
+[AP_TWR_INI-CONTACT_34]
+  "SHIP:@LTWR, @SCSN, RWY34, @NSPT.:成田タワー管制、こちらは@SCSNです。使用滑走路は34です。@NSPTに到着予定です。"
+
+[AP_TWR_CONTINUE-APP_16]
+  "TWR:@SCSN, @LTWR, continue_approach RWY16, wind @WDIR at @WKNT, QNH @WQNH.:@SCSN、成田タワー管制です。滑走路16への進入を継続してください。風は方位@WDIR°から@WKNTノットです、QNHは@WQNH。"
+  "SHIP:Continue_approach RWY16, @SCSN.:滑走路16への進入を継続します。@SCSN。"
+[AP_TWR_CONTINUE-APP_34]
+  "TWR:@SCSN, @LTWR, continue_approach RWY34, wind @WDIR at @WKNT, QNH @WQNH.:@SCSN、成田タワー管制です。滑走路34への進入を継続してください。風は方位@WDIR°から@WKNTノットです、QNHは@WQNH。"
+  "SHIP:Continue_approach RWY34, @SCSN.:滑走路34への進入を継続します。@SCSN。"
+
+[AP_TWR_CONTINUE-APP_CM_16]
+  "TWR:@SCSN, @LTWR, continue_approach RWY16, wind_calm, QNH @WQNH.:@SCSN、成田タワー管制です。滑走路16への進入を継続してください。風は微風です、QNHは@WQNH。"
+  "SHIP:Continue_approach RWY16, @SCSN.:滑走路16への進入を継続します。@SCSN。"
+[AP_TWR_CONTINUE-APP_CM_34]
+  "TWR:@SCSN, @LTWR, continue_approach RWY34, wind_calm, QNH @WQNH.:@SCSN、成田タワー管制です。滑走路34への進入を継続してください。風は微風です、QNHは@WQNH。"
+  "SHIP:Continue_approach RWY34, @SCSN.:滑走路34への進入を継続します。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 着陸する場合の最終催促
+[AP_TWR_CLEARED-TO-LAND_REQ]
+  "SHIP:@ATWR, @SCSN, on_final.:タワー管制、こちらは@SCSNです。ファイナルです。"
+
+[AP_TWR_CLEARED-TO-LAND_REQ_BASE]
+  "SHIP:@ATWR, @SCSN, base, request_landing.:タワー管制、こちらは@SCSNです。ベースターンに進入しました。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 着陸許可
+[AP_TWR_CLEARED-TO-LAND]
+  "TWR:@SCSN, @LTWR, wind @WDIR at @WKNT, @RRWY, cleared_to_land.:@SCSN、成田タワー管制です。風は方位@WDIR°から@WKNTノットです、滑走路@RRWNへの着陸を許可します。"
+  "SHIP:@RRWY, cleared_to_land, @SCSN.:滑走路@RRWNへの着陸許可を確認しました。@SCSN。"
+
+[AP_TWR_CLEARED-TO-LAND_CM]
+  "TWR:@SCSN, @LTWR, wind_calm, @RRWY, cleared_to_land.:@SCSN、成田タワー管制です。風は微風です、滑走路@RRWNへの着陸を許可します。"
+  "SHIP:@RRWY, cleared_to_land, @SCSN.:滑走路@RRWNへの着陸許可を確認しました。@SCSN。"
+
+[AP_TWR_CLEARED-TO-LAND_16]
+  "TWR:@SCSN, @LTWR, cleared_to_land RWY16, wind @WDIR at @WKNT, QNH @WQNH.:@SCSN、成田タワー管制です。滑走路16への着陸を許可します。風は方位@WDIR°から@WKNTノットです、QNHは@WQNH。"
+  "SHIP:Cleared_to_land RWY16, @SCSN.:滑走路16への着陸許可を確認しました。@SCSN。"
+[AP_TWR_CLEARED-TO-LAND_34]
+  "TWR:@SCSN, @LTWR, cleared_to_land RWY34, wind @WDIR at @WKNT, QNH @WQNH.:@SCSN、成田タワー管制です。滑走路34への着陸を許可します。風は方位@WDIR°から@WKNTノットです、QNHは@WQNH。"
+  "SHIP:Cleared_to_land RWY34, @SCSN.:滑走路34への着陸許可を確認しました。@SCSN。"
+
+[AP_TWR_CLEARED-TO-LAND_CM_16]
+  "TWR:@SCSN, @LTWR, cleared_to_land RWY16, wind_calm, QNH @WQNH.:@SCSN、成田タワー管制です。滑走路16への着陸を許可します。風は微風です、QNHは@WQNH。"
+  "SHIP:Cleared_to_land RWY16, @SCSN.:滑走路16への着陸許可を確認しました。@SCSN。"
+[AP_TWR_CLEARED-TO-LAND_CM_34]
+  "TWR:@SCSN, @LTWR, cleared_to_land RWY34, wind_calm, QNH @WQNH.:@SCSN、成田タワー管制です。滑走路34への着陸を許可します。風は微風です、QNHは@WQNH。"
+  "SHIP:Cleared_to_land RWY34, @SCSN.:滑走路34への着陸許可を確認しました。@SCSN。"
+
+[AP_TWR_CLEARED-TO-LAND_NA_16]
+  "TWR:@SCSN, cleared_to_land RWY16.:@SCSN、滑走路16への着陸を許可します。"
+  "SHIP:Cleared_to_land RWY16, @SCSN.:滑走路16陸許可を確認しました。@SCSN。"
+[AP_TWR_CLEARED-TO-LAND_NA_34]
+  "TWR:@SCSN, cleared_to_land RWY34.:@SCSN、滑走路34への着陸を許可します。"
+  "SHIP:Cleared_to_land RWY34, @SCSN.:滑走路34への着陸許可を確認しました。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 最短離脱と遠方離脱
+[AP_TWR_AVAILABLE-TWY_LEFT]
+  "TWR:@SCSN, turn_left available_taxiway.:@SCSN、離脱可能なポイントから滑走路離脱してください。"
+  "SHIP:Turn_left available_taxiway, @SCSN.:離脱可能なポイントから滑走路離脱します。@SCSN。"
+
+[AP_TWR_AVAILABLE-TWY_RIGHT]
+  "TWR:@SCSN, turn_right available_taxiway.:@SCSN、離脱可能なポイントから滑走路離脱してください。"
+  "SHIP:Turn_right available_taxiway, @SCSN.:離脱可能なポイントから滑走路離脱します。@SCSN。"
+
+[AP_TWR_FAROUT-TWY_LEFT]
+  "TWR:@SCSN, turn_left @NFON.:@SCSN、@NFONから左折してください。"
+  "SHIP:Turn_left @NFON, @SCSN.:@NFONを左折します。@SCSN。"
+
+[AP_TWR_FAROUT-TWY_RIGHT]
+  "TWR:@SCSN, turn_right @NFON.:@SCSN、@NFONから右折してください。"
+  "SHIP:Turn_right @NFON, @SCSN.:@NFONを右折します。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; TWRからGNDへのハンドオフ
+[AP_TWR_GND-HANDOFF]
+  "TWR:@SCSN, contact @LGND @FGND.:@SCSN、成田グランド管制にコンタクトしてください。周波数は@FGNDです。"
+  "SHIP:Contact @LGND, @SCSN.:成田グランド管制にコンタクトします。@SCSN。"
+
+[AP_TWR_GND-HANDOFF_REQ]
+  "SHIP:@ATWR, @SCSN, @NRPT.:タワー管制、こちらは@SCSNです。@NRPTにいます。グランド管制へのコンタクトを要請します。"
+
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 着陸復行
+[AP_TWR_GA_BFORE_EXECUTE]
+  "TWR:@SCSN, go_around, execute_missed_approach.:@SCSN、着陸復行してください。"
+  "SHIP:Going_around, execute_missed_approach, @SCSN.:着陸復行します。@SCSN。"
+
+[AP_TWR_GA_EXECUTE]
+  "SHIP:We_are_going_around, @SCSN.:着陸復行中です。@SCSN。"
+
+[AP_TWR_GA_APP-HANDOFF]
+  "TWR:@SCSN, fly_RWY_heading, contact @LAPP @FAPP.:@SCSN、滑走路の方向に沿って飛行します。東京アプローチ管制にコンタクトしてください。周波数は@FAPPです。"
+  "SHIP:Fly_RWY_heading, contact @LAPP, @SCSN.:滑走路の方向に沿って飛行します。東京アプローチ管制にコンタクトします。@SCSN。"
+
+[AP_TWR_GA_DEP-HANDOFF]
+  "TWR:@SCSN, fly_RWY_heading, contact @LDEP @FDEP.:@SCSN、滑走路の方向に沿って飛行します。東京ディパーチャー管制にコンタクトしてください。周波数は@FDEPです。"
+  "SHIP:Fly_RWY_heading, contact @LDEP, @SCSN.:滑走路の方向に沿って飛行します。東京ディパーチャー管制にコンタクトします。@SCSN。"
+
+[AP_DEP_GA_INI-CONTACT]
+  "SHIP:@LDEP, @SCSN, going_around.:東京ディパーチャー管制、こちらは@SCSNです。着陸復行中です。"
+
+[AP_DEP_GA_APP-HANDOFF]
+  "DEP:@SCSN, contact @LAPP @FAPP.:@SCSN、東京アプローチ管制にコンタクトしてください。周波数は@FAPPです。"
+  "SHIP:Contact @LAPP, @SCSN.:東京アプローチ管制にコンタクトします。@SCSN。"
+
+[AP_APP_GA_INI-CONTACT]
+  "SHIP:@LAPP, @SCSN, going_around.:東京アプローチ管制、こちらは@SCSNです。着陸復行中です。"
+
+[AP_APP_GA_RDR-CONTACT]
+  "APP:@SCSN, @LAPP, radar_contact, follow_missed_approach_course, cross MARTIN maintain 6000.:@SCSN、こちらは東京アプローチ管制です。レーダーで補足しました。着陸復行コースを飛行してください、MARTINを6000ftで通過してください。"
+  "SHIP:Roger, cross MARTIN maintain 6000, @SCSN.:了解しました。MARTINを6000ftで通過します、@SCSN。"
+
+[AP_APP_GA_RWY-CHANGE]
+;  "APP:@SCSN, change_RWY_to @RRWY.:@SCSN、使用滑走路を@RRWYに変更してください。"
+;  "SHIP:@RRWY, @SCSN.:滑走路を@RRWYに変更します。@SCSN。"
+  "APP:@SCSN, change_landing_RWY_to @RRWY, expect @RDAP.:@SCSN、着陸滑走路を@RRWNに変更。最終進入経路は@RDAPを予定。"
+  "SHIP:Landing_RWY @RRWN, expect @RDAP, @SCSN.:着陸滑走路を@RRWNに変更、最終進入経路は@RDAPを予定。"
+
+[AP_APP_GA_RWY-CHANGE_16]
+  "APP:@SCSN, change_RWY_to RWY16, expect @RDAP.:@SCSN、着陸滑走路を16に変更。最終進入経路は@RDAPを予定。"
+  "SHIP:RWY16, expect @RDAP, @SCSN.:着陸滑走路を16に変更、最終進入経路は@RDAPを予定。"
+[AP_APP_GA_RWY-CHANGE_34]
+  "APP:@SCSN, change_RWY_to RWY34, expect @RDAP.:@SCSN、着陸滑走路を34に変更。最終進入経路は@RDAPを予定。"
+  "SHIP:RWY34, expect @RDAP, @SCSN.:着陸滑走路を34に変更、最終進入経路は@RDAPを予定。"
+
+[AP_TWR_GA_RDR-CONTACT]
+  "TWR:@SCSN, @ATWR, follow_missed_approach_course.:@SCSN、こちらは成田タワー管制です。着陸復行コースを飛行してください。"
+  "SHIP:Roger, @SCSN.:了解しました。@SCSN。"
+
+[AP_APP_GA_STAR-ENTRY_16]
+  "APP:@SCSN, cleared_for @RDAR, landing RWY16, depart MARTIN descend_and_maintain 6000, QNH @WQNH.:@SCSN, wait."
+  "SHIP:Cleared_for @RDAR, landing RWY16, depart MARTIN descending_to 6000, @SCSN.:@SCSN, wait."
+[AP_APP_GA_STAR-ENTRY_34]
+  "APP:@SCSN, cleared_for @RDAR, landing RWY34, depart MARTIN descend_and_maintain 4000, QNH @WQNH.:@SCSN, wait."
+  "SHIP:Cleared_for @RDAR, landing RWY34, depart MARTIN descending_to 4000, @SCSN.:@SCSN, wait."
+
+  "APP:@SCSN, @LAPP, radar_contact, cleared_for @RDAR, landing RWY16, descend 6000, QNH @WQNH.:@SCSN、こちらは東京アプローチ管制です。レーダーで捕捉しました。@RDARでの進入を許可します。使用滑走路は16です。6000ftまで下昇してください、QNHは@WQNH。"
+  "SHIP:Cleared_for @RDAR, landing RWY16, descending_to 6000, @SCSN.:@RDARでの進入許可を確認、使用滑走路は16。6000ftまで下昇します。@SCSN。"
+
+[AP_DEP_RDR-CONTACT_DIVERT]
+  "DEP:@SCSN, @LDEP, radar_contact, climb_and_maintain 7000.:@SCSN、こちらは東京ディパーチャー管制です。レーダーで捕捉しました。高度7000ftまで上昇してください。"
+  "SHIP:Climb_and_maintain 7000, @SCSN.:高度7000ftまで上昇します。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; ゲートウェイへのタクシー
+[AP_GND_INI-CONTACT]
+  "SHIP:@LGND, @SCSN, @NRPT, @NSPT.:成田グランド管制、こちらは@SCSNです、@NRPT。@NSPTに入ります。"
+
+[AL_GND_TAXI_STAND-BY]
+  "GND:@SCSN, stand_by_taxi.:@SCSN、地上走行を待機してください。"
+  "SHIP:Standing_by, @SCSN.:地上走行を待機します。@SCSN。"
+
+[AP_GND_TAXI_GWY_HOLD]
+  "GND:@SCSN, hold_short_of_GWY.:@SCSN、ゲートウェイ手前で待機してください。"
+  "SHIP:Hold_short_of_GWY, @SCSN.:ゲートウェイ手前で待機します。@SCSN。"
+
+[AP_GND_TAXI_GWY_LONG]
+  "GND:@SCSN, taxi_to @NGPT GWY, via @NLPT.:@SCSN、@NLPT経由で@NGPTゲートウェイまで地上走行してください。"
+  "SHIP:Taxi_to @NGPT GWY, via @NLPT, @SCSN.:@NLPT経由で@NGPTゲートウェイまで地上走行します。@SCSN。"
+
+[AP_GND_TAXI_GWY_SHORT]
+  "GND:@SCSN, taxi_to @NGPT GWY.:@SCSN、@NGPTゲートウェイまで地上走行してください。"
+  "SHIP:Taxi_to @NGPT GWY, @SCSN.:@NGPTゲートウェイまで地上走行します。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; GNDからRMPへのハンドオフ
+[AP_GND_RMP-HANDOFF]
+  "GND:@SCSN, contact @ARMP control @FRMP.:@SCSN、成田ランプにコンタクトしてください。周波数は@FRMPです。"
+  "SHIP:Contact @ARMP control, @SCSN.:成田ランプにコンタクトします。@SCSN。"
+
+[AP_GND_RMP-HANDOFF_REQ]
+  "SHIP:@AGND, @SCSN, @NGPT GWY, @NSPT.:グランド管制、こちらは@SCSNです。@NGPTゲートウェイにいます。@NSPTに入ります。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; スポットへのタクシー
+[AP_RMP_INI-CONTACT]
+  "SHIP:@LRMP, @SCSN, approaching @NGPT GWY, @NSPT.:成田ランプ、こちらは@SCSNです。@NGPTゲートウェイに向かっています。 @NSPTに入ります。"
+
+[AP_RMP_INI-CONTACT_HOLD]
+  "SHIP:@LRMP, @SCSN, @NGPT GWY, @NSPT.:成田ランプ、こちらは@SCSNです。@NGPTゲートウェイにいます。 @NSPTに入ります。"
+
+[AL_RMP_TAXI_STAND-BY]
+  "RMP:@SCSN, stand_by_taxi.:@SCSN、地上走行を待機してください。"
+  "SHIP:Standing_by, @SCSN.:地上走行を待機します。@SCSN。"
+
+[AP_RMP_TAXI_SPOT_LONG]
+  "RMP:@SCSN, taxi_via @NLPT.:@SCSN、@NLPT経由で地上走行してください。"
+  "SHIP:Taxi_via @NLPT, @SCSN.:@NLPT経由で地上走行します。@SCSN。"
+
+[AP_RMP_TAXI_SPOT_SHORT]
+  "RMP:@SCSN, taxi_to_spot.:@SCSN、スポットまで地上走行してください。"
+  "SHIP:Taxi_to_spot, @SCSN.:スポットまで地上走行します。@SCSN。"
+
+[AP_GND_TAXI_SPOT_LONG]
+  "GND:@SCSN, taxi_via @NLPT.:@SCSN、@NLPT経由で地上走行してください。"
+  "SHIP:Taxi_via @NLPT, @SCSN.:@NLPT経由で地上走行します。@SCSN。"
+
+[AP_GND_TAXI_SPOT_SHORT]
+  "GND:@SCSN, taxi_to_spot.:@SCSN、スポットまで地上走行してください。"
+  "SHIP:Taxi_to_spot, @SCSN.:スポットまで地上走行します。@SCSN。"
+
+
+; ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; 出発用ATC
+; ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; デリバリー許可
+[DP_DEL_DELIVERY_REQ]
+  "SHIP:@LDEL, @SCSN, @NSPT.:成田デリバリー管制、こちらは@SCSNです。準備完了しました。"
+
+[DP_DEL_DELIVERY_STAND-BY]
+  "DEL:@SCSN, @LDEL, stand_by_clearance.:@SCSN、こちらは成田デリバリー管制です。出発待機してください。"
+  "SHIP:Standing_by, @SCSN.:出発待機します。@SCSN。"
+
+[DP_DEL_DELIVERY_PTS1_LOW]
+  "DEL:@SCSN, @LDEL, go_ahead.:@SCSN、こちらは成田デリバリー管制です。どうぞ。"
+  "SHIP:Request_clearance_to @PATC, 7000, @NSPT, @SCSN.:@P2ATまでの出発許可を要請します。巡航高度は7000ftです。@NSPTに駐機しています。@SCSN。"
+
+[DP_DEL_DELIVERY_PTS1_HIGH]
+  "DEL:@SCSN, @LDEL, go_ahead.:@SCSN、こちらは成田デリバリー管制です。どうぞ。"
+  "SHIP:Request_clearance_to @PATC, @PFLV, @NSPT, @SCSN.:@P2ATまでの出発許可を要請します。巡航高度は@PFLVです。@NSPTに駐機しています。@SCSN。"
+
+[DP_DEL_DELIVERY_PTS2_LOW]
+  "DEL:@SCSN, cleared_to @PATC, via @RDDP, @RDTR, flight_planned_route, maintain 7000, expect @PFLV, squawk @SSQK, readback.:@SCSN、@P2ATへの飛行を許可します。出発方式は@RDDP、@RDTR、以降はフライトプランにしたがってください。予定巡航高度は7000ft、予定巡航高度は@PFLV。スコークコードは@SSQKです。復唱してください。"
+  "SHIP:Cleared_to @PATC, @RDDP, @RDTR, flight_planned_route, maintain 7000, expect @PFLV, squawk @SSQK, @SCSN.:@P2ATへの飛行を許可。出発方式は@RDDP、@RDTR、以降はフライトプラン通り、予定巡航高度は7000ft、予定巡航高度は@PFLV。スコークコード@SSQK了解しました。@SCSN。"
+
+[DP_DEL_DELIVERY_PTS2_LOW2]
+  "DEL:@SCSN, cleared_to @PATC, via @RDDP, flight_planned_route, maintain 7000, expect @PFLV, squawk @SSQK, readback.:@SCSN、@P2ATへの飛行を許可します。出発方式は@RDDP、以降はフライトプランにしたがってください。予定巡航高度は7000ft、予定巡航高度は@PFLV。スコークコードは@SSQKです。復唱してください。"
+  "SHIP:Cleared_to @PATC, @RDDP, flight_planned_route, maintain 7000, expect @PFLV, squawk @SSQK, @SCSN.:@P2ATへの飛行を許可。出発方式は@RDDP、以降はフライトプラン通り、予定巡航高度は7000ft、予定巡航高度は@PFLV。スコークコード@SSQK了解しました。@SCSN。"
+
+[DP_DEL_DELIVERY_PTS2_HIGH]
+  "DEL:@SCSN, cleared_to @PATC, via @RDDP, @RDTR, flight_planned_route, maintain FL150, expect @PFLV, squawk @SSQK, readback.:@SCSN、@P2ATへの飛行を許可します。出発方式は@RDDP、@RDTR、以降はフライトプランにしたがってください。暫定承認高度はFL150、予定巡航高度は@PFLV。スコークコードは@SSQKです。復唱してください。"
+  "SHIP:Cleared_to @PATC, @RDDP, @RDTR, flight_planned_route, maintain FL150, expect @PFLV, squawk @SSQK, @SCSN.:@P2ATへの飛行を許可。出発方式は@RDDP、@RDTR、以降はフライトプラン通り、暫定承認高度はFL150、予定巡航高度は@PFLV。スコークコード@SSQK了解しました。@SCSN。"
+
+[DP_DEL_DELIVERY_PTS2_HIGH2]
+  "DEL:@SCSN, cleared_to @PATC, via @RDDP, flight_planned_route, maintain FL150, expect @PFLV, squawk @SSQK, readback.:@SCSN、@P2ATへの飛行を許可します。出発方式は@RDDP、以降はフライトプランにしたがってください。暫定承認高度はFL150、予定巡航高度は@PFLV。スコークコードは@SSQKです。復唱してください。"
+  "SHIP:Cleared_to @PATC, @RDDP, flight_planned_route, maintain FL150, expect @PFLV, squawk @SSQK, @SCSN.:@P2ATへの飛行を許可。出発方式は@RDDP、以降はフライトプラン通り、暫定承認高度はFL150、予定巡航高度は@PFLV。スコークコード@SSQK了解しました。@SCSN。"
+
+[DP_DEL_DELIVERY_PTS2_RJTT]
+  "DEL:@SCSN, cleared_to @PATC, via @RDDP, @RDTR, flight_planned_route, maintain 7000, squawk @SSQK, readback.:@SCSN、@P2ATへの飛行を許可します。出発方式は@RDDP、@RDTR、以降はフライトプランにしたがってください。予定巡航高度は7000ft。スコークコードは@SSQKです。復唱してください。"
+  "SHIP:Cleared_to @PATC, @RDDP, @RDTR, flight_planned_route, maintain 7000, squawk @SSQK, @SCSN.:@P2ATへの飛行を許可。出発方式は@RDDP、@RDTR、以降はフライトプラン通り、予定巡航高度は7000ft。スコークコード@SSQK了解しました。@SCSN。"
+
+[DP_DEL_DELIVERY_PTS2_RJTT2]
+  "DEL:@SCSN, cleared_to @PATC, via @RDDP, flight_planned_route, maintain 7000, squawk @SSQK, readback.:@SCSN、@P2ATへの飛行を許可します。出発方式は@RDDP、以降はフライトプランにしたがってください。予定巡航高度は7000ft。スコークコードは@SSQKです。復唱してください。"
+  "SHIP:Cleared_to @PATC, @RDDP, flight_planned_route, maintain 7000, squawk @SSQK, @SCSN.:@P2ATへの飛行を許可。出発方式は@RDDP、以降はフライトプラン通り、予定巡航高度は7000ft。スコークコード@SSQK了解しました。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; DELからGNDへのハンドオフ（デリバリー音声から連続で再生）
+;[DP_DEL_RMP-HANDOFF]
+;  "DEL:Readback_is_correct, contact @ARMP control @FRMP.:復唱は正確です。成田ランプにコンタクトしてください。周波数は@FRMPです。"
+;  "SHIP:Contact @ARMP control, @SCSN.:成田ランプにコンタクトします。@SCSN。"
+
+[DP_DEL_RMP-HANDOFF]
+  "DEL:Readback_is_correct, expect @RRWY, contact @ARMP control @FRMP.:復唱は正確です。使用滑走路は@RRWNです。成田ランプにコンタクトしてください。周波数は@FRMPです。"
+  "SHIP:Expect @RRWY, contact @ARMP control, @SCSN.:使用滑走路は@RRWN、了解しました。成田ランプにコンタクトします。@SCSN。"
+
+[DP_DEL_RMP-HANDOFF_16]
+  "DEL:Readback_is_correct, expect RWY16, contact RMP_control @FRMP.:復唱は正確です。使用滑走路は16です。成田ランプにコンタクトしてください。周波数は@FRMPです。"
+  "SHIP:Expect RWY16, contact RMP_control, @SCSN.:使用滑走路は16、了解しました。成田ランプにコンタクトします。@SCSN。"
+[DP_DEL_RMP-HANDOFF_34]
+  "DEL:Readback_is_correct, expect RWY34, contact RMP_control @FRMP.:復唱は正確です。使用滑走路は34です。成田ランプにコンタクトしてください。周波数は@FRMPです。"
+  "SHIP:Expect RWY34, contact RMP_control, @SCSN.:使用滑走路は34、了解しました。成田ランプにコンタクトします。@SCSN。"
+
+[DP_DEL_GND-HANDOFF_16]
+  "DEL:Readback_is_correct, expect RWY16, contact @LGND @FGND.:復唱は正確です。使用滑走路は16です。成田グランド管制にコンタクトしてください。周波数は@FRMPです。"
+  "SHIP:Expect RWY16, contact @LGND, @SCSN.:使用滑走路は16、了解しました。成田ランプにコンタクトします。@SCSN。"
+[DP_DEL_GND-HANDOFF_34]
+  "DEL:Readback_is_correct, expect RWY34, contact @LGND @FGND.:復唱は正確です。使用滑走路は34です。成田グランド管制にコンタクトしてください。周波数は@FRMPです。"
+  "SHIP:Expect RWY34, contact @LGND, @SCSN.:使用滑走路は34、了解しました。成田ランプにコンタクトします。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; プッシュバック
+[DP_RMP_PUSHBACK_REQ]
+  "SHIP:@LRMP, @SCSN, @NSPT, request_pushback_and_start, we_have_information @XATS.:成田ランプ、こちらは@SCSNです。@NSPTに駐機しています。プッシュバック許可を要請します。空港情報は@XATSを取得しています。"
+
+[DP_GND_PUSHBACK_REQ]
+  "SHIP:@LGND, @SCSN, @NSPT, request_pushback_and_start, we_have_information @XATS.:成田グランド、こちらは@SCSNです。@NSPTに駐機しています。プッシュバック許可を要請します。空港情報は@XATSを取得しています。"
+
+[DP_RMP_PUSHBACK_REQ2]
+  "SHIP:@LRMP, @SCSN, @NSPT, request_pushback_and_start, we_have_information @XATS.:成田ランプ、こちらは@SCSNです。@NSPTに駐機しています。プッシュバック許可を要請します。空港情報は@XATSを取得しています。"
+
+[DP_RMP_PUSHBACK_STAND-BY]
+  "RMP:@SCSN, @LRMP, stand_by_pushback.:@SCSN、こちら成田ランプ、プッシュバック待機してください。"
+  "SHIP:Standing_by, @SCSN.:プッシュバック待機します。@SCSN。"
+
+[DP_GND_PUSHBACK_STAND-BY]
+  "GND:@SCSN, @LGND, stand_by_pushback.:@SCSN、こちら成田グランド、プッシュバック待機してください。"
+  "SHIP:Standing_by, @SCSN.:プッシュバック待機します。@SCSN。"
+
+[DP_RMP_PUSHBACK_CLEAR]
+  "RMP:@SCSN, @LRMP, pushback_approved, @NPBF, @RRWY.:@SCSN、こちらは成田ランプです。プッシュバックを許可します。滑走路は@RRWNを使用してください。"
+  "SHIP:Pushback_approved, @RRWY, @SCSN.:プッシュバック許可を確認しました。滑走路は@RRWNを使用します。@SCSN。"
+
+[DP_RMP_PUSHBACK_CLEAR_16]
+  "RMP:@SCSN, @LRMP, pushback_approved, @NPBF, RWY16.:@SCSN、こちらは成田ランプです。プッシュバックを許可します。滑走路は16を使用してください。"
+  "SHIP:Pushback_approved, RWY16, @SCSN.:プッシュバック許可を確認しました。滑走路は16を使用します。@SCSN。"
+[DP_RMP_PUSHBACK_CLEAR_34]
+  "RMP:@SCSN, @LRMP, pushback_approved, @NPBF, RWY34.:@SCSN、こちらは成田ランプです。プッシュバックを許可します。滑走路は34を使用してください。"
+  "SHIP:Pushback_approved, RWY34, @SCSN.:プッシュバック許可を確認しました。滑走路は34を使用します。@SCSN。"
+
+[DP_GND_PUSHBACK_CLEAR_16]
+  "GND:@SCSN, @LGND, pushback_approved, @NPBF, RWY16.:@SCSN、こちら成田グランド。プッシュバックを許可します。滑走路は16を使用してください。"
+  "SHIP:Pushback_approved, RWY16, @SCSN.:プッシュバック許可を確認しました。滑走路は16を使用します。@SCSN。"
+[DP_GND_PUSHBACK_CLEAR_34]
+  "GND:@SCSN, @LGND, pushback_approved, @NPBF, RWY34.:@SCSN、こちら成田グランド。プッシュバックを許可します。滑走路は34を使用してください。"
+  "SHIP:Pushback_approved, RWY34, @SCSN.:プッシュバック許可を確認しました。滑走路は34を使用します。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 滑走路変更
+[DP_RMP_RWY-CHANGE]
+  "RMP:@SCSN, change_RWY_to @RRWY.:@SCSN、使用滑走路を@RRWYに変更してください。"
+  "SHIP:@RRWY, @SCSN.:滑走路を@RRWYに変更します。@SCSN。"
+
+[DP_GND_RWY-CHANGE]
+  "GND:@SCSN, change_RWY_to @RRWY.:@SCSN、使用滑走路を@RRWYに変更してください。"
+  "SHIP:@RRWY, @SCSN.:滑走路を@RRWYに変更します。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; ゲートウェイまでの走行
+[AL_RMP_TAXI_REQ]
+  "SHIP:@ARMP, @SCSN, request_taxi.:ランプ、こちらは@SCSNです。地上走行許可を要請します。"
+
+[AL_RMP_TAXI_REQ2]
+  "SHIP:@LRMP, @SCSN, @NSPT, request_taxi, we_have_information @XATS.:成田ランプ、こちらは@SCSN。@NSPTに駐機しています。走行許可を要請します。空港情報は@XATSを取得しています。"
+
+[AL_GND_TAXI_REQ]
+  "SHIP:@AGND, @SCSN, request_taxi.:グランド、こちらは@SCSNです。地上走行許可を要請します。"
+
+[AL_GND_TAXI_REQ2]
+  "SHIP:@LGND, @SCSN, @NSPT, request_taxi, we_have_information @XATS.:成田グランド、こちらは@SCSN。@NSPTに駐機しています。走行許可を要請します。空港情報は@XATSを取得しています。"
+
+[DP_RMP_TAXI_GWY_LONG]
+  "RMP:@SCSN, taxi_to @NGPT GWY, via @NLPT.:@SCSN、@NLPT経由で@NGPTゲートウェイまで地上走行を許可します。"
+  "SHIP:Taxi_to @NGPT GWY, via @NLPT, @SCSN.:@NLPT経由で@NGPTゲートウェイへの地上走行の許可を確認しました。@SCSN。"
+
+[DP_RMP_TAXI_GWY_SHORT]
+  "RMP:@SCSN, taxi_to @NGPT GWY.:@SCSN、@NGPTゲートウェイまで地上走行を許可します。"
+  "SHIP:Taxi_to @NGPT GWY, @SCSN.:@NGPTゲートウェイへの地上走行の許可を確認しました。@SCSN。"
+
+[DP_RMP_TAXI_GWY_HOLD]
+  "RMP:@SCSN, Hold_short_of_GWY.:@SCSN、ゲートウェイ手前で待機してください。"
+  "SHIP:Hold_short_of_GWY, @SCSN.:ゲートウェイ手前で待機します。@SCSN。"
+
+[DP_GND_TAXI_GWY_HOLD]
+  "GND:@SCSN, Hold_short_of_GWY.:@SCSN、ゲートウェイ手前で待機してください。"
+  "SHIP:Hold_short_of_GWY, @SCSN.:ゲートウェイ手前で待機します。@SCSN。"
+
+[AL_RMP_TAXI_HOLD]
+  "RMP:@SCSN, hold_position.:@SCSN、その場で停止してください。"
+  "SHIP:Holding, @SCSN.:停止します。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; RMPからGNDへのハンドオフ
+[DP_RMP_GND-HANDOFF]
+  "RMP:@SCSN, contact @LGND @FGND.:@SCSN、成田グランド管制にコンタクトしてください。周波数は@FGNDです。"
+  "SHIP:Contact @LGND, @SCSN.:成田グランド管制にコンタクトします。@SCSN。"
+
+[DP_RMP_GND-HANDOFF_REQ]
+  "SHIP:@ARMP, @SCSN, @NGPT GWY, @RRWY.:ランプ、こちらは@SCSNです。@NGPTゲートウェイにいます。滑走路@RRWNへ向かいます。グランド管制へのコンタクトを要請します。"
+
+[DP_RMP_GND-HANDOFF_REQ_16]
+  "SHIP:@ARMP, @SCSN, @NGPT GWY, RWY16.:ランプ、こちらは@SCSNです。@NGPTゲートウェイにいます。滑走路16へ向かいます。グランド管制へのコンタクトを要請します。"
+[DP_RMP_GND-HANDOFF_REQ_34]
+  "SHIP:@ARMP, @SCSN, @NGPT GWY, RWY34.:ランプ、こちらは@SCSNです。@NGPTゲートウェイにいます。滑走路34へ向かいます。グランド管制へのコンタクトを要請します。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 滑走路までの走行
+[DP_GND_INI-CONTACT]
+  "SHIP:@LGND, @SCSN, approaching @NGPT GWY, @RRWY.:成田グランド管制、こちらは@SCSNです。@NGPTゲートウェイに向かっています。滑走路@RRWNへ向かいます。"
+
+[DP_GND_INI-CONTACT_16]
+  "SHIP:@LGND, @SCSN, approaching @NGPT GWY, RWY16.:成田グランド管制、こちらは@SCSNです。@NGPTゲートウェイに向かっています。滑走路16へ向かいます。"
+[DP_GND_INI-CONTACT_34]
+  "SHIP:@LGND, @SCSN, approaching @NGPT GWY, RWY34.:成田グランド管制、こちらは@SCSNです。@NGPTゲートウェイに向かっています。滑走路34へ向かいます。"
+
+[DP_GND_INI-CONTACT_HOLD]
+  "SHIP:@LGND, @SCSN, @NGPT GWY, @RRWY.:成田グランド管制、こちらは@SCSNです。@NGPTゲートウェイにいます。滑走路@RRWNへ向かいます。"
+
+[DP_GND_INI-CONTACT_HOLD_16]
+  "SHIP:@LGND, @SCSN, @NGPT GWY, RWY16.:成田グランド管制、こちらは@SCSNです。@NGPTゲートウェイにいます。滑走路16へ向かいます。"
+[DP_GND_INI-CONTACT_HOLD_34]
+  "SHIP:@LGND, @SCSN, @NGPT GWY, RWY34.:成田グランド管制、こちらは@SCSNです。@NGPTゲートウェイにいます。滑走路34へ向かいます。"
+
+[DP_GND_TAXI_RWY_LONG_ISD]
+  "GND:@SCSN, @RRWY, taxi_to_HP @NRPT, via @NLPT.:@SCSN、@NLPT経由で滑走路@RRWNへの地上走行を許可します。@NRPTで停止してください。"
+  "SHIP:@RRWY, via @NLPT, to_HP @NRPT, @SCSN.:@NLPT経由で滑走路@RRWNへの地上走行の許可を確認しました。@NRPTで停止します。@SCSN。"
+
+[DP_GND_TAXI_RWY_SHORT_ISD]
+  "GND:@SCSN, @RRWY, taxi_to_HP @NRPT.:@SCSN、滑走路@RRWNへの地上走行を許可しました。@NRPTで停止してください。"
+  "SHIP:@RRWY, taxi_to_HP @NRPT, @SCSN.:滑走路@RRWNへの地上走行の許可を確認しました。@NRPTで停止します。@SCSN。"
+
+[DP_GND_TAXI_RWY_LONG]
+  "GND:@SCSN, taxi_via @NLPT, @RRWY.:@SCSN、@NLPT経由で滑走路@RRWNへの地上走行を許可します。"
+  "SHIP:Taxi_via @NLPT, @RRWY, @SCSN.:@NLPT経由で滑走路@RRWNへの地上走行の許可を確認しました。@SCSN。"
+
+[DP_GND_TAXI_RWY_SHORT]
+  "GND:@SCSN, taxi_to_RWY @RRWN.:@SCSN、滑走路@RRWNへの地上走行を許可します。"
+  "SHIP:Taxi_to_RWY @RRWN, @SCSN.:滑走路@RRWNへの地上走行の許可を確認しました。@SCSN。"
+
+[DP_GND_TAXI_RWY_LONG_I16]
+  "GND:@SCSN, RWY16, taxi_to_HP @NRPT, via @NLPT.:@SCSN、@NLPT経由で滑走路16への地上走行を許可します。@NRPTで停止してください。"
+  "SHIP:RWY16, via @NLPT, to_HP @NRPT, @SCSN.:@NLPT経由で滑走路16への地上走行の許可を確認しました。@NRPTで停止します。@SCSN。"
+[DP_GND_TAXI_RWY_LONG_I34]
+  "GND:@SCSN, RWY34, taxi_to_HP @NRPT, via @NLPT.:@SCSN、@NLPT経由で滑走路34への地上走行を許可します。@NRPTで停止してください。"
+  "SHIP:RWY34, via @NLPT, to_HP @NRPT, @SCSN.:@NLPT経由で滑走路34への地上走行の許可を確認しました。@NRPTで停止します。@SCSN。"
+
+[DP_GND_TAXI_RWY_SHORT_I16]
+  "GND:@SCSN, RWY16, taxi_to_HP @NRPT.:@SCSN、滑走路16への地上走行を許可しました。@NRPTで停止してください。"
+  "SHIP:RWY16, taxi_to_HP @NRPT, @SCSN.:滑走路16への地上走行の許可を確認しました。@NRPTで停止します。@SCSN。"
+[DP_GND_TAXI_RWY_SHORT_I34]
+  "GND:@SCSN, RWY34, taxi_to_HP @NRPT.:@SCSN、滑走路34への地上走行を許可しました。@NRPTで停止してください。"
+  "SHIP:RWY34, taxi_to_HP @NRPT, @SCSN.:滑走路34への地上走行の許可を確認しました。@NRPTで停止します。@SCSN。"
+
+[DP_GND_TAXI_RWY_LONG_16]
+  "GND:@SCSN, taxi_via @NLPT, RWY16.:@SCSN、@NLPT経由で滑走路16への地上走行を許可します。"
+  "SHIP:Taxi_via @NLPT, RWY16, @SCSN.:@NLPT経由で滑走路16への地上走行の許可を確認しました。@SCSN。"
+[DP_GND_TAXI_RWY_LONG_34]
+  "GND:@SCSN, taxi_via @NLPT, RWY34.:@SCSN、@NLPT経由で滑走路34への地上走行を許可します。"
+  "SHIP:Taxi_via @NLPT, RWY34, @SCSN.:@NLPT経由で滑走路34への地上走行の許可を確認しました。@SCSN。"
+
+[DP_GND_TAXI_RWY_SHORT_16]
+  "GND:@SCSN, taxi_to RWY16.:@SCSN、滑走路16への地上走行を許可します。"
+  "SHIP:Taxi_to RWY16, @SCSN.:滑走路16への地上走行の許可を確認しました。@SCSN。"
+[DP_GND_TAXI_RWY_SHORT_34]
+  "GND:@SCSN, taxi_to RWY34.:@SCSN、滑走路34への地上走行を許可します。"
+  "SHIP:Taxi_to RWY34, @SCSN.:滑走路34への地上走行の許可を確認しました。@SCSN。"
+
+[AL_GND_TAXI_HOLD]
+  "GND:@SCSN, hold_position.:@SCSN、その場で停止してください。"
+  "SHIP:Holding, @SCSN.:停止します。@SCSN。"
+
+[AL_GND_TAXI_REQ]
+  "SHIP:@AGND, @SCSN, request_taxi.:グランド管制、こちらは@SCSNです。地上走行許可を要請します。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 滑走路やGPホールドラインの横断・通行
+[AL_GND_TAXI_CROSS_REQ]
+  "SHIP:@AGND, @SCSN, request_cross_RWY.:グランド管制、こちらは@SCSNです。滑走路の横断許可を要請します。"
+
+[AL_GND_TAXI_CROSS_HOLD]
+  "GND:@SCSN, hold_short_of_RWY.:@SCSN、滑走路手前で待機してください。"
+  "SHIP:Hold_short_of_RWY, @SCSN.:滑走路手前で待機します。@SCSN。"
+
+[AL_GND_TAXI_CROSS]
+  "GND:@SCSN, cross_RWY.:@SCSN、滑走路横断を許可します。"
+  "SHIP:Cross_RWY, @SCSN.:滑走路横断許可を確認しました。@SCSN。"
+
+[AL_GND_TAXI_GPCROSS_REQ]
+  "SHIP:@AGND, @SCSN, GP_hold_line.:グランド管制、こちらは@SCSNです。GPホールドラインで停止しています。"
+
+[AL_GND_TAXI_GPCROSS_HOLD]
+  "GND:@SCSN, hold_short_of_GP_hold_line.:@SCSN、GPホールドライン手前で待機してください。"
+  "SHIP:Hold_short_of_GP_hold_line, @SCSN.:GPホールドライン手前で待機します。@SCSN。"
+
+[AL_GND_TAXI_GPCROSS]
+  "GND:@SCSN, cross_GP_hold_line.:@SCSN、GPホールドラインを通過してください。"
+  "SHIP:Cross_GP_hold_line, @SCSN.:GPホールドラインを通過します。@SCSN。"
+
+;[AL_GND_TAXI_PASS_REQ]
+;  "SHIP:@AGND, @SCSN, request taxi via RWY 27.:グランド管制、こちらは@SCSNです。滑走路の通行許可を要請します。"
+
+;[AL_GND_TAXI_PASS]
+;  "GND:@SCSN, taxi via RWY 27.:@SCSN、滑走路通行を許可します。"
+;  "SHIP:Taxi via RWY 27, @SCSN.:滑走路通行許可を確認しました。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; GNDからTWRへのハンドオフ
+[DP_GND_TWR-HANDOFF]
+  "GND:@SCSN, contact @LTWR @FTWR.:@SCSN、成田タワー管制にコンタクトしてください。周波数は@FTWRです。"
+  "SHIP:Contact @LTWR, @SCSN.:成田タワー管制にコンタクトします。@SCSN。"
+
+[DP_GND_TWR-HANDOFF_REQ]
+  "SHIP:@AGND, @SCSN, @NHPT.:グランド管制、こちらは@SCSNです。@NHPTにいます。タワー管制へのコンタクトを要請します。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; TWRへのイニシャルコンタクト
+[DP_TWR_INI-CONTACT]
+  "SHIP:@LTWR, @SCSN, on_your_frequency.:成田タワー管制、こちらは@SCSNです。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 離陸時のホールドショート
+[DP_TWR_HOLD-SHORT_REQ]
+  "SHIP:@ATWR, @SCSN, @NHPT.:タワー管制、こちらは@SCSNです。@NHPTにいます。離陸許可を要請します。"
+
+[DP_TWR_HOLD-SHORT]
+  "TWR:@SCSN, hold_short_of_RWY @RRWN.:@SCSN、滑走路@RRWN前で待機してください。"
+  "SHIP:Hold_short_of_RWY @RRWN, @SCSN.:滑走路@RRWN前で待機します。@SCSN。"
+
+[DP_TWR_HOLD-SHORT_16]
+  "TWR:@SCSN, hold_short_of RWY16.:@SCSN、滑走路16前で待機してください。"
+  "SHIP:Hold_short_of RWY16, @SCSN.:滑走路16前で待機します。@SCSN。"
+[DP_TWR_HOLD-SHORT_34]
+  "TWR:@SCSN, hold_short_of RWY34.:@SCSN、滑走路34前で待機してください。"
+  "SHIP:Hold_short_of RWY34, @SCSN.:滑走路34前で待機します。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 離陸時のラインナップ
+[DP_TWR_LINE-UP]
+  "TWR:@SCSN, @RRWY, line_up_and_wait.:@SCSN、滑走路@RRWNで離陸待機してください。"
+  "SHIP:@RRWY, line_up_and_wait, @SCSN.:滑走路@RRWNで離陸待機します。@SCSN。"
+
+[DP_TWR_LINE-UP_ISD]
+  "TWR:@SCSN, @RRWY at @NRPT, line_up_and_wait.:@SCSN、@NRPTから進入して@RRWYで離陸待機してください。"
+  "SHIP:@RRWY at @NRPT, line_up_and_wait, @SCSN.:@NRPTから進入して@RRWYで離陸待機します。@SCSN。"
+
+[DP_TWR_LINE-UP_16]
+  "TWR:@SCSN, RWY16, line_up_and_wait.:@SCSN、滑走路16で離陸待機してください。"
+  "SHIP:RWY16, line_up_and_wait, @SCSN.:滑走路16で離陸待機します。@SCSN。"
+[DP_TWR_LINE-UP_34]
+  "TWR:@SCSN, RWY34, line_up_and_wait.:@SCSN、滑走路34で離陸待機してください。"
+  "SHIP:RWY34, line_up_and_wait, @SCSN.:滑走路34で離陸待機します。@SCSN。"
+
+[DP_TWR_LINE-UP_I16]
+  "TWR:@SCSN, RWY16 at @NRPT, line_up_and_wait.:@SCSN、@NRPTから進入してRWY16で離陸待機してください。"
+  "SHIP:RWY16 at @NRPT, line_up_and_wait, @SCSN.:@NRPTから進入してRWY16で離陸待機します。@SCSN。"
+[DP_TWR_LINE-UP_I34]
+  "TWR:@SCSN, RWY34 at @NRPT, line_up_and_wait.:@SCSN、@NRPTから進入してRWY34で離陸待機してください。"
+  "SHIP:RWY34 at @NRPT, line_up_and_wait, @SCSN.:@NRPTから進入してRWY34で離陸待機します。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 離陸許可
+[DP_TWR_LINE-UP_REQ]
+  "SHIP:@ATWR, @SCSN, ready.:タワー管制、こちらは@SCSNです。離陸準備完了しました。"
+
+[DP_TWR_TAKEOFF]
+  "TWR:@SCSN, @LTWR, wind @WDIR at @WKNT, @RRWY, cleared_for_takeoff.:@SCSN、成田タワー管制です。風は方位@WDIR°から@WKNTノットです、滑走路@RRWNからの離陸を許可します。"
+  "SHIP:@RRWY, cleared_for_takeoff, @SCSN.:滑走路@RRWNからの離陸許可を確認しました。@SCSN。"
+
+[DP_TWR_TAKEOFF_CM]
+  "TWR:@SCSN, @LTWR, wind_calm, @RRWY, cleared_for_takeoff.:@SCSN、成田タワー管制です。風は微風です、滑走路@RRWNからの離陸を許可します。"
+  "SHIP:@RRWY, cleared_for_takeoff, @SCSN.:滑走路@RRWNからの離陸許可を確認しました。@SCSN。"
+
+[DP_TWR_TAKEOFF_16]
+  "TWR:@SCSN, @LTWR, cleared_for_takeoff RWY16, wind @WDIR at @WKNT.:@SCSN、成田タワー管制です。滑走路16からの離陸を許可します、風は方位@WDIR°から@WKNTノットです。"
+  "SHIP:Cleared_for_takeoff RWY16, @SCSN.:滑走路16からの離陸許可を確認しました。@SCSN。"
+[DP_TWR_TAKEOFF_34]
+  "TWR:@SCSN, @LTWR, cleared_for_takeoff RWY34, wind @WDIR at @WKNT.:@SCSN、成田タワー管制です。滑走路34からの離陸を許可します、風は方位@WDIR°から@WKNTノットです。"
+  "SHIP:Cleared_for_takeoff RWY34, @SCSN.:滑走路34からの離陸許可を確認しました。@SCSN。"
+
+[DP_TWR_TAKEOFF_CM_16]
+  "TWR:@SCSN, @LTWR, cleared_for_takeoff RWY16, wind_calm.:@SCSN、成田タワー管制です。滑走路16からの離陸を許可します、風は微風です。"
+  "SHIP:Cleared_for_takeoff RWY16, @SCSN.:滑走路16からの離陸許可を確認しました。@SCSN。"
+[DP_TWR_TAKEOFF_CM_34]
+  "TWR:@SCSN, @LTWR, cleared_for_takeoff RWY34, wind_calm.:@SCSN、成田タワー管制です。滑走路34からの離陸を許可します、風は微風です。"
+  "SHIP:Cleared_for_takeoff RWY34, @SCSN.:滑走路34からの離陸許可を確認しました。@SCSN。"
+
+[DP_TWR_TAKEOFF_HOLD]
+  "TWR:@SCSN, continue_hold.:@SCSN、離陸待機してください。"
+  "SHIP:Holding, @SCSN.:離陸待機します。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; TWRからDEPへのハンドオフ
+[AL_TWR_DEP-HANDOFF]
+  "TWR:@SCSN, contact @LDEP @FDEP.:@SCSN、東京ディパーチャー管制にコンタクトしてください。周波数は@FDEPです。"
+  "SHIP:Contact @LDEP, @SCSN.:東京ディパーチャー管制にコンタクトします。@SCSN。"
+
+[DP_TWR_DEP-HANDOFF_REQ]
+  "SHIP:@ATWR, @SCSN, airborne passing @SALT.:タワー管制、こちらは@SCSNです。離陸しました、高度@SALTftを飛行中です。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; DEPへのイニシャルコンタクト
+[DP_DEP_INI-CONTACT]
+  "SHIP:@LDEP, @SCSN, leaving @SALT for FL150.:東京ディパーチャー管制、こちらは@SCSNです。現在@SALTftを飛行中、高度15000ftへ上昇しています。"
+
+[DP_DEP_INI-CONTACT_LOW]
+  "SHIP:@LDEP, @SCSN, leaving @SALT for 7000.:東京ディパーチャー管制、こちらは@SCSNです。現在@SALTftを飛行中、高度7000ftへ上昇しています。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; DEPでのレーダーコンタクト
+[DP_DEP_RDR-CONTACT]
+  "DEP:@SCSN, @LDEP, radar_contact.:@SCSN、こちらは東京ディパーチャー管制です。レーダーで捕捉しました。"
+  "SHIP:Roger, @SCSN.:了解しました。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; ルート変更（ダイレクト指示）
+[DP_DEP_RTE-CHANGE]
+  "DEP:@SCSN, recleared_direct @RRTP, climb_via_SID.:@SCSN、@RRTPへの直行を許可します。高度制限を遵守してください。"
+  "SHIP:Direct @RRTP, climb_via_SID, @SCSN.:@RRTPへの直行許可を確認しました。高度制限を遵守し飛行します。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 高度制限解除
+[DP_DEP_ALT-REST_CANCEL]
+  "DEP:@SCSN, altitude_restrictions_cancelled, @PFLV.:@SCSN、高度制限を解除します。@PFLVまで上昇してください。"
+  "SHIP:Cancel_restrictions, climbing_to @PFLV, @SCSN.:高度制限の解除を確認しました。@PFLVまで上昇します。@SCSN。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; DEPからACCへのハンドオフ
+[DP_DEP_ACC-HANDOFF_REQ]
+  "SHIP:@LDEP, @SCSN, leaving FL150.:東京ディパーチャー管制、こちらは@SCSNです。高度15000ftを飛行中です。"
+
+[DP_DEP_APP-HANDOFF_REQ]
+  "SHIP:@LDEP, @SCSN, depart MAMA.:東京ディパーチャー管制、こちらは@SCSNです。MAMAを通過しました。"
+
+[DP_DEP_ACC-HANDOFF]
+  "DEP:@SCSN, contact_Tokyo_control @FACC.:@SCSN、東京コントロール管制にコンタクトしてください。周波数は@FACCです。"
+  "SHIP:Contact_Tokyo_control @FACC, @SCSN, good_day.:東京コントロール管制にコンタクトします。@SCSN。さようなら。"
+
+[DP_DEP_APP-HANDOFF]
+  "DEP:@SCSN, contact @LAPP 119.1.:@SCSN、東京アプローチ管制にコンタクトしてください。周波数は119.1です。"
+  "SHIP:Contact @LAPP, @SCSN.:東京アプローチ管制にコンタクトします。@SCSN。"
+
+[DP_DEP_ACC-HANDOFF_LAST]
+  "DEP:Good_day.:さようなら。"
+
+
+; ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; 移動機用ATC
+; ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; プッシュバック
+[TW_RMP_PUSHBACK_REQ]
+  "SHIP:@ZEVE[gh,100] Ramp, this is @SCSN, @NSPT, to @RRWY, request pushback.:*ランプ、こちら@SCSN、@NSPTです。@RRWY へトーイングします。プッシュバック許可願います。"
+
+[TW_RMP_PUSHBACK_CLEAR]
+  "RMP:@ZEVE[gh,101] @SCSN, this is Ramp, pushback approved.:*@SCSN、ランプです。プッシュバック支障ありません。"
+  "SHIP:@ZEVE[gh,2] @SCSN, pushback approved.:*@SCSN, プッシュバック開始します。"
+
+[TW_RMP_PUSHBACK_STAND-BY]
+  "RMP:@ZEVE[gh,102] @SCSN, this is Ramp, stand by for pushback:*@SCSN、ランプです。プッシュバック待機してください。"
+  "SHIP:@ZEVE[gh,4] @SCSN, stand by.:*@SCSN、待機します。"
+
+[TW_GND_PUSHBACK_REQ]
+  "SHIP:@ZEVE[gh,0] Ground, this is @SCSN, @NSPT, to @RRWY, request pushback.:*グランド、こちら@SCSN、@NSPTです。@RRWY へトーイングします。プッシュバック許可願います。"
+
+[TW_GND_PUSHBACK_CLEAR]
+  "GND:@ZEVE[gh,1] @SCSN, this is Ground, pushback approved.:*@SCSN、グランド管制です。プッシュバック支障ありません。"
+  "SHIP:@ZEVE[gh,2] @SCSN, pushback approved.:*@SCSN, プッシュバック開始します。"
+
+[TW_GND_PUSHBACK_STAND-BY]
+  "GND:@ZEVE[gh,3] @SCSN, this is Ground, stand by for pushback.:*@SCSN、グランドです。プッシュバック待機してください。"
+  "SHIP:@ZEVE[gh,4] @SCSN, stand by for pushback.:*@SCSN、待機します。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 走行開始
+[TW_RMP_PUSHBACK_TOW_REQ]
+  "SHIP:@ZEVE[gh,103] Ramp, this is @SCSN, pushback completed, request start towing.:*ランプ、こちら@SCSN、プッシュバック完了しました。トーイング許可願います。"
+
+[TW_RMP_TOW_CLEAR]
+  "RMP:@ZEVE[gh,104] @SCSN, this is Ramp, towing approved.:*@SCSN、ランプです。トーイング許可します。"
+  "SHIP:@ZEVE[gh,7] @SCSN, towing approved.:*@SCSN、トーイングを開始します。"
+
+[TW_RMP_TOW_STAND-BY]
+  "RMP:@ZEVE[gh,105] @SCSN, this is Ramp, stand by for towing.:*@SCSN、トラフィックを確認します。しばらくお待ちください。"
+  "SHIP:@ZEVE[gh,4] @SCSN, stand by.:*@SCSN、待機します。"
+
+[TW_GND_PUSHBACK_TOW_REQ]
+  "SHIP:@ZEVE[gh,5] Ground, this is @SCSN, pushback completed, request start towing.:*グランド、こちら@SCSN、プッシュバック完了しました。トーイング許可願います。"
+
+[TW_GND_TOW_REQ]
+  "SHIP:@ZEVE[gh,23] Ground, this is @SCSN, @NSPT, to @RRWY, request start towing.:*グランド、こちら@SCSN、@NSPTです。@RRWY へトーイング許可願います。"
+
+[TW_GND_TOW_CLEAR]
+  "GND:@ZEVE[gh,6] @SCSN, this is Ground, towing approved.:*@SCSN、グランド管制です。トーイング許可します。"
+  "SHIP:@ZEVE[gh,7] @SCSN, towing approved.:*@SCSN、トーイングを開始します。"
+
+[TW_GND_TOW_STAND-BY]
+  "GND:@ZEVE[gh,14] @SCSN, this is Ground, stand by for towing.:*@SCSN、トラフィックを確認します。しばらくお待ちください。"
+  "SHIP:@ZEVE[gh,4] @SCSN, stand by for towing.:*@SCSN、待機します。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 走行停止
+[TW_RMP_TOW_HOLD]
+  "RMP:@ZEVE[gh,106] @SCSN, hold current position.:*@SCSN、その場で停止してください。"
+  "SHIP:@ZEVE[gh,10] @SCSN, holding.:*@SCSN、停止します。"
+
+[TW_RMP_TOW_HOLD_REQ]
+  "SHIP:@ZEVE[gh,107] Ground, this is @SCSN, standing by for towing.:*ランプ、こちら@SCSN、トーイング待機しています。"
+
+[TW_RMP_TOW_CONTINUE]
+  "RMP:@ZEVE[gh,108] @SCSN, resume towing.:*@SCSN、トーイングを再開してください。"
+  "SHIP:@ZEVE[gh,12] @SCSN, resume towing.:*@SCSN、トーイング再開します。"
+
+[TW_RMP_TOW_HOLD_CONTINUE]
+  "RMP:@ZEVE[gh,123] @SCSN, this is Ramp, stand by for towing:*@SCSN、ランプです。しばらくお待ちください。"
+  "SHIP:@ZEVE[gh,4] @SCSN, stand by.:*@SCSN、待機します。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; RMPからGNDハンドオフ
+[TW_RMP_TOW_HOLD_GWY]
+  "SHIP:@ZEVE[gh,109] Ramp, this is @SCSN, stopped at gateway.:*ランプ、こちら@SCSN、ゲートウェイで停止しています。"
+
+[TW_RMP_GND-HANDOFF]
+  "RMP:@ZEVE[gh,110] @SCSN, contact Ground control.:*@SCSN、グランド管制にコンタクトしてください。"
+  "SHIP:@ZEVE[gh,111] @SCSN, contact Ground control.:*@SCSN、グランド管制にコンタクトします。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; RMPの走行ルート変更
+[TW_RMP_TOW_RTE-CHANGE]
+  "RMP:@ZEVE[gh,112] @SCSN, change towing route.:*@SCSN、トーイングルートを変更してください。"
+  "SHIP:@ZEVE[gh,18] @SCSN, changing route.:*@SCSN、トーイングルートを変更します。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; RMPのイニシャルコンタクト
+[TW_RMP_INI-CONTACT]
+  "SHIP:@ZEVE[gh,113] Ramp, this is @SCSN, approaching gateway.:*ランプ、こちら@SCSN、ゲートウェイに接近しています。"
+
+[TW_RMP_INI-CONTACT_RES]
+  "RMP:@ZEVE[gh,114] @SCSN, continue towing.:*@SCSN、トーイングを継続してください。"
+  "SHIP:@ZEVE[gh,115] @SCSN, continue towing.:*@SCSN、トーイング継続します。"
+
+[TW_RMP_TAXI_GWY_HOLD]
+  "RMP:@ZEVE[gh,124] @SCSN, this is Ramp, hold at gateway.:*@SCSN、ランプです。ゲートウェイ手前で待機してください。"
+  "SHIP:@ZEVE[gh,125] @SCSN, holding at gateway:*@SCSN、ゲートウェイ手前で待機します。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; スポットイン
+[TW_RMP_TOW_SPOTIN]
+  "SHIP:@ZEVE[gh,116] Ramp, this is @SCSN, towing completed.:*ランプ、こちら@SCSN、トーイングを完了しました。"
+  "RMP:@ZEVE[gh,117] @SCSN, towing completed, roger.:*@SCSN、トーイング完了、了解しました。"
+
+[TW_GND_TOW_SPOTIN]
+  "SHIP:@ZEVE[gh,15] Ground, this is @SCSN, towing completed.:*グランド、こちら@SCSN、トーイングを完了しました。"
+  "GND:@ZEVE[gh,16] @SCSN, towing completed, roger.:*@SCSN、トーイング完了、了解しました。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; GNDのイニシャルコンタクト
+[TW_GND_INI-CONTACT]
+  "SHIP:@ZEVE[gh,118] Ground, this is @SCSN, approaching gateway.:*グランド、こちら@SCSN、ゲートウェイに接近しています。"
+
+[TW_GND_TOW_HOLD_GWY]
+  "SHIP:@ZEVE[gh,119] Ground, this is @SCSN, stopped at gateway.:*グランド、こちら@SCSN、ゲートウェイで停止しています。"
+
+[TW_GND_INI-CONTACT_RES]
+  "GND:@ZEVE[gh,120] @SCSN, continue towing:*@SCSN、トーイングを継続してください。"
+  "SHIP:@ZEVE[gh,115] @SCSN, continue towing:*@SCSN、トーイング継続します。"
+
+[TW_GND_TAXI_GWY_HOLD]
+  "GND:@ZEVE[gh,126] @SCSN, this is Ground, hold at gateway.:*@SCSN、グランド管制です。ゲートウェイ手前で待機してください。"
+  "SHIP:@ZEVE[gh,125] @SCSN, holding at gateway:*@SCSN、ゲートウェイ手前で待機します。"
+
+[TW_GND_TOW_STAND-BY]
+  "GND:@ZEVE[gh,105] @SCSN, this is Ground, stand by for towing.:*@SCSN、トラフィックを確認します。しばらくお待ちください。"
+  "SHIP:@ZEVE[gh,4] @SCSN, stand by.:*@SCSN、待機します。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; GNDからRMPハンドオフ
+[TW_GND_RMP-HANDOFF]
+  "GND:@ZEVE[gh,121] @SCSN, contact Ramp control.:*@SCSN、ランプにコンタクトしてください。"
+  "SHIP:@ZEVE[gh,122] @SCSN, contact Ramp control.:*@SCSN、ランプにコンタクトします。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 走行ルート変更
+[TW_GND_TOW_RTE-CHANGE]
+  "GND:@ZEVE[gh,17] @SCSN, change towing route.:*@SCSN、トーイングルートを変更してください。"
+  "SHIP:@ZEVE[gh,18] @SCSN, changing route.:*@SCSN、トーイングルートを変更します。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 走行停止
+[TW_GND_TOW_HOLD]
+  "GND:@ZEVE[gh,9] @SCSN, hold current position.:*@SCSN、その場で停止してください。"
+  "SHIP:@ZEVE[gh,10] @SCSN, holding.:*@SCSN、停止します。"
+
+[TW_GND_TOW_HOLD_REQ]
+  "SHIP:@ZEVE[gh,19] Ground, this is @SCSN, standing by for towing.:*グランド管制、こちら@SCSN、トーイング待機しています。"
+
+[TW_GND_TOW_CONTINUE]
+  "GND:@ZEVE[gh,11] @SCSN, resume towing.:*@SCSN、トーイングを再開してください。"
+  "SHIP:@ZEVE[gh,12] @SCSN, resume towing.:*@SCSN、トーイング再開します。"
+
+[TW_GND_TOW_HOLD_CONTINUE]
+  "GND:@ZEVE[gh,8] @SCSN, this is Ground, please wait.:*@SCSN、グランドです。しばらくお待ちください。"
+  "SHIP:@ZEVE[gh,4] @SCSN, stand by.:*@SCSN、待機します。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 滑走路やホールドラインの横断・通行
+;[TW_GND_TOW_HOLD-SHORT]
+;  "SHIP:@ZEVE[gh,13] Ground, this is @SCSN, we're stopped on the hold line.:*グランド、こちら@SCSN、ホールドライン上で停止しています。"
+
+;[TW_GND_TOW_CROSS]
+;  "GND:@ZEVE[gh,20] @SCSN, this is Ground. Runway crossing allowed.:*@SCSN、こちらグランド管制です。滑走路横断支障ありません。"
+;  "SHIP:@ZEVE[gh,26] @SCSN, crossing the runway.:*@SCSN、滑走路横断します。"
+
+
+
+; ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; イベント用
+; ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[EV_DEL_GREETINGGS_01]
+  "RMP:@ZEVE[st01atc,0] @SCSN, contact Narita GND, @FGND.:@SCSN、成田グランド管制にコンタクトしてください。周波数は@FGNDです。"
+  "SHIP:@ZEVE[st01atc,1] Contact Narita GND, ARIGATOUGOZAIMASU!:成田グランド管制にコンタクトします。ありがとうございます！"
+
+[EV_DEP_GREETINGGS_02]
+  "DEP:@ZEVE[st01atc,2] @SCSN, contact_Tokyo control, @FGND.:@SCSN、東京コントロール管制にコンタクトしてください。周波数は@FGNDです。"
+  "SHIP:@ZEVE[st01atc,3] Contact_Tokyo_control @FGND, @SCSN, SAYONARA!:周波数@FGNDで東京コントロール管制にコンタクトします。@SCSN。"
+  "DEP:@ZEVE[st01atc,4] SAYONARA.:さようなら。"
+
+[EV_DEP_GREETINGGS_03]
+  "DEP:@ZEVE[st09atc,0] @SCSN, contact_Tokyo control, @FGND.:@SCSN、東京コントロール管制にコンタクトしてください。周波数は@FGNDです。"
+  "SHIP:@ZEVE[st09atc,1] Contact_Tokyo_control @FGND, @SCSN, SAYONARA.:周波数@FGNDで東京コントロール管制にコンタクトします。@SCSN。"
+  "DEP:@ZEVE[st09atc,2] SAYONARA.:さようなら。"
+
+[EV_APP_DELAY_01]
+  "APP:@ZEVE[st01atc,5] @SCSN, Tokyo_APP, recleared_direct GEMIN, maintain 6000 until GEMIN, cleared_for ILS_Y_RWY16R_APPROACH.:@SCSN、こちらはアプローチ管制です。GEMINへ直行してください。GEMINは高度6000ftで通過してください。ILS_Y_RWY16R_APPROACHでの進入を許可します。"
+  "SHIP:@ZEVE[st01atc,6] Direct ah…say again?:聞き取れませんでした。もう一度お願いします。"
+  "APP:@ZEVE[st01atc,7] @SCSN, recleared_direct GEMIN, maintain 6000 until GEMIN, cleared_for ILS_Y_RWY16R_APPROACH.:@SCSN、GEMINへ直行してください。GEMINは高度6000ftで通過してください。ILS_Y_RWY16R_APPROACHでの進入を許可します。"
+  "SHIP:@ZEVE[st01atc,8] Ah…,confirm direct GEMIN, descend 6000? TNO62.:確認します。GEMINへ直行し、高度6000ftで通過でよろしいですか？@SCSN。"
+  "APP:@ZEVE[st01atc,9] Afferm.:その通りです。"
+
+[EV_APP_DELAY_02]
+  "SHIP:@ZEVE[st01atc,10] Thank you. ARIGATOU!:わかりました。ありがとう！"
+  "APP:@ZEVE[st01atc,11] You're welcome.:どういたしまして。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 滑走路変更
+
+[EV_DEP_R-CHANGE_01]
+  "SHIP:@ZEVE[st03atc,0] Narita_RMP, TBA2719, if available request RWY16R, due to make up for the delay.:成田ランプ、こちらはTBA2719です。離陸滑走路の変更を要請します。希望滑走路はRWY16Rです。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 誘導路チェック
+
+[EV_RMP_RWY-CHANGE_RWY16R]
+  "RMP:@SCSN, change_RWY_to RWY16R.:@SCSN、使用滑走路をRWY16Rに変更してください。"
+  "SHIP:RWY16R, @SCSN.:滑走路をRWY16Rに変更します。@SCSN。"
+
+[EV_GND_TWY-CHECK_01]
+  "SHIP:@ZEVE[st07atc,0] Narita Ground, this is JMN03. Due to an animal detection report, we would like to enter K-TWY to check. Are we good?:*成田グランド、場面3号です。動物発見の通報により、これから、K-TWYに進入しチェックを行いたいと思います。よろしいでしょうか？"
+
+[EV_GND_TWY-CHECK_01_TAXIIN]
+  "GND:@ZEVE[st07atc,1] JMN03, you are good to check K-TWY. K-TWY will be closed during the check, please enter the taxiway after it is closed.:*場面3号、Kのチェック支障ありません。チェック中はK-TWYは閉鎖しますので、クローズを確認したら進入してください。"
+  "SHIP:@ZEVE[st07atc,2] Roger, we will enter K-TWY after it's closed, JMN03.:*了解。クローズ確認したらKに進入します。場面3号。"
+
+[EV_GND_TWY-CHECK_02]
+  "SHIP:@ZEVE[st07atc,3] Narita Ground, this is JMN03. We checked K-TWY and could not find any animals. Just in case, we're going to check the C-TWY as well, is this good?:*成田グランド、場面3号です。K-TWYをチェックしましたが、動物は確認できませんでした。念のため、C-TWYも確認しようと思いますが、よろしいでしょうか？"
+
+[EV_GND_TWY-CHECK_02_TAXIIN]
+  "GND:@ZEVE[st07atc,4] JMN03, you are good to check C-TWY. K-TWY will be reopened. Please enter C-TWY after it is closed.:*場面3号、Cのチェック支障ありません。ではKをオープンします。Cのクローズを確認したら進入してください。"
+  "SHIP:@ZEVE[st07atc,5] Roger, we will enter C-TWY after it's closed, JMN03.:*了解。クローズ確認したらCに進入します。場面3号。"
+
+[EV_GND_TWY-CHECK_03]
+  "SHIP:@ZEVE[st07atc,6] Narita Ground, this is JMN03. C-TWY check is completed. A turtle was lost on the taxiway, so we retrieved it.:*成田グランド、場面3号です。C-TWYのチェック完了しました。カメが誘導路内に迷い込んでいたので保護しました。"
+
+[EV_GND_TWY-CHECK_03_END]
+  "GND:@ZEVE[st07atc,7] Ah... ok. thank you for your hard work.:*あぁ…わかりました。お疲れ様です。"
+
+[EV_GND_TWY-CHECK_WAIT]
+  "GND:@ZEVE[st07atc,8] JMN03, please wait.:*場面3号、待機してください。"
+  "SHIP:@ZEVE[st07atc,9] Waiting, JMN03:*待機します。場面3号。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 燃料枯渇
+
+[EV_APP_MDFUEL_REQ_TEU]
+  "SHIP:@ZEVE[st06atc,0] Tokyo_APP, TEU242, mayday_fuel. we_are_low_on_fuel. request_direct TYLER and_priority_for_landing.:東京アプローチ、こちらはTEU242です。燃料が枯渇しています。TYLERへのダイレクト及び着陸の優先を要求します。"
+
+[EV_APP_MDFUEL_REQ_TNO]
+  "SHIP:@ZEVE[st06atc,1] Tokyo_APP, TNO316, mayday_mayday_mayday_fuel. we_are_running_out_of_fuel. request_priority_for_landing.:東京アプローチ、こちらはTEU242です。燃料が枯渇しています。着陸の優先を要求します。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; ショートカット
+[EV_AP_APP_SHORTCUT_RWY34]
+  "APP:@SCSN, APP, recleared_direct @RRTP, maintain 4000 until @RRTP, cleared_for @RDAP.:@SCSN、こちらはアプローチ管制です。@RRTPへ直行してください。@RRTPは高度4000ftで通過してください。@RDAPでの進入を許可します。"
+  "SHIP:Direct @RRTP, descend 4000, cleared_for @RDAP, @SCSN, Thank_you.:@RDAPへの進入許可を確認しました。@RRTPへ直行し、高度4000ftで通過します。@SCSN。ありがとう。"
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 航空機の引き返し
+[EV_DP_DEP_EMG_01]
+  "SHIP:@ZEVE[st09atc,3]Tokyo DEP, TBA3983, we have sick passenger. request return to the airport. also request priority for landing.:東京ディパーチャー、こちらはTBA3983です。病気の乗客がいるため、成田空港への引き返しを要請します。着陸の優先を要求します。"
+
+[EV_DP_DEP_EMG_02_A]
+  "DEP:@ZEVE[st09atc,4]TBA3983, Tokyo DEP, roger. maintain 12000. request your intention.:TBA3983、こちらは東京ディパーチャーです。了解しました。高度12000ftで飛行してください。この後の意向を教えてください。"
+  "SHIP:@ZEVE[st09atc,5]Maintain 12000. request radar vector to ILS_Z_RWY34L final, TBA3983.:高度12000ftで飛行します。ILS_Z_RWY34L_approachの最終進入経路までの誘導を要請します。TBA3983。"
+
+[EV_DP_DEP_EMG_02_B]
+  "DEP:@ZEVE[st09atc,6]TBA3983, roger, stand_by for coordination. do you declare emergency?:TBA3983、了解しました。調整しますのでお待ちください。エマージェンシー宣言を行いますか？"
+
+[EV_DP_DEP_EMG_02_C]
+  "SHIP:@ZEVE[st09atc,7]We will declare an emergency. Thank you very much. TBA3983.:*エマージェンシー宣言致します。よろしくお願い致します。TBA3983."
+  "DEP:@ZEVE[st09atc,8]I understand. We will arrange an ambulance for you. Please let me know if you need anything else. Contact Tokyo_APP 124.3.:*TBA3983, エマージェンシー了解いたしました。救急車はこちらで手配致します。その他必要な事があれば仰ってください。コンタクト東京アプローチ 124.3."
+  "SHIP:@ZEVE[st09atc,9]Contact Tokyo_APP 124.3, TBA3983. Thank you.:*コンタクト東京アプローチ 124.3, TBA3983. ありがとうございます。"
+
+[EV_DP_DEP_EMG_03]
+  "SHIP:@ZEVE[st09atc,10]Tokyo APP, TBA3983, maintain 12000.:東京アプローチ、こちらはTBA3983です。高度12000ftを飛行中です。"
+
+[EV_DP_DEP_EMG_04]
+  "APP:@ZEVE[st09atc,11]TBA3983, Tokyo APP, vector_to_final_approach_course RWY34L, your spot is 31. maintain present HDG, descend and maintain 10000.:TBA3983、こちらは東京アプローチです。RWY34Lの最終進入経路まで誘導します。貴機のスポットは31番です。現在の方位を維持してください。高度10000ftまで降下してください。"
+  "SHIP:@ZEVE[st09atc,12]Our spot is 31, maintain present heading, descend 10000, TBA3983.:スポット31番了解しました。現在の方位を維持します。高度10000ftまで降下します。"
+
+[EV_DP_DEP_EMG_05]
+  "SHIP:@ZEVE[st09atc,13]APP, TBA3983, maintain 10000.:東京アプローチ、こちらはTBA3983です。高度10000ftです。"
+
+[EV_DP_DEP_EMG_06]
+  "APP:@ZEVE[st09atc,14]TBA3983, turn_left_HDG080,  descend and maintain 7000.:TBA3983、左旋回して方位080へ飛行してください。高度7000ftまで降下してください。"
+  "SHIP:@ZEVE[st09atc,15]Turn HDG080, descend 7000, TBA3983.:方位080で飛行します。高度7000ftまで降下します。TBA3983。"
+
+[EV_DP_DEP_EMG_07]
+  "SHIP:@ZEVE[st09atc,16]APP, TBA3983, maintain 7000.:東京アプローチ、こちらはTBA3983です。高度7000ftです。"
+
+[EV_DP_DEP_EMG_08]
+  "APP:@ZEVE[st09atc,17]TBA3983, Tokyo APP, resume own navigation direct TYLER, descend and maintain 4000 until TYLER, cleared_for ILS_Z_RWY34L_approach.:TBA3983、こちらは東京アプローチです。TYLERへ直行し、高度4000ftで通過してください。ILS_Z_RWY34L_approachでの進入を許可します。"
+  "SHIP:@ZEVE[st09atc,18]Cleared_for ILS_Z_RWY34L approach, direct TYLER, TBA3983. thank you.:ILS_Z_RWY34L_approachでの進入許可を確認しました。TYLERへ直行します。TBA3983。ありがとうございます。"
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,11 @@
+<?VoiceActManager version="1.0"?>
+<!-- AN Voice Script “ú–{Œê”Å -->
+<VoiceScript>
+	<Book name="AN">
+		<script no="0" string="#$FLIGHT announcements_j_dep_01 $CITY announcements_j_dep_02 #$SPOT announcements_j_dep_03"/>
+		<script no="1" string="announcements_j_arr_01 #$FLIGHT announcements_j_arr_02"/>
+		<!--script no="0" string="$AIRLINES #$FLIGHT announcements_j_dep_01 $CITY announcements_j_dep_02 #$SPOT announcements_j_dep_03"/>
+		<script no="1" string="announcements_j_arr_01 $AIRLINES #$FLIGHT announcements_j_arr_02"/-->
+	</Script>
+</VoiceScript>
+

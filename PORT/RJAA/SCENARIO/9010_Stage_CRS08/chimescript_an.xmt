@@ -1,0 +1,9 @@
+<?VoiceActManager version="1.0"?>
+<!-- AN chime -->
+<VoiceScript>
+	<Book name="AN">
+		<script no="0" string="chime_C"/>
+		<script no="1" string="chime_C"/>
+	</Script>
+</VoiceScript>
+

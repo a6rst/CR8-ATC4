@@ -1,0 +1,12 @@
+<?VoiceActManager version="1.0"?>
+<!-- CA Voice Script ‰pŒê”Å -->
+<VoiceScript>
+	<Book name="FA">
+		<script no="0" string="blank"/>
+		<script no="1" string="fa_h_final"/>
+		<script no="2" string="fa_h_land"/>
+		<script no="3" string="blank"/>
+		<script no="4" string="fa_h_takeoff"/>
+	</Script>
+</VoiceScript>
+

@@ -1,0 +1,169 @@
+<?effector version="1.0"?>
+<EffectData>
+<!-- ====================================================
+	INTRO AT START
+========================================================= -->
+	<Category name="INTRO_CUT">
+		<Effect trigger="start" overlap="once" area="telop">
+			<PvmLayer file="event_cr8">
+				<Action para="8,1" time="0"/>
+				<Wait time="2000"/>
+				<Action para="8,0"/>
+			</PvmLayer>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	BLOCKADE SIGN IMPORT
+========================================================= -->
+	<Category name="CR8_MODEL">
+		<!-- MODEL SET -->
+		<Effect trigger="start" overlap="once">
+			<!-- MODEL DISPLAY -->
+			<Model file="CR8_blockade\blockade_main" pos="0,0,0" rotate="0,0,0">
+				<Wait time="finish"/>
+			</Model>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	EVT: CONST AREA SETUP
+========================================================= -->
+	<!--Category name="CR8_AREA">
+		<!-- RISK AREA FILE -->
+		<!--Effect trigger="start" overlap="once" area="telop">
+			<!--Risk file="CR8_blockade_area"/>
+		<!--/Effect>
+	<!--/Category>
+<!-- ====================================================
+	EVT: CONST AREA VIOLATION
+========================================================= -->
+	<!--Category name="CR8_VIOLATION">
+		<!--Effect comstate="CR8_AREA_ENTRY" area="area">
+			<!--Ship commandfile="command" statefile="state"/>
+			<!--Command state="CR8_VIOLATION_STATE"/>
+		<!--/Effect>
+	<!--/Category>
+<!-- ====================================================
+	INITIAL SETUP
+========================================================= -->
+	<!-- DEFINE INSERT CUT -->
+	<Init Sentence="insertcut_stage04"/>
+	<!-- INSERT CUT AREA -->
+	<Area name="area_lb" align="lb"  pos="0,-80" next="0,-45" count="5"/>
+	<Area name="area_lt" align="lt"  pos="0,88" next="0,45" count="5"/>
+		<!-- Area "telop" is defined in insertcut.xmt -->
+	<!-- AUDIO DATA -->
+	<SoundData name="warning" file="insert_warning"/>
+	<SoundData name="event_notice" file="event_notice"/>
+	<SoundData name="insert_alarm" file="insert_alarm"/>
+	<VoiceScript name="cr8_eventall" memberlist="cr8_eventall" memberfolder="others"/>
+	<SoundArea name="all" area="-173000,82250, 150700,120000, 175000,-78000, -147000,-116000" alt="0,10000"/>
+<!-- ====================================================
+	EVT : ENGINE TROUBLE (AIRCRAFT RESPONSE)
+========================================================= -->
+	<Category callsign="TNO6710" name="CR8_EV_GHSTALL_ACFT">
+	<!-- MAIN EVENT NOTICE TAG -->
+		<Effect comstate="CR8_EV_GHSTALL_INITIAL" overlap="once" area="area_lb">
+			<Voice script="cr8_eventall" no="0" area="all" volume="100,100" range="20000,20000"/>
+			<!-- Wait shipsub="SpotIn" lookship="TNO6710"/ -->
+			<PvmLayer file="warning" pos="0,0" time="0">
+				<Sound name="event_notice" time="0"/>
+				<Action para="2,1"/>
+				<Action para="4,1" time="0"/>
+				<Action para="7,1" time="0"/>
+				<Text label="event01" pos="48,-7" font="large" rgb="255,255,255">
+					<Wait time="8000"/>
+					<Voice script="cr8_eventall" no="1" area="all" volume="100,100" range="20000,20000"/>
+					<Voice script="cr8_eventall" no="2" area="all" volume="100,100" range="20000,20000"/>
+					<Voice script="cr8_eventall" no="3" area="all" volume="100,100" range="20000,20000"/>
+					<Wait time="4000"/>
+				</Text>
+				<Action para="4,0"/>
+				<Action para="6,1"/>
+				<Flag iFlag1="1"/>
+				<!-- Shitass timing system kept activating this simul so I'm lumping this with the PvmLayer -->
+			</PvmLayer>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	EVT : ENGINE TROUBLE (SYSTEM RESPONSE)
+	These two have to be seperated due to some unknown Category/Effect(?) limit imposed on .xmtx files affecting the VISPAPCH event later on
+========================================================= -->
+	<!-- EVENT PREVIEW -->
+	<Category name="CR8_EV_GHSTALL_PROC">
+		<Effect trigger="start" overlap="once" area="telop">
+			<Wait iFlag1="@EQ:1"/>
+			<PvmLayer file="event_cr8" time="0">
+				<Sound name="event_notice" time="0"/>
+				<Action para="2,1"/>
+				<Action para="4,1" time="0"/>
+				<Action para="5,1" time="0"/>
+				<!-- Event preview slot action +7 -->
+				<Action para="10,1" time="0"/>
+				<Text label="event02" cliplayer="message" scroll="12000" font="large" rgb="0,255,0">
+					<Wait time="500"/>
+					<!--Voice script="cr8_eventall" no="4" area="all" volume="100,100" range="20000,20000"/-->
+					<!-- REACTIVATE this when GND closure announcement gets implemented, set to slot 4 -->
+					<Wait time="12000"/>
+					<Wait time="3000"/>
+				</Text>
+				<Action para="10,0"/>
+				<Action para="4,0"/>
+				<Action para="3,1"/>
+			</PvmLayer>
+		</Effect>
+	<!-- ENGINE RESTART FAIL -->
+		<Effect nowtime="120400" overlap="once" area="telop">
+			<PvmLayer file="event_cr8" time="0">
+				<!-- Event preview slot action +7 -->
+				<Action para="11,1" time="0"/>
+					<BGM volume="20" fadetime="2000"/>
+					<Voice script="cr8_eventall" no="5" area="all" volume="100,100" range="20000,20000"/>
+					<BGM volume="fadein" fadetime="2000"/>
+					<Flag iFlag1="2"/>
+				<Action para="11,0"/>
+			</PvmLayer>
+		</Effect>
+	<!-- CAR MODEL IMPORT -->
+		<Effect trigger="start">
+			<Wait iFlag1="@EQ:1"/>
+			<Model file="CR8_blockade\others\car_jmn" ship="TNO6710" pos="35,-43,-30" rotate="0,45,0">
+				<Action para="10,1"/>
+				<Action para="50,1"/>
+				<Wait time="finish"/>
+			</Model>
+		</Effect>
+		<Effect trigger="start">
+			<Wait iFlag1="@EQ:2"/>
+			<Wait time="500"/>
+			<Model file="CR8_blockade\others\cab_fire" ship="TNO6710" pos="-40,-43,-20" rotate="0,-103,0">
+				<Action para="10,1"/>
+				<Action para="50,1"/>
+				<Wait time="finish"/>
+			</Model>
+		</Effect>
+	<!-- RADAR BLOCKADE OVERLAY -->
+		<Effect trigger="start">
+			<Wait iFlag1="@EQ:1"/>
+			<RadarWindowAPL parts="closeanime" ship="TNO6710">
+				<Action para="3,1"/>
+				<Wait time="finish"/>
+			</RadarWindowAPL>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	EVT : AZA1785 VISUAL APPROACH CONFLICT
+========================================================= -->
+	<Category callsign="AZA1785" name="CR8_EV_CONFLICT">
+		<Effect subcom="create" overlap="once" area="telop">
+			<Wait statOut="%ROUTE_FINAL"/>
+			<PvmLayer file="event_cr8" time="0">
+				<Action para="12,1" time="0"/>
+					<Wait time="3000"/>
+				<Action para="12,0"/>
+			</PvmLayer>
+		</Effect>
+	</Category>
+<!-- ====================================================
+
+========================================================= -->
+</EffectData>
