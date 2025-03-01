@@ -25,7 +25,7 @@ sequence04_rotate_x=(0,0,0:0,nml),(60,0,0:1500,nml)
 mode=SWITCH_REVERSIBLE
 time=1000
 sequence01_layer=ANM_SlastReverser
-sequence01_translate_y=(4.0085,0,0:0,nml),(3.0085,0,0:1000,nml)
+sequence01_translate_y=(4.0085,0,0:0,nml),(3.7075,0,0:1000,nml)
 
 [ACTION023]
 mode=PARAM
