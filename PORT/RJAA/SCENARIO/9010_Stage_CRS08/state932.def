@@ -510,6 +510,7 @@
 ;  {$VALUE03 == $SHIP_UID} #SUBCODE(EV_R-CHANGE_CPT_VOICE)
 ;  {$VALUE03 == $SHIP_UID} #WAIT(45)
   "[DP_DEL_DELIVERY_REQ]"
+  {$SHIP_SECTION_AUTO == 1} #STATE(DP_DEL_DELIVERY_RWYCHECK)
   #STATE(DP_DEL_DELIVERY_CLEAR_LOOP)
 
 ;------------------------------------------------------------------------------------------------------------------------------------------------------
