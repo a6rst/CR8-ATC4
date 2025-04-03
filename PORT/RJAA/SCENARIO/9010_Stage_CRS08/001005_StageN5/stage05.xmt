@@ -4,7 +4,7 @@
 	INTRO AT START
 ========================================================= -->
 	<Category name="INTRO_CUT">
-		<Effect trigger="start" overlap="once" area="telop">
+		<Effect trigger="start" overlap="once" pos="0,0">
 			<PvmLayer file="event_cr8">
 				<Action para="8,1" time="0"/>
 				<Wait time="2000"/>

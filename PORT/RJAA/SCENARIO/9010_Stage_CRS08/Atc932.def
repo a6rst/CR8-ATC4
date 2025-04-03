@@ -504,10 +504,10 @@
   "SHIP:Expect RWY34, contact RMP_control, @SCSN.:使用滑走路は34、了解しました。成田ランプにコンタクトします。@SCSN。"
 
 [DP_DEL_GND-HANDOFF_16]
-  "DEL:Readback_is_correct, expect RWY16, contact @LGND @FGND.:復唱は正確です。使用滑走路は16です。成田グランド管制にコンタクトしてください。周波数は@FRMPです。"
+  "DEL:Readback_is_correct, expect RWY16, contact @LGND @FGND.:復唱は正確です。使用滑走路は16です。成田グランド管制にコンタクトしてください。周波数は@FGNDです。"
   "SHIP:Expect RWY16, contact @LGND, @SCSN.:使用滑走路は16、了解しました。成田ランプにコンタクトします。@SCSN。"
 [DP_DEL_GND-HANDOFF_34]
-  "DEL:Readback_is_correct, expect RWY34, contact @LGND @FGND.:復唱は正確です。使用滑走路は34です。成田グランド管制にコンタクトしてください。周波数は@FRMPです。"
+  "DEL:Readback_is_correct, expect RWY34, contact @LGND @FGND.:復唱は正確です。使用滑走路は34です。成田グランド管制にコンタクトしてください。周波数は@FGNDです。"
   "SHIP:Expect RWY34, contact @LGND, @SCSN.:使用滑走路は34、了解しました。成田ランプにコンタクトします。@SCSN。"
 
 ;------------------------------------------------------------------------------------------------------------------------------------------------------
