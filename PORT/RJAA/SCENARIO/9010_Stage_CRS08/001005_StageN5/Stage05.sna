@@ -483,7 +483,7 @@ spot=SPOT191
 icaocode=B762
 depport=NZAA
 arrport=RJAA
-start=1803
+start=1804
 ready=1817
 mode=12
 backcolor=2
@@ -507,6 +507,8 @@ route02=AR_MARTIN_2_ARR
 route03=AP_ILS_RWY34_COURSEWAY
 route04=RWY34L
 registration1=ZK-6A1
+event00=<NAME=SE050001,CONDITION=RoutePoint(ROUSY,7.6)&&Runway(RWY16R),EXECUTION=STATE(%ARQ_APP_VIS-APCH_16R)>
+event01=<NAME=SE050002,CONDITION=RoutePoint(ROUSY,7.6)&&Runway(RWY34L),EXECUTION=STATE(%ARQ_APP_VIS-APCH_34L)>
 extcolor=0x00000000
 setupvalue=0
 setupvalue2=0
@@ -565,7 +567,7 @@ spot=SPOT705
 icaocode=B742
 depport=PANC
 arrport=RJAA
-start=1809.25
+start=1809.45
 ready=1833
 mode=12
 backcolor=2

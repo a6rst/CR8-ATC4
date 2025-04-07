@@ -102,9 +102,14 @@
   "APP:@SCSN, @AAPP, cleared_for visual_approach RWY34, proceed_direct Yokoshiba.:@SCSN、こちらはアプローチ管制です。Visual approach RWY34での進入を許可します。横芝NDBに直行してください。"
   "SHIP:Cleared_for visual_approach RWY34, direct Yokoshiba, @SCSN.:Visual approach RWY34での進入許可を確認しました。横芝NDBに直行します。@SCSN。"
 
-[AP_APP_VIS-APCH_REPORT]
+[AP_APP_VIS-APCH_REP_TFP]
   "APP:@SCSN, descend_and_maintain 4500, report_airport_insight.:@SCSN、4500ftまで降下し、空港を視認次第通報してください。"
   "SHIP:Descend_and_maintain 4500, report_airport_insight, @SCSN.:4500ftまで降下し、空港を視認次第通報します。@SCSN。"
+
+[AP_APP_VIS-APCH_REP_DCT]
+  "APP:@SCSN, descend_and_maintain 3000, report_airport_insight.:@SCSN、3000ftまで降下し、空港を視認次第通報してください。"
+  "SHIP:Descend_and_maintain 3000, report_airport_insight, @SCSN.:3000ftまで降下し、空港を視認次第通報します。@SCSN。"
+
 
 [AP_APP_VIS-APCH_RANGE]
   "SHIP:APP, @SCSN, airport_insight.:アプローチ管制、こちらは@SCSNです。空港を視認しました。"
@@ -505,10 +510,10 @@
 
 [DP_DEL_GND-HANDOFF_16]
   "DEL:Readback_is_correct, expect RWY16, contact @LGND @FGND.:復唱は正確です。使用滑走路は16です。成田グランド管制にコンタクトしてください。周波数は@FGNDです。"
-  "SHIP:Expect RWY16, contact @LGND, @SCSN.:使用滑走路は16、了解しました。成田ランプにコンタクトします。@SCSN。"
+  "SHIP:Expect RWY16, contact @LGND, @SCSN.:使用滑走路は16、成田グランドにコンタクトします。@SCSN。"
 [DP_DEL_GND-HANDOFF_34]
   "DEL:Readback_is_correct, expect RWY34, contact @LGND @FGND.:復唱は正確です。使用滑走路は34です。成田グランド管制にコンタクトしてください。周波数は@FGNDです。"
-  "SHIP:Expect RWY34, contact @LGND, @SCSN.:使用滑走路は34、了解しました。成田ランプにコンタクトします。@SCSN。"
+  "SHIP:Expect RWY34, contact @LGND, @SCSN.:使用滑走路は34、成田グランドにコンタクトします。@SCSN。"
 
 ;------------------------------------------------------------------------------------------------------------------------------------------------------
 ; プッシュバック
