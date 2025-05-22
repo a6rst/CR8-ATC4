@@ -20,15 +20,11 @@ wind1speed=0,9,30,5,60,8
 wind1direct=0,337,30,359,60,349
 wind2speed=0,9,30,5,60,8
 wind2direct=0,337,30,359,60,349
-rainfall=0,0,25,1,60,1
+rainfall=0,0,60,0
 snowfall=0,0,60,0
 lightrate=0,100,60,100
 cloud=SeaCloud
-cloudheight=7000
-
-;>>>NOTE TO SELF<<<
-; AUDIO starts to crack at TNT taxi clearance or NWA radar contact, reason not known
-; on replay, AFR radar contact is not registered, will freeze game indefinitely, may require rebooting device
+cloudheight=3000
 
 ;------ DEPARTURES ------
 [SHIP0000]
@@ -68,7 +64,7 @@ state=%SNA_RPGD_START
 section=GND
 extcolor=0x00000000
 setupvalue=1
-setupvalue2=30
+setupvalue2=60
 setupvalue3=0
 setupvalue4=0
 
@@ -107,7 +103,7 @@ route03=TR_NRE_GTC
 registration1=USSR-TBA01
 extcolor=0x00000000
 setupvalue=0
-setupvalue2=5
+setupvalue2=35
 setupvalue3=0
 setupvalue4=0
 
@@ -146,7 +142,7 @@ route03=TR_NRE_GTC
 registration1=G-4BA1
 extcolor=0x00000000
 setupvalue=0
-setupvalue2=15
+setupvalue2=45
 setupvalue3=0
 setupvalue4=0
 
@@ -185,7 +181,7 @@ route03=TR_PAPA_INANBA_DH
 registration1=9M-3M1
 extcolor=0x00000000
 setupvalue=0
-setupvalue2=45
+setupvalue2=75
 setupvalue3=0
 setupvalue4=0
 
@@ -1437,6 +1433,6 @@ level_c=12
 level_d=0
 level_e=0
 level_star=3
-lastsectiondep=DEP
+lastsectiondep=TWR
 lastsectionapp=GND
 productid=WTLF033

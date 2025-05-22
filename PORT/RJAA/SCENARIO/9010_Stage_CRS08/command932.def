@@ -55,7 +55,7 @@
 
 <DP_DELIVERY_CLEAR:*Delivery clearance [@RRWY]:出発許可[@RRWY]>
   #SUBCODE(@98,,2,500)
-;  {($ROUTECODE_NIKKO_DT == 1) || ($ROUTECODE_YAMIZO_DT == 1) || ($ROUTECODE_IWAKI_DT == 1)} #SETUSERFLAG(0,1)
+  {($ROUTECODE_NIKKO_DT == 1) || ($ROUTECODE_YAMIZO_DT == 1) || ($ROUTECODE_IWAKI_DT == 1)} #SETUSERFLAG(0,1)
   {$SHIP_ARR_RJTT != 1} "[DP_DEL_DELIVERY_PTS1_HIGH]"
   {$SHIP_ARR_RJTT == 1} "[DP_DEL_DELIVERY_PTS1_LOW]"
   {($USERFLAG00 == 1) && ($SHIP_ARR_RJTT != 1) && ($SHIP_TRANSITION == 1)} "[DP_DEL_DELIVERY_PTS2_LOW]"
@@ -529,7 +529,9 @@
   #SETUSERFLAG(20,1)
   {$SHIP_HOLD == 0} #EXECUTE(LINEUPANDWAIT)
   {$SHIP_HOLD != 0} #DELAYEXECUTE(LINEUPANDWAIT,7)
-  "[DP_TWR_LINE-UP]"
+;  "[DP_TWR_LINE-UP]"
+  {$SHIP_RWY_RWY16R == 1} "[DP_TWR_LINE-UP_16]"
+  {$SHIP_RWY_RWY34L == 1} "[DP_TWR_LINE-UP_34]"
   #STATE(DP_TWR_LINE-UP_LOOP)
 
 ;------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -609,6 +611,7 @@
 <AP_RDR-CONTACT_EXECUTE:*Radar contact:レーダーコンタクト>
   {$USERFLAG08 == 0} #SUBCODE(@98,,2,500)
   {$USERFLAG08 == 1} #SUBCODE(@98,,2,200)
+  {($SHIP_UID == $VALUE08) && ($USERFLAG08 == 0)}  #COMMAND(AP_RDR-CONTACT_OSKDIV)
   #COMMAND(AP_RDR-CONTACT_COMMON)
 
 <AP_RDR-CONTACT_COMMON:Radar contact:レーダーコンタクト>
@@ -619,6 +622,14 @@
   #SETUSERFLAG(0,1)
 ;  {($VALUE02 == $SHIP_UID) && ($SHIP_GOAROUNDED == 0)} #STATE(EV_DELAY_01_COP01)
 ;  {($SHIP_GOAROUNDED == 0) && (($VALUE04 == $SHIP_UID) || ($VALUE05 == $SHIP_UID))} #STATE(EV_MDFUEL_SHORTCUT_REQ)
+  #STATE(AP_APP_ARR-FLIGHT_JUDGE)
+
+<AP_RDR-CONTACT_OSKDIV:Radar contact:レーダーコンタクト>
+  {$SHIP_RWY_RWY16R == 1} "[AP_APP_RDR-CONTACT_16_OSK]"
+  {$SHIP_RWY_RWY34L == 1} "[AP_APP_RDR-CONTACT_34_OSK]"
+  #SHIPTIMELIMIT(20)
+;  #STRIPMODE(ARR)
+  #SETUSERFLAG(0,1)
   #STATE(AP_APP_ARR-FLIGHT_JUDGE)
 
 ;------------------------------------------------------------------------------------------------------------------------------------------------------

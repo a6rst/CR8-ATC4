@@ -1,0 +1,133 @@
+<?effector version="1.0"?>
+<EffectData>
+<!-- ====================================================
+	INTRO AT START
+========================================================= -->
+	<Category name="INTRO_CUT">
+		<Effect trigger="start" overlap="once" pos="0,0">
+			<PvmLayer file="event_cr8">
+				<Action para="9,1" time="0"/>
+				<Wait time="2000"/>
+				<Action para="9,0"/>
+			</PvmLayer>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	BLOCKADE SIGN IMPORT
+========================================================= -->
+	<Category name="CR8_MODEL">
+		<!-- MODEL SET -->
+		<Effect trigger="start" overlap="once">
+			<!-- MODEL DISPLAY -->
+			<Model file="CR8_blockade\blockade_main" pos="0,0,0" rotate="0,0,0">
+				<Wait time="finish"/>
+			</Model>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	EVT: CONST AREA SETUP
+========================================================= -->
+	<!--Category name="CR8_AREA">
+		<!-- RISK AREA FILE -->
+		<!--Effect trigger="start" overlap="once" area="telop">
+			<!--Risk file="CR8_blockade_area"/>
+		<!--/Effect>
+	<!--/Category>
+<!-- ====================================================
+	EVT: CONST AREA VIOLATION
+========================================================= -->
+	<!--Category name="CR8_VIOLATION">
+		<!--Effect comstate="CR8_AREA_ENTRY" area="area">
+			<!--Ship commandfile="command" statefile="state"/>
+			<!--Command state="CR8_VIOLATION_STATE"/>
+		<!--/Effect>
+	<!--/Category>
+<!-- ====================================================
+	INITIAL SETUP
+========================================================= -->
+	<!-- DEFINE INSERT CUT -->
+	<!--Init Sentence="insertcut_stage07"/-->
+	<!-- INSERT CUT AREA -->
+	<!--Area name="area_lb" align="lb"  pos="0,-80" next="0,-45" count="5"/>
+	<Area name="area_lt" align="lt"  pos="0,88" next="0,45" count="5"/-->
+		<!-- Area "telop" is defined in insertcut.xmt -->
+	<!-- AUDIO DATA -->
+	<!--SoundData name="warning" file="insert_warning"/>
+	<SoundData name="event_notice" file="event_notice"/>
+	<SoundData name="insert_alarm" file="insert_alarm"/>
+	<VoiceScript name="cr8_eventall" memberlist="cr8_eventall" memberfolder="others"/>
+	<SoundArea name="all" area="-173000,82250, 150700,120000, 175000,-78000, -147000,-116000" alt="0,10000"/-->
+<!-- ====================================================
+	EVT : DELIVERY CEREMONY (OBJECTIVE)
+========================================================= -->
+	<Category name="CR8_EV_DELIVERY_MASTER">
+	<!-- CLEARFLAG -->
+		<Effect trigger="start" overlap="once">
+			<Flag iFlag1="0"/>
+			<!--Flag clearflag2="1"/-->
+		</Effect>
+	<!-- CAR MODEL IMPORT -->
+		<Effect trigger="start" overlap="once">
+			<Model file="CR8_blockade\others\ceremony05" pos="-710.372,0,649.938" rotate="0,59.5,0">
+			<!-- FIRETRUCK SPAWN -->
+				<Wait iFlag1="@EQ:1"/>
+				<Wait time="2000"/>
+				<Action para="33,1"/>
+			<!-- WATER SALUTE START -->
+				<Wait iFlag1="@EQ:2"/>
+				<Action para="7,1" time="0"/>
+			<!-- WATER SALUTE STOP -->
+				<Wait iFlag1="@EQ:3"/>
+				<Action para="21,1"/>
+			<!-- DISAPPEAR AFTER CEREMONY -->
+				<Wait time="120000"/>
+				<!--Action para="25,0"/-->
+				<Action para="33,0"/>
+			</Model>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	EVT : DELIVERY CEREMONY (AIRCRAFT)
+========================================================= -->
+	<Category callsign="TBA8107" name="CR8_EV_DELIVERY_CHECK">	
+		<!-- FIRETRUCK SPAWN -->
+		<Effect trigger="touchdown" overlap="once">
+			<Wait time="25000"/>
+			<Flag iFlag1="1"/>
+		</Effect>
+		<!-- WATER SALUTE START -->
+		<Effect comstate="CR8_EV_DELIVERY_INITIAL" overlap="once">
+			<Flag iFlag1="2"/>
+		</Effect>
+		<!-- WATER SALUTE STOP -->
+		<Effect comstate="CR8_EV_DELIVERY_END" overlap="once">
+			<Flag iFlag1="3"/>
+		</Effect>
+			<!-- yes I did try to use nodetrack for these and they didn't work for some reason????? -->
+			<!-- so y'all enjoy the standard event-subcode sequence instead -->
+		<!-- ARRIVAL -->
+		<!--Effect comstate="spotin" overlap="once">
+			<Flag clearflag2="2"/>
+		</Effect-->
+		<!--Effect subcom="create" overlap="once" area="telop">
+			<Wait statOut="AP_RDR-CONTACT_COMMON"/>
+			<PvmLayer file="event_cr8" time="0">
+				<Sound name="event_notice" time="0"/>
+				<Action para="2,1"/>
+				<Action para="4,1" time="0"/>
+				<Action para="5,1" time="0"/>
+				<!-- Event preview slot action +7 >
+				<Action para="14,1" time="0"/>
+				<Text label="event01" cliplayer="message" scroll="12000" font="large" rgb="0,255,0">
+					<Wait time="15000"/>
+				</Text>
+				<Action para="14,0"/>
+				<Action para="4,0"/>
+				<Action para="3,1"/>
+			</PvmLayer>
+		</Effect-->
+	</Category>
+<!-- ====================================================
+
+========================================================= -->
+</EffectData>

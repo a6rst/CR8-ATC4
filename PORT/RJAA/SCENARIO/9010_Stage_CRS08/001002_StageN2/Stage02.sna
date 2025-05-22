@@ -497,7 +497,7 @@ setupvalue3=0
 setupvalue4=0
 
 [SHIP0012]
-shipcode=a4_B742f_JALCTL
+shipcode=a4_B742f_JAACTL
 callsign=JAA254
 squawk=2103
 guid=230103000
@@ -918,6 +918,6 @@ level_c=11
 level_d=0
 level_e=0
 level_star=2
-lastsectiondep=DEP
+lastsectiondep=TWR
 lastsectionapp=GND
 productid=WTLF033

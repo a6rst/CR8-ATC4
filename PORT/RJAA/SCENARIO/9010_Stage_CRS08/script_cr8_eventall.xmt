@@ -9,6 +9,8 @@
 		<script no="4" string="CR8_ghstall_040"/>
 		<script no="5" string="CR8_ghstall_050"/>
 		<script no="6" string="CR8_ghstall_060"/>
+		<script no="10" string="CR8_curfew_000"/>
+		<script no="20" string="CR8_typhoon_005"/>
 	</Script>
 </VoiceScript>
 

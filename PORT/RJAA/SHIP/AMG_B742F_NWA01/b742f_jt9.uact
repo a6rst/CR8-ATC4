@@ -295,19 +295,19 @@ time=1500
 loop=-1
 reset=1,0,0,0,0
 sequence01_layer=ANM_collisionLight_top
-sequence01_pointsize=(0,0,0:0,nml),(0,0,0:50,nml),(5,0,0:60,sin),(5,0,0:70,nml),(0,0,0:100,cos)
+sequence01_pointsize=(0,0,0:0,nml),(0,0,0:50,nml),(5,0,0:60,sin),(0,0,0:100,cos)
 sequence01_switch=(0,0,0:0,nml),(0,0,0:50,nml),(1,0,0:60,nml),(0,0,0:100,nml)
 sequence02_layer=ANM_collisionLight_bottom
-sequence02_pointsize=(0,0,0:0,nml),(0,0,0:150,nml),(5,0,0:160,sin),(5,0,0:170,nml),(0,0,0:200,cos)
-sequence02_switch=(0,0,0:0,nml),(0,0,0:150,nml),(1,0,0:160,nml),(0,0,0:200,nml)
+sequence02_pointsize=(0,0,0:0,nml),(0,0,0:50,nml),(5,0,0:60,sin),(0,0,0:100,cos)
+sequence02_switch=(0,0,0:0,nml),(0,0,0:50,nml),(1,0,0:60,nml),(0,0,0:100,nml)
 sequence03_layer=ANM_StroboLight_tail
-sequence03_pointsize=(0,0,0:0,nml),(0,0,0:250,nml),(2.5,0,0:260,sin),(2.5,0,0:270,nml),(0,0,0:300,cos)
+sequence03_pointsize=(0,0,0:0,nml),(0,0,0:300,nml),(2.5,0,0:310,sin),(0,0,0:400,cos)
 sequence04_layer=ANM_collisionLight_drop
-sequence04_switch=(0,0,0:0,nml),(1,0,0:150,nml),(1,0,0:160,sin),(0,0,0:200,cos)
+sequence04_switch=(0,0,0:0,nml),(1,0,0:50,nml),(1,0,0:60,nml),(0,0,0:100,nml)
 sequence05_layer=ANM_StroboLight_Wing_l
-sequence05_pointsize=(0,0,0:0,nml),(0,0,0:300,nml),(2.5,0,0:310,sin),(2.5,0,0:320,nml),(0,0,0:400,cos)
+sequence05_pointsize=(0,0,0:0,nml),(0,0,0:300,nml),(2.5,0,0:310,sin),(0,0,0:400,cos)
 sequence06_layer=ANM_StroboLight_Wing_r
-sequence06_pointsize=(0,0,0:0,nml),(0,0,0:300,nml),(2.5,0,0:310,sin),(2.5,0,0:320,nml),(0,0,0:400,cos)
+sequence06_pointsize=(0,0,0:0,nml),(0,0,0:300,nml),(2.5,0,0:310,sin),(0,0,0:400,cos)
 
 [ACTION031]
 mode=SWITCH
@@ -531,9 +531,9 @@ light_no=7
 light01_layer=ANM_collisionLight_top
 light01_data=(2,0,0,10:60,100)
 light02_layer=ANM_collisionLight_bottom
-light02_data=(16,0,0,14:160,200)
+light02_data=(16,0,0,14:60,100)
 light03_layer=ANM_StroboLight_tail
-light03_data=(16,16,16,1:260,300)
+light03_data=(16,16,16,1:310,400)
 
 [ACTION112]
 mode=EXTERNAL

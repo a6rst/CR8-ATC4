@@ -217,7 +217,8 @@
 ; 到着機が空域に進入してきた直後（到着機の開始）【0001S】
 [%APPROACH:In flight:飛行中]
   #WAIT(3)
-  "[AP_APP_INI-CONTACT]"
+  {$SHIP_UID != $VALUE08} "[AP_APP_INI-CONTACT]"
+  {$SHIP_UID == $VALUE08} "[AP_APP_INI-CONTACT_OSKDIV]"
   #SUBCODE(approach)
   #STATE(AP_APP_RDR-CONTACT)
 
@@ -259,7 +260,8 @@
 ; 到着・トーイング機がスポットイン
 [%SPOTIN:Arrived:到着しました]
   {$SHIP_MODE == 3} "[TW_GND_TOW_SPOTIN]"
-  {$SHIP_UID == $VALUE03} #MESSAGE(Engine trouble:エンジントラブル発生)
+;  {$SHIP_UID == $VALUE06} #SUBCODE(CR8_EV_CURFEW_CHECK)
+;  {$SHIP_UID == $VALUE03} #MESSAGE(Engine trouble:エンジントラブル発生)
 ;  {$SHIP_UID == $VALUE07} #SUBCODE(EV_EMG_SPOTIN_I-CAT)
 ;  {$SHIP_UID == $VALUE07} #SUBCODE(EV_EMG_SPOTIN_VOICE)
 
@@ -2183,6 +2185,51 @@
 
 
 ;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+;CR8 EVENT STATE
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 
+[EV_CR8_GHSTALL_BLANK:You know what's about to happen:走行中]
+
+[%EV_CR8_GHSTALL_START:Taxiing:走行中]
+  #EXECUTE(HOLD)
+  #SUBCODE(CR8_EV_GHSTALL_INITIAL)
+  #WAIT(10)
+  #MESSAGE(Engine trouble:エンジントラブル発生)
+  
+[%EV_CR8_GHSTALL_START2:Taxiing:走行中]
+  #SETVALUE(3,$SHIP_UID)
+  #CHANGESPOT(M2)
+  #WAIT(10)
+  #SUBCODE(CR8_EV_GHSTALL_INITIAL)
+  #MESSAGE(Engine trouble:エンジントラブル発生)
+  
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 
+[%CR8_EV_CURFEW_INITIAL]
+  #SETVALUE(6,$SHIP_UID)
+  #STATE(%APPROACH)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 
+[%CR8_EV_DELIVERY_INITIAL]
+  #TAXIGS(5)
+  #SUBCODE(CR8_EV_DELIVERY_INITIAL)
+  #MESSAGE(Taxiing:走行中)
+
+[%CR8_EV_DELIVERY_END]
+  #SUBCODE(CR8_EV_DELIVERY_END)
+  #MESSAGE(Taxiing:走行中)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 燃料が少ない機体の初期設定
+[%CR8_EV_OSKDIV_INITIAL]
+  #SETVALUE(8,$SHIP_UID)
+  #STATE(%APPROACH)
+
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ;イベントState
 ;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2372,24 +2419,6 @@
   #FLAG(CONTACTTWR)
 ;  #ROUTECHANGEPOINT(@D)
   #STATE(AP_APP_ARR-FLIGHT_JUDGE)
-
-;------------------------------------------------------------------------------------------------------------------------------------------------------
-; 
-[EV_CR8_GHSTALL_BLANK:You know what's about to happen:走行中]
-
-[%EV_CR8_GHSTALL_START:Taxiing:走行中]
-  #EXECUTE(HOLD)
-  #SUBCODE(CR8_EV_GHSTALL_INITIAL)
-  #WAIT(10)
-  #MESSAGE(Engine trouble:エンジントラブル発生)
-  
-[%EV_CR8_GHSTALL_START2:Taxiing:走行中]
-  #SETVALUE(3,$SHIP_UID)
-  #CHANGESPOT(M2)
-  #WAIT(10)
-  #SUBCODE(CR8_EV_GHSTALL_INITIAL)
-  #MESSAGE(Engine trouble:エンジントラブル発生)
-  
 
 ;------------------------------------------------------------------------------------------------------------------------------------------------------
 ; 工事エリアに接近した航空機の停止処理

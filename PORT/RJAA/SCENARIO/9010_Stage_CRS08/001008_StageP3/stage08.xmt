@@ -1,0 +1,180 @@
+<?effector version="1.0"?>
+<EffectData>
+<!-- ====================================================
+	INTRO AT START
+========================================================= -->
+	<Category name="INTRO_CUT">
+		<Effect trigger="start" overlap="once" pos="0,0">
+			<PvmLayer file="event_cr8">
+				<Action para="9,1" time="0"/>
+				<Wait time="2000"/>
+				<Action para="9,0"/>
+			</PvmLayer>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	BLOCKADE SIGN IMPORT
+========================================================= -->
+	<Category name="CR8_MODEL">
+		<!-- MODEL SET -->
+		<Effect trigger="start" overlap="once">
+			<!-- MODEL DISPLAY -->
+			<Model file="CR8_blockade\blockade_main" pos="0,0,0" rotate="0,0,0">
+				<Wait time="finish"/>
+			</Model>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	EVT: CONST AREA SETUP
+========================================================= -->
+	<!--Category name="CR8_AREA">
+		<!-- RISK AREA FILE -->
+		<!--Effect trigger="start" overlap="once" area="telop">
+			<!--Risk file="CR8_blockade_area"/>
+		<!--/Effect>
+	<!--/Category>
+<!-- ====================================================
+	EVT: CONST AREA VIOLATION
+========================================================= -->
+	<!--Category name="CR8_VIOLATION">
+		<!--Effect comstate="CR8_AREA_ENTRY" area="area">
+			<!--Ship commandfile="command" statefile="state"/>
+			<!--Command state="CR8_VIOLATION_STATE"/>
+		<!--/Effect>
+	<!--/Category>
+<!-- ====================================================
+	INITIAL SETUP
+========================================================= -->
+	<!-- DEFINE INSERT CUT -->
+	<Init Sentence="insertcut_stage08"/>
+	<!-- INSERT CUT AREA -->
+	<Area name="area_lb" align="lb"  pos="0,-80" next="0,-45" count="5"/>
+	<Area name="area_lt" align="lt"  pos="0,88" next="0,45" count="5"/>
+		<!-- Area "telop" is defined in insertcut.xmt -->
+	<!-- AUDIO DATA -->
+	<SoundData name="warning" file="insert_warning"/>
+	<SoundData name="event_notice" file="event_notice"/>
+	<SoundData name="insert_alarm" file="insert_alarm"/>
+	<VoiceScript name="cr8_eventall" memberlist="cr8_eventall" memberfolder="others"/>
+	<SoundArea name="all" area="-173000,82250, 150700,120000, 175000,-78000, -147000,-116000" alt="0,10000"/>
+<!-- ====================================================
+	EVT : CLOSURE OF OSAKA INTL
+========================================================= -->
+	<Category name="CR8_EV_TYPHOON_CALL">
+	<!-- MAIN EVENT NOTICE TAG -->
+		<Effect nowtime="141503" overlap="once" area="telop">
+			<PvmLayer file="event_cr8" time="0">
+				<Sound name="event_notice" time="0"/>
+				<Action para="2,1"/>
+				<Action para="4,1" time="0"/>
+				<Action para="5,1" time="0"/>
+				<!-- Event preview slot action +7 -->
+				<Action para="14,1" time="0"/>
+				<Text label="event01" cliplayer="message" scroll="12000" font="large" rgb="0,255,0">
+					<Wait time="500"/>
+					<Voice script="cr8_eventall" no="20" area="all" volume="75,75" range="20000,20000"/>
+					<Wait time="5000"/>
+				</Text>
+				<Action para="14,0"/>
+				<Action para="4,0"/>
+				<Action para="3,1"/>
+			</PvmLayer>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	EVT : OSAKA DIVERSIONS (ARRIVALS OBJECTIVE)
+========================================================= -->
+	<Category name="CR8_EV_CURFEW_MASTER">
+	<!-- OBJECTIVE SETUP -->
+		<Effect trigger="start" overlap="once" area="area_lt">
+			<Wait iFlag2="@EQ:1"/>
+			<PvmLayer file="notice_01" pos="0,0">
+				<Action para="2,1"/>
+				<Action para="4,1" time="0"/>
+				<Action para="7,1" time="0"/>
+				<Text label="obj01" pos="48,-7" font="large" rgb="255,255,255">
+					<Wait iFlag1="@EQ:0"/>
+					<Flag clearflag2="2"/>
+				</Text>
+				<Action para="4,0"/>
+				<Action para="6,1"/>
+			</PvmLayer>
+		</Effect>
+	<!-- CLEARFLAG -->
+		<Effect trigger="start" overlap="once">
+			<Flag iFlag1="4"/>
+			<Flag clearflag2="1"/>
+			<Wait iFlag1="@EQ:0"/>
+			<Flag clearflag2="2"/>
+			<Flag iFlag2="0"/>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	EVT : OSAKA DIVERSIONS (ARRIVALS CHECK)
+========================================================= -->
+	<Category callsign="DLH650" name="CR8_EV_OSKDIV_CHECK">	
+		<Effect subcom="create" overlap="once" area="telop">
+			<Wait statOut="AP_APP_RDR-CONTACT"/>
+			<Flag iFlag2="1"/>
+			<PvmLayer file="event_cr8" time="0">
+				<Sound name="event_notice" time="0"/>
+				<Action para="2,1"/>
+				<Action para="4,1" time="0"/>
+				<Action para="5,1" time="0"/>
+				<!-- Event preview slot action +7 -->
+				<Action para="15,1" time="0"/>
+				<Text label="event02" cliplayer="message" scroll="12000" font="large" rgb="0,255,0">
+					<Wait time="15000"/>
+				</Text>
+				<Action para="15,0"/>
+				<Action para="4,0"/>
+				<Action para="3,1"/>
+			</PvmLayer>
+		</Effect>
+		<Effect comstate="spotin" overlap="once">
+			<Flag iFlag1="-1"/>
+		</Effect>
+	</Category>
+	<Category callsign="CCA915" name="CR8_EV_OSKDIV_CHECK">	
+		<Effect comstate="spotin" overlap="once">
+			<Flag iFlag1="-1"/>
+		</Effect>
+	</Category>
+	<Category callsign="KAL752" name="CR8_EV_OSKDIV_CHECK">	
+		<Effect comstate="spotin" overlap="once">
+			<Flag iFlag1="-1"/>
+		</Effect>
+	</Category>
+	<Category callsign="JAA232" name="CR8_EV_OSKDIV_CHECK">	
+		<Effect comstate="spotin" overlap="once">
+			<Flag iFlag1="-1"/>
+		</Effect>
+	</Category>
+	<!-- INSERT CUT REMOVE -->
+	<Category name="CR8_EV_OSKDIV_T-OUT">	
+		<Effect nowtime="145458" overlap="once">
+			<Flag iFlag2="0"/>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	EVT : SOUND EFFECTS
+========================================================= -->
+	<Category name="THUNDER">
+		<Effect trigger="start" overlap="once" area="area">
+			<Sound file="CR8_thunder_010"/>
+			<Sound file="CR8_thunder_010"/>
+			<Sound file="CR8_thunder_010"/>
+			<Sound file="CR8_thunder_010"/>
+			<Sound file="CR8_thunder_010"/>
+			<Sound file="CR8_thunder_010"/>
+			<Sound file="CR8_thunder_010"/>
+			<Sound file="CR8_thunder_010"/>
+		</Effect>
+		<Effect nowtime="142500" overlap="once" area="area">
+			<Sound file="CR8_thunder_020"/>
+		</Effect>
+	</Category>
+<!-- ====================================================
+
+========================================================= -->
+</EffectData>

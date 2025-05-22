@@ -116,9 +116,9 @@
 			<PvmLayer file="event_cr8" time="0">
 				<!-- Event preview slot action +7 -->
 				<Action para="11,1" time="0"/>
-					<BGM volume="20" fadetime="2000"/>
-					<Voice script="cr8_eventall" no="5" area="all" volume="100,100" range="20000,20000"/>
-					<BGM volume="fadein" fadetime="2000"/>
+					<!--BGM volume="20" fadetime="2000"/-->
+					<Voice script="cr8_eventall" no="5" area="all" volume="67,67" range="20000,20000"/>
+					<!--BGM volume="fadein" fadetime="2000"/-->
 					<Flag iFlag1="2"/>
 				<Action para="11,0"/>
 			</PvmLayer>
