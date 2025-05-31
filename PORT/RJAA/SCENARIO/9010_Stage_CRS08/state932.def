@@ -218,7 +218,7 @@
 [%APPROACH:In flight:îÚçsíÜ]
   #WAIT(3)
   {$SHIP_UID != $VALUE08} "[AP_APP_INI-CONTACT]"
-  {$SHIP_UID == $VALUE08} "[AP_APP_INI-CONTACT_OSKDIV]"
+  {$SHIP_UID == $VALUE08} "[AP_APP_INI-CONTACT_DIVERT]"
   #SUBCODE(approach)
   #STATE(AP_APP_RDR-CONTACT)
 
@@ -2225,6 +2225,10 @@
 ;------------------------------------------------------------------------------------------------------------------------------------------------------
 ; îRóøÇ™è≠Ç»Ç¢ã@ëÃÇÃèâä˙ê›íË
 [%CR8_EV_OSKDIV_INITIAL]
+  #SETVALUE(8,$SHIP_UID)
+  #STATE(%APPROACH)
+
+[%CR8_EV_TYODIV_INITIAL]
   #SETVALUE(8,$SHIP_UID)
   #STATE(%APPROACH)
 

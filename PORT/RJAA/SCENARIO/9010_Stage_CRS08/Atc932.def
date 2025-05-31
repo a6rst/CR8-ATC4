@@ -12,7 +12,7 @@
 [AP_APP_INI-CONTACT]
   "SHIP:@LAPP, @SCSN, leaving @SALT descending, we_have_information @XATS.:東京アプローチ管制、こちらは@SCSNです。高度@SALTftを降下中です。空港情報は@XATSを取得しています。"
   
-[AP_APP_INI-CONTACT_OSKDIV]
+[AP_APP_INI-CONTACT_DIVERT]
   "SHIP:@LAPP, @SCSN, leaving @SALT descending, we_have_information @XATS, @PATC is runway close, request clearance to New Tokyo Intl Airport.:東京アプローチ管制、こちらは@SCSNです。高度@SALTftを降下中です。空港情報は@XATSを取得しています。@P2ATの滑走路が閉鎖しているため、ターンバックしました。新東京国際空港へのクリアランスを要請します。"
   
 [AP_APP_RDR-CONTACT]
@@ -26,10 +26,10 @@
   "APP:@SCSN, @LAPP, radar_contact, cleared_for @RDAR, landing RWY34, descend 4000, QNH @WQNH.:@SCSN、こちらは東京アプローチ管制です。レーダーで捕捉しました。@RDARでの進入を許可します。使用滑走路は34です。4000ftまで下昇してください、QNHは@WQNH。"
   "SHIP:Cleared_for @RDAR, landing RWY34, descending_to 4000, @SCSN.:@RDARでの進入許可を確認、使用滑走路は34。4000ftまで下昇します。@SCSN。"
 
-[AP_APP_RDR-CONTACT_16_OSK]
+[AP_APP_RDR-CONTACT_16_DIV]
   "APP:@SCSN, @LAPP, radar_contact, cleared_to New Tokyo Intl Airport, via @RDAR, landing RWY16, descend 6000, QNH @WQNH.:@SCSN、こちらは東京アプローチ管制です。レーダーで捕捉しました。@RDARを使用した新東京国際空港への進入を許可します。使用滑走路は16です。6000ftまで下昇してください、QNHは@WQNH。"
   "SHIP:Cleared_to New Tokyo Intl Airport, via @RDAR, landing RWY16, descending_to 6000, @SCSN.:@RDARを使用した新東京国際空港への進入許可を確認、使用滑走路は16。6000ftまで下昇します。@SCSN。"
-[AP_APP_RDR-CONTACT_34_OSK]
+[AP_APP_RDR-CONTACT_34_DIV]
   "APP:@SCSN, @LAPP, radar_contact, cleared_to New Tokyo Intl Airport, via @RDAR, landing RWY34, descend 4000, QNH @WQNH.:@SCSN、こちらは東京アプローチ管制です。レーダーで捕捉しました。@RDARを使用した新東京国際空港への進入を許可します。使用滑走路は34です。4000ftまで下昇してください、QNHは@WQNH。"
   "SHIP:Cleared_to New Tokyo Intl Airport, via @RDAR, landing RWY34, descending_to 4000, @SCSN.:@RDARを使用した新東京国際空港への進入許可を確認、使用滑走路は34。4000ftまで下昇します。@SCSN。"
 
