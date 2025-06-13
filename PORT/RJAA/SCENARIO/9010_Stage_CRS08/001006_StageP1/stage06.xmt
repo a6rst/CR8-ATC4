@@ -95,8 +95,7 @@
 				<Action para="4,1" time="0"/>
 				<Action para="7,1" time="0"/>
 				<Text label="obj01" pos="48,-7" font="large" rgb="255,255,255">
-					<Wait iFlag1="@EQ:0"/>
-					<Flag clearflag2="2"/>
+					<Wait iFlag2="@EQ:0"/>
 				</Text>
 				<Action para="4,0"/>
 				<Action para="6,1"/>

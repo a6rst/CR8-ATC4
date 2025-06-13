@@ -1031,8 +1031,47 @@
 
 
 ; ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+; イベント用(CR8)
+; ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[EV_CR8_GND_TAXIBACK_01A]
+  "SHIP:@ZEVE[cr8_eventatc,0] GND, TBA270, we need to return to the gate due to ill health of one of our passengers. Request taxi back to spot.:グランド、こちらはTBA270、お客様の体調不良によりスポットへ戻りたいのですが・・・。"
+  "GND:@SCSN, @AGND, roger, stand_by.:*@SCSN、こちらグランド管制です。待機してください。"
+  "SHIP:Standing_by.:待機します。"
+
+[EV_CR8_GND_TAXIBACK_02A]
+  "SHIP:@ZEVE[cr8_eventatc,1] TWR, TBA270, we need to return to the gate due to ill health of one of our passengers. Request taxi back to spot.:タワー、こちらはTBA270、お客様の体調不良によりスポットへ戻りたいのですが・・・。"
+  "TWR:@SCSN, @ATWR, roger. Contact @AGND @FGND.:*@SCSN、こちらグランド管制です。グランド管制にコンタクトしてください。周波数は@FGNDです。"
+  "SHIP:Contact @AGND, @SCSN.:グランド管制にコンタクトします。@SCSN。"
+
+[EV_CR8_GND_TAXIBACK_02B]
+  "SHIP:GND, TBA270, request taxi back, @NSPT.:グランド、こちらTBA270、スポットへ戻りたいのですが、@NSPTに入ります。"
+  "GND:@SCSN, @AGND, roger, stand_by.:*@SCSN、こちらグランド管制です。待機してください。"
+  "SHIP:Standing_by.:待機します。"
+
+[EV_CR8_APP_TYOEMERG_01]
+  "SHIP:Mayday_mayday_mayday_fuel. @LAPP, @SCSN at 12000. We_are_running_out_of_fuel. Request_clearance_to New_Tokyo_Intl_Airport and_priority_for_landing.:メーデー、メーデー、メーデー。東京アプローチ、こちらは@SCSNです、高度12000ftを降下中です。燃料が枯渇しています。新東京国際空港への優先着陸を要請します。"
+
+[EV_CR8_APP_TYOEMERG_02]
+  "APP:@SCSN, @LAPP, radar_contact, roger. Cleared to New_Tokyo_Intl_Airport, maintain_present_heading, descend_and_maintain 9000. Expect vector_to_final_approach_course.:*@SCSN、こちらは東京アプローチ管制です。レーダーで捕捉しました。新東京国際空港への侵入を許可します。針路維持、高度9000ftへ降下しなさい。最終進入コースまでレーダー誘導します。"
+  "SHIP:Cleared to New_Tokyo_Intl_Airport, maintain_present_heading, descend 9000. Expect vector_to_final_approach_course, @SCSN.:新東京国際空港への進入許可を確認。針路維持、高度9000ft。最終進入コースへのレーダー誘導、@SCSN。"
+
+[EV_CR8_APP_TYOEMERG_03]
+  "SHIP:@LAPP, @SCSN at 9000.:東京アプローチ、こちらは@SCSNです、高度9000ftを降下中です。"
+
+[EV_CR8_APP_TYOEMERG_04A]
+  "APP:@SCSN, @AAPP, landing RWY16, cleared_for @RDAP via Choshi then LAKE, descend 6000, QNH @WQNH.:@SCSN、こちらはアプローチ管制です。使用滑走路は16です。銚子VORTAC、LAKE経由で@RDAPでの進入を許可します。6000ftまで下昇してください、QNHは@WQNH。"
+  "SHIP:Landing RWY16, cleared_for @RDAP via Choshi then LAKE, descending_to 6000, @SCSN.:使用滑走路は16、銚子VORTAC、LAKE経由で@RDAPへの進入許可を確認しました。6000ftまで下昇します。@SCSN。"
+
+[EV_CR8_APP_TYOEMERG_04B]
+  "APP:@SCSN, @AAPP, landing RWY34, cleared_for @RDAP via COURSEWAY, descend 4000, QNH @WQNH.:@SCSN、こちらはアプローチ管制です。使用滑走路は34です。COURSEWAY経由で@RDAPでの進入を許可します。4000ftまで下昇してください、QNHは@WQNH。"
+  "SHIP:Landing RWY34, cleared_for @RDAP via COURSEWAY, descending_to 4000, @SCSN.:使用滑走路は34、COURSEWAY経由で@RDAPへの進入許可を確認しました。4000ftまで下昇します。@SCSN。"
+
+
+; ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ; イベント用
 ; ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 [EV_DEL_GREETINGGS_01]
   "RMP:@ZEVE[st01atc,0] @SCSN, contact Narita GND, @FGND.:@SCSN、成田グランド管制にコンタクトしてください。周波数は@FGNDです。"

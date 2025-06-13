@@ -6,7 +6,7 @@ version=1000
 nosave=0
 port=RJAA
 [GENERAL]
-month=8
+month=10
 basetime=1800
 baserange=30
 commentline=1

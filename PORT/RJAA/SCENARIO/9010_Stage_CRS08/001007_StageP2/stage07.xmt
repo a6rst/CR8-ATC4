@@ -85,6 +85,16 @@
 				<Action para="33,0"/>
 			</Model>
 		</Effect>
+	<!-- CEREMONY PREVIEW -->
+		<Effect trigger="start" overlap="once" area="telop">
+			<PvmLayer file="event_cr8" time="0">
+				<Wait iFlag1="@EQ:2"/>
+				<!-- Event preview slot action +7 -->
+				<Action para="16,1" time="0"/>
+				<Wait iFlag1="@EQ:3"/>
+				<Action para="16,0"/>
+			</PvmLayer>
+		</Effect>
 	</Category>
 <!-- ====================================================
 	EVT : DELIVERY CEREMONY (AIRCRAFT)

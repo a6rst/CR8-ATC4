@@ -84,7 +84,7 @@
 <!-- ====================================================
 	EVT : OSAKA DIVERSIONS (ARRIVALS OBJECTIVE)
 ========================================================= -->
-	<Category name="CR8_EV_CURFEW_MASTER">
+	<Category name="CR8_EV_OSKDIV_MASTER">
 	<!-- OBJECTIVE SETUP -->
 		<Effect trigger="start" overlap="once" area="area_lt">
 			<Wait iFlag2="@EQ:1"/>
@@ -93,8 +93,7 @@
 				<Action para="4,1" time="0"/>
 				<Action para="7,1" time="0"/>
 				<Text label="obj01" pos="48,-7" font="large" rgb="255,255,255">
-					<Wait iFlag1="@EQ:0"/>
-					<Flag clearflag2="2"/>
+					<Wait iFlag2="@EQ:0"/>
 				</Text>
 				<Action para="4,0"/>
 				<Action para="6,1"/>

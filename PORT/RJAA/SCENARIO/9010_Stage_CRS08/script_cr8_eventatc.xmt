@@ -1,0 +1,12 @@
+<?VoiceActManager version="1.0"?>
+<!-- enginestop Voice Script JP -->
+<VoiceScript>
+	<Book name="cr8_eventatc">
+		<script no="0" string="CR8_taxiback_010"/>
+		<script no="1" string="CR8_taxiback_015"/>
+	</Script>
+</VoiceScript>
+
+
+
+

@@ -13,6 +13,7 @@
 ; 1 → ACTIVE REQUEST
 ; 2 → OVERALT BACKUP INDICATOR (d1=1000ft)
 ; 3 → SAKURA 1 DEP ALT-REST BONUS
+; 7 → STP-4 TBA270-RETURN TO GATE CHECK
 
 ; AIRPORT SPECIFIC LOCAL SETTINGS (NOT USED)
 ; 5 → NO. OF LAPS IN TRAFFIC PATTERN +1 COUNTDOWN, LAND WHEN VALUE REACHES 0
@@ -74,7 +75,8 @@
 ; 9 → 
 
 ; CR8 VALUE SETTINGS
-; 0 → 
+; 6 → STP-4 TBA270-RETURNING TO GATE
+; 8 → STP-3~4 DIVERTING TO NARITA
 
 ; ROUTE MARKERS #SETMARKER(X,*) {$ROUTE_MARKER_X}
 ; @R → FOR RWY-CHANGE (RWY-CHANGE=1, RWY-CHANGE/STAR REVISION=2)
@@ -217,8 +219,9 @@
 ; 到着機が空域に進入してきた直後（到着機の開始）【0001S】
 [%APPROACH:In flight:飛行中]
   #WAIT(3)
-  {$SHIP_UID != $VALUE08} "[AP_APP_INI-CONTACT]"
+  {($SHIP_UID != $VALUE08) && ($SHIP_UID != $VALUE09)} "[AP_APP_INI-CONTACT]"
   {$SHIP_UID == $VALUE08} "[AP_APP_INI-CONTACT_DIVERT]"
+  {$SHIP_UID == $VALUE09} "[EV_CR8_APP_TYOEMERG_01]"
   #SUBCODE(approach)
   #STATE(AP_APP_RDR-CONTACT)
 
@@ -592,6 +595,8 @@
 ; 出発と到着とトーイング機のタキシング許可メインループ
 [AL_RPGD_TAXI_REQ_LOOP:Waiting to taxi:走行許可できます]
   #SUBCODE(@98,AL_RPGD_TAXI_REQ,1,60)
+  {$LOCAL06 == 1} #SUBCODE(@98,,3,120)
+  {$LOCAL06 == 1} #SETLOCAL(6,2)
   {$USERFLAG15 == 1} #SUBCODE(@98,,3,5)
   {$USERFLAG15 == 1} #SETUSERFLAG(15,0)
   {$SHIP_MODE == 1} <DP_TAXI_RWY_SELECT>
@@ -2189,7 +2194,7 @@
 ;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ;------------------------------------------------------------------------------------------------------------------------------------------------------
-; 
+; (I forgot to rename these to be consistent, but ehhh it doens't matter that much)
 [EV_CR8_GHSTALL_BLANK:You know what's about to happen:走行中]
 
 [%EV_CR8_GHSTALL_START:Taxiing:走行中]
@@ -2208,7 +2213,7 @@
 ;------------------------------------------------------------------------------------------------------------------------------------------------------
 ; 
 [%CR8_EV_CURFEW_INITIAL]
-  #SETVALUE(6,$SHIP_UID)
+;  #SETVALUE(6,$SHIP_UID)
   #STATE(%APPROACH)
 
 ;------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2223,7 +2228,49 @@
   #MESSAGE(Taxiing:走行中)
 
 ;------------------------------------------------------------------------------------------------------------------------------------------------------
-; 燃料が少ない機体の初期設定
+; 
+[%CR8_EV_TAXIBACK_START]
+  #SETVALUE(6,$SHIP_UID)
+;  #STATE(AL_RPGD_TAXI_LOOP)
+
+[%CR8_EV_TAXIBACK_INITIAL]
+  {$SHIP_SECTION == 12} #STATE(CR8_EV_TAXIBACK_TWRSET)
+  {($LOCAL06 > 0) && ($USERFLAG09 == 0)} #STATE(AL_RPGD_TAXI_REQ_LOOP)
+  {($LOCAL06 > 0) && ($USERFLAG09 == 1) && ($SHIP_HOLD == 0)} #STATE(AL_RPGD_TAXI_LOOP_JUDGE)
+  {($LOCAL06 > 0) && ($USERFLAG09 == 1) && ($SHIP_HOLD != 0)} #STATE(AL_RPGD_TAXI_HOLD_LOOP)
+  #MESSAGE(Taxiing:走行中)
+  #EXECUTE(HOLD)
+  #SETLOCAL(6,1)
+  #SETVALUE(6,$SHIP_UID)
+  #WAIT(20)
+  #SUBCODE(CR8_EV_TAXIBACK_INITIAL)
+  "[EV_CR8_GND_TAXIBACK_01A]"
+  {$SHIP_RWY_RWY16R == 1} #SHIPTIMELIMIT(13)
+  {$SHIP_RWY_RWY34L == 1} #SHIPTIMELIMIT(10)
+  #CHANGESPOT(SPOT52)
+  #STRIPMODE(ARR)
+;  {$LOCAL06 == 1} #EXECUTE(TAXICHANGE,79)
+  #STATE(AL_RPGD_TAXI_REQ_LOOP)
+  
+[CR8_EV_TAXIBACK_TWRSET:Handoff:走行中]
+  #SETLOCAL(6,1)
+  #SETVALUE(6,$SHIP_UID)
+  #WAIT(20)
+  #SUBCODE(CR8_EV_TAXIBACK_INITIAL)
+  "[EV_CR8_GND_TAXIBACK_02A]"
+  #HANDOFF(GND)
+  {$SHIP_RWY_RWY16R == 1} #SHIPTIMELIMIT(13)
+  {$SHIP_RWY_RWY34L == 1} #SHIPTIMELIMIT(10)
+  #CHANGESPOT(SPOT52)
+  #STRIPMODE(ARR)
+  #MESSAGE(Handoff:走行中)
+  #WAIT(3)
+  "[EV_CR8_GND_TAXIBACK_02B]"
+  #STATE(AL_RPGD_TAXI_REQ_LOOP)
+
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 
 [%CR8_EV_OSKDIV_INITIAL]
   #SETVALUE(8,$SHIP_UID)
   #STATE(%APPROACH)
@@ -2231,6 +2278,123 @@
 [%CR8_EV_TYODIV_INITIAL]
   #SETVALUE(8,$SHIP_UID)
   #STATE(%APPROACH)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 
+[%CR8_HOLD_IAF_8000]
+  #EXECUTE(HOLDIN)
+  #ALT(8000)
+  {$ROUTECODE_ILS_RWY16 == 1} #SETLOCAL(2,2)
+  {$ROUTECODE_ILS_RWY34 == 1} #SETLOCAL(2,4)
+  #SETUSERFLAG(26,1)
+  #SETUSERFLAG(25,1)
+  #SETUSERFLAG(12,0)
+  #STATE(AP_APP_HOLDING_LOOP)
+
+[%CR8_HOLD_IAF_7000]
+  #EXECUTE(HOLDIN)
+  #ALT(7000)
+  {$ROUTECODE_ILS_RWY16 == 1} #SETLOCAL(2,1)
+  {$ROUTECODE_ILS_RWY34 == 1} #SETLOCAL(2,3)
+  #SETUSERFLAG(26,1)
+  #SETUSERFLAG(25,1)
+  #SETUSERFLAG(12,0)
+  #STATE(AP_APP_HOLDING_LOOP)
+
+[%CR8_HOLD_IAF_6000]
+  #EXECUTE(HOLDIN)
+  #ALT(6000)
+  {$ROUTECODE_ILS_RWY16 == 1} #SETLOCAL(2,0)
+  {$ROUTECODE_ILS_RWY34 == 1} #SETLOCAL(2,2)
+  #SETUSERFLAG(26,1)
+  #SETUSERFLAG(25,1)
+  #SETUSERFLAG(12,0)
+  #STATE(AP_APP_HOLDING_LOOP)
+
+[%CR8_HOLD_IAF_5000]
+  #EXECUTE(HOLDIN)
+  #ALT(5000)
+  {$ROUTECODE_ILS_RWY16 == 1} #SETLOCAL(2,-1)
+  {$ROUTECODE_ILS_RWY34 == 1} #SETLOCAL(2,1)
+  #SETUSERFLAG(26,1)
+  #SETUSERFLAG(25,1)
+  #SETUSERFLAG(12,0)
+  #STATE(AP_APP_HOLDING_LOOP)
+
+[%CR8_HOLD_IAF_4000]
+  #EXECUTE(HOLDIN)
+  #ALT(4000)
+  {$ROUTECODE_ILS_RWY16 == 1} #SETLOCAL(2,-2)
+  {$ROUTECODE_ILS_RWY34 == 1} #SETLOCAL(2,0)
+  #SETUSERFLAG(26,1)
+  #SETUSERFLAG(25,1)
+  #SETUSERFLAG(12,0)
+  #STATE(AP_APP_HOLDING_LOOP)
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 
+[%CR8_EV_TYOEMERG_INITIAL]
+  #SETVALUE(9,$SHIP_UID)
+  #STATE(%APPROACH)
+
+[CR8_EV_TYOEMERG_INITIAL_LOOP:In flight:飛行中]
+  <CR8_EV_MDFUEL_RWYSEL>
+  {$SHIP_ALT < 9000} #STATE(CR8_EV_TYOEMERG_REQ)
+  #WAITSTATE(CR8_EV_TYOEMERG_INITIAL_LOOP,5)
+
+[CR8_EV_TYOEMERG_REQ:In flight:飛行中]
+  #MAINMENU()
+  #SETUSERFLAG(18,1)
+  #ALT(9000)
+  "[EV_CR8_APP_TYOEMERG_03]"
+  #STATE(CR8_EV_TYOEMERG_REQ_LOOP)
+
+[CR8_EV_TYOEMERG_REQ_LOOP:In flight:飛行中]
+  #SUBCODE(@98,CR8_EV_TYOEMERG_REQ_T-OUT,1,30)
+  <CR8_EV_MDFUEL_RWYSEL>
+
+[CR8_EV_TYOEMERG_RWYSEL_16R]
+  {$USERFLAG18 == 0} #SUBCODE(@98,,2,500)
+  {$USERFLAG18 == 1} #SUBCODE(@98,,4,500)
+  #ROUTECHANGETABLE(GP_AP16_CVC)
+  #ROUTECHANGEPOINT(CVC)
+  #ALT(0)
+  #SETMARKER(Y,0)
+  #SETMARKER(X,0)
+  #SETUSERFLAG(11,0)
+  #SETUSERFLAG(12,1)
+  #SETUSERFLAG(18,0)
+  "[EV_CR8_APP_TYOEMERG_04A]"
+  #STATE(AP_APP_ARR-FLIGHT_JUDGE)
+
+[CR8_EV_TYOEMERG_RWYSEL_34L]
+  {$USERFLAG18 == 0} #SUBCODE(@98,,2,500)
+  {$USERFLAG18 == 1} #SUBCODE(@98,,4,500)
+  #ROUTECHANGETABLE(GP_AP34_CVC)
+  #ROUTECHANGEPOINT(BEACH)
+  #ALT(0)
+  #SETMARKER(Y,0)
+  #SETMARKER(X,0)
+  #SETUSERFLAG(11,0)
+  #SETUSERFLAG(12,1)
+  #SETUSERFLAG(18,0)
+  "[EV_CR8_APP_TYOEMERG_04B]"
+  #STATE(AP_APP_ARR-FLIGHT_JUDGE)
+
+; No response, auto select RWY16
+[CR8_EV_TYOEMERG_REQ_T-OUT]
+  #SUBCODE(@98,,2,0)
+  #SCOREB(50)
+  #ROUTECHANGETABLE(GP_AP16_CVC)
+  #ROUTECHANGEPOINT(CVC)
+  #ALT(0)
+  #SETMARKER(Y,0)
+  #SETMARKER(X,0)
+  #SETUSERFLAG(11,0)
+  #SETUSERFLAG(12,1)
+  #SETUSERFLAG(18,0)
+  "[EV_CR8_APP_TYOEMERG_04A]"
+  #STATE(AP_APP_ARR-FLIGHT_JUDGE)
 
 
 ;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

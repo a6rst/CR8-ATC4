@@ -435,9 +435,11 @@
   {$USERFLAG18 == 0} #SUBCODE(@98,,4,500)
   {$USERFLAG18 == 1} #SUBCODE(@98,,2,500)
   #SETUSERFLAG(18,0)
+  {$SHIP_UID == $VALUE06} #EXECUTE(HOLD)
  "[DP_GND_TWR-HANDOFF]"
   #HANDOFF(TWR)
   #MESSAGE(Handoff:走行中)
+  {$SHIP_UID == $VALUE06} #STATE(CR8_EV_TAXIBACK_TWRSET)
   #WAIT(3)
   {$USERFLAG19 == 1} #STATE(DP_TWR_HOLD-SHORT)
   "[DP_TWR_INI-CONTACT]"
@@ -612,6 +614,7 @@
   {$USERFLAG08 == 0} #SUBCODE(@98,,2,500)
   {$USERFLAG08 == 1} #SUBCODE(@98,,2,200)
   {($SHIP_UID == $VALUE08) && ($USERFLAG08 == 0)}  #COMMAND(AP_RDR-CONTACT_DIV)
+  {($SHIP_UID == $VALUE09) && ($USERFLAG08 == 0)}  #COMMAND(AP_RDR-CONTACT_TYOEMERG)
   #COMMAND(AP_RDR-CONTACT_COMMON)
 
 <AP_RDR-CONTACT_COMMON:Radar contact:レーダーコンタクト>
@@ -631,6 +634,11 @@
 ;  #STRIPMODE(ARR)
   #SETUSERFLAG(0,1)
   #STATE(AP_APP_ARR-FLIGHT_JUDGE)
+
+<AP_RDR-CONTACT_TYOEMERG:Radar contact:レーダーコンタクト>
+  "[EV_CR8_APP_TYOEMERG_02]"
+  #SETUSERFLAG(0,1)
+  #STATE(CR8_EV_TYOEMERG_INITIAL_LOOP)
 
 ;------------------------------------------------------------------------------------------------------------------------------------------------------
 ; 到着機の滑走路選択コマンド
@@ -1048,6 +1056,23 @@
   {$ROUTECODE_CVC_NRE == 1} "[AP_APP_VIS-APCH_REP_TFP]"
   {$ROUTECODE_CVC_NRE != 1} "[AP_APP_VIS-APCH_REP_DCT]"
   #STATE(AP_APP_VIS-APCH_LOOP)
+
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+;イベントCommand(CR8)
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------
+; 
+<CR8_EV_MDFUEL_RWYSEL:*Approach clearance:進入ルート合流>
+  #SETSUBMENU()
+;  #SETSUBMENU(CR8_EV_TYOEMERG_RWYSEL_16L,RWY16L:RWY16L)
+  #SETSUBMENU(CR8_EV_TYOEMERG_RWYSEL_16R,RWY16R:RWY16R)
+  #SETSUBMENU(CR8_EV_TYOEMERG_RWYSEL_34L,RWY34L:RWY34L)
+;  #SETSUBMENU(CR8_EV_TYOEMERG_RWYSEL_34R,RWY34R:RWY34R)
+  #EXECUTE(SUBMENU_SELECT)
+  {$USERFLAG18 == 0} #STATE(CR8_EV_TYOEMERG_INITIAL_LOOP)
+  {$USERFLAG18 == 1} #STATE(CR8_EV_TYOEMERG_REQ_LOOP)
 
 
 ;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,222 @@
+<?effector version="1.0"?>
+<EffectData>
+<!-- ====================================================
+	INTRO AT START
+========================================================= -->
+	<Category name="CR8_SETUP">
+		<Effect trigger="start" overlap="once" pos="0,0">
+			<PvmLayer file="event_cr8">
+				<Action para="9,1" time="0"/>
+				<Wait time="2000"/>
+				<Action para="9,0"/>
+			</PvmLayer>
+		</Effect>
+		<!-- MODEL SET -->
+		<Effect trigger="start" overlap="once">
+			<Model file="CR8_blockade\blockade_main" pos="0,0,0" rotate="0,0,0">
+				<Wait time="finish"/>
+			</Model>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	INITIAL SETUP
+========================================================= -->
+	<!-- DEFINE INSERT CUT -->
+	<Init Sentence="insertcut_stage09"/>
+	<!-- INSERT CUT AREA -->
+	<Area name="area_lb" align="lb"  pos="0,-80" next="0,-45" count="5"/>
+	<Area name="area_lt" align="lt"  pos="0,88" next="0,45" count="5"/>
+		<!-- Area "telop" is defined in insertcut.xmt -->
+	<!-- AUDIO DATA -->
+	<SoundData name="warning" file="insert_warning"/>
+	<SoundData name="event_notice" file="event_notice"/>
+	<SoundData name="insert_alarm" file="insert_alarm"/>
+	<VoiceScript name="cr8_eventall" memberlist="cr8_eventall" memberfolder="others"/>
+	<SoundArea name="all" area="-173000,82250, 150700,120000, 175000,-78000, -147000,-116000" alt="0,10000"/>
+<!-- ====================================================
+	I had to invert the order of the categories so that the objective insert cut would show up in the right order
+========================================================= -->
+<!-- ====================================================
+	EVT : TAXIBACK
+========================================================= -->
+	<Category name="CR8_EV_TAXIBACK_MASTER">
+	<!-- OBJECTIVE SETUP -->
+		<Effect trigger="start" overlap="once" area="area_lt">
+			<Wait iFlag4="@EQ:1"/>
+			<PvmLayer file="notice_01" pos="0,0">
+				<Action para="2,1"/>
+				<Action para="4,1" time="0"/>
+				<Action para="7,1" time="0"/>
+				<Text label="obj03" pos="48,-7" font="large" rgb="255,255,255">
+					<Wait iFlag4="@EQ:0"/>
+				</Text>
+				<Action para="4,0"/>
+				<Action para="6,1"/>
+			</PvmLayer>
+		</Effect>
+	<!-- CLEARFLAG -->
+		<Effect trigger="start" overlap="once">
+			<Flag clearflag4="1"/>
+		</Effect>
+		<Effect nowtime="153458" overlap="once">
+			<Flag iFlag4="0"/>
+		</Effect>
+	</Category>
+	<!-- ARRIVAL CHECK -->
+	<Category callsign="TBA270" name="CR8_EV_TAXIBACK_CHECK">	
+		<Effect comstate="CR8_EV_TAXIBACK_INITIAL" overlap="once" area="telop">
+			<Flag iFlag4="1"/>
+			<PvmLayer file="event_cr8" time="0">
+				<Sound name="event_notice" time="0"/>
+				<Action para="2,1"/>
+				<Action para="4,1" time="0"/>
+				<Action para="5,1" time="0"/>
+				<!-- Event preview slot action +7 -->
+				<Action para="18,1" time="0"/>
+				<Text label="event03" cliplayer="message" scroll="12000" font="large" rgb="0,255,0">
+					<Wait time="12000"/>
+				</Text>
+				<Action para="18,0"/>
+				<Action para="4,0"/>
+				<Action para="3,1"/>
+			</PvmLayer>
+		</Effect>
+		<Effect comstate="spotin" delay="@GE:0" overlap="once">
+			<Flag clearflag4="2"/>
+			<Flag iFlag4="0"/>
+		</Effect>
+		<Effect comstate="spotin" delay="@LT:0" overlap="once">
+			<Flag iFlag4="0"/>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	EVT : TOKYO EMERGENCY
+========================================================= -->
+	<Category name="CR8_EV_TYOEMERG_MASTER">
+	<!-- OBJECTIVE SETUP -->
+		<Effect trigger="start" overlap="once" area="area_lt">
+			<Wait iFlag3="@EQ:1"/>
+			<PvmLayer file="notice_01" pos="0,0">
+				<Action para="2,1"/>
+				<Action para="4,1" time="0"/>
+				<Action para="7,1" time="0"/>
+				<Text label="obj02" pos="48,-7" font="large" rgb="255,255,255">
+					<Wait iFlag3="@EQ:0"/>
+				</Text>
+				<Action para="4,0"/>
+				<Action para="6,1"/>
+			</PvmLayer>
+		</Effect>
+	<!-- CLEARFLAG -->
+		<Effect trigger="start" overlap="once">
+			<Flag clearflag3="1"/>
+		</Effect>
+		<Effect nowtime="153458" overlap="once">
+			<Flag iFlag3="0"/>
+		</Effect>
+	</Category>
+	<!-- ARRIVAL CHECK -->
+	<Category callsign="CAL17" name="CR8_EV_TYOEMERG_CHECK">	
+		<Effect subcom="create" overlap="once" area="telop">
+			<Wait time="3000"/>
+			<Flag iFlag3="1"/>
+			<PvmLayer file="event_cr8" time="0">
+				<Sound name="event_notice" time="0"/>
+				<Action para="2,1"/>
+				<Action para="4,1" time="0"/>
+				<Action para="5,1" time="0"/>
+				<!-- Event preview slot action +7 -->
+				<Action para="19,1" time="0"/>
+				<Text label="event02" cliplayer="message" scroll="12000" font="large" rgb="0,255,0">
+					<Wait time="15000"/>
+				</Text>
+				<Action para="19,0"/>
+				<Action para="4,0"/>
+				<Action para="3,1"/>
+			</PvmLayer>
+		</Effect>
+		<Effect comstate="spotin" delay="@GE:0" overlap="once">
+			<Flag clearflag3="2"/>
+			<Flag iFlag3="0"/>
+		</Effect>
+		<Effect comstate="spotin" delay="@LT:0" overlap="once">
+			<Flag iFlag3="0"/>
+		</Effect>
+	</Category>
+<!-- ====================================================
+	EVT : TOKYO DIVERSIONS
+========================================================= -->
+	<Category name="CR8_EV_TYODIV_CALL">
+	<!-- MAIN EVENT NOTICE TAG -->
+		<Effect nowtime="150003" overlap="once" area="telop">
+			<PvmLayer file="event_cr8" time="0">
+				<Sound name="event_notice" time="0"/>
+				<Action para="2,1"/>
+				<Action para="4,1" time="0"/>
+				<Action para="5,1" time="0"/>
+				<!-- Event preview slot action +7 -->
+				<Action para="17,1" time="0"/>
+				<Text label="event01" cliplayer="message" scroll="12000" font="large" rgb="0,255,0">
+					<Wait time="20000"/>
+				</Text>
+				<Action para="17,0"/>
+				<Action para="4,0"/>
+				<Action para="3,1"/>
+			</PvmLayer>
+		</Effect>
+		<Effect nowtime="150003" overlap="once" area="area">
+			<Sound file="CR8_siren"/>
+		</Effect>
+	</Category>
+	<!-- OBJECTIVE SETUP -->
+	<Category name="CR8_EV_TYODIV_MASTER">
+		<Effect trigger="start" overlap="once" area="area_lt">
+			<Wait iFlag2="@EQ:1"/>
+			<PvmLayer file="notice_01" pos="0,0">
+				<Action para="2,1"/>
+				<Action para="4,1" time="0"/>
+				<Action para="7,1" time="0"/>
+				<Text label="obj01" pos="48,-7" font="large" rgb="255,255,255">
+					<Wait iFlag2="@EQ:0"/>
+				</Text>
+				<Action para="4,0"/>
+				<Action para="6,1"/>
+			</PvmLayer>
+		</Effect>
+	<!-- CLEARFLAG -->
+		<Effect trigger="start" overlap="once">
+			<Flag iFlag1="3"/>
+			<Flag clearflag2="1"/>
+			<Wait iFlag1="@EQ:0"/>
+			<Flag clearflag2="2"/>
+			<Flag iFlag2="0"/>
+		</Effect>
+	<!-- INSERT CUT REMOVE -->
+		<Effect nowtime="153458" overlap="once">
+			<Flag iFlag2="0"/>
+		</Effect>
+	</Category>
+	<!-- ARRIVALS CHECK -->
+	<Category callsign="JAL510" name="CR8_EV_TYODIV_CHECK">	
+		<Effect subcom="create" overlap="once" area="telop">
+			<Wait statOut="AP_APP_RDR-CONTACT"/>
+			<Flag iFlag2="1"/>
+		</Effect>
+		<Effect comstate="spotin" overlap="once">
+			<Flag iFlag1="-1"/>
+		</Effect>
+	</Category>
+	<Category callsign="ANA256" name="CR8_EV_TYODIV_CHECK">	
+		<Effect comstate="spotin" overlap="once">
+			<Flag iFlag1="-1"/>
+		</Effect>
+	</Category>
+	<Category callsign="ANA528" name="CR8_EV_TYODIV_CHECK">	
+		<Effect comstate="spotin" overlap="once">
+			<Flag iFlag1="-1"/>
+		</Effect>
+	</Category>
+<!-- ====================================================
+
+========================================================= -->
+</EffectData>
