@@ -1248,7 +1248,7 @@
   {($SHIP_ALT > 12000) && ($SHIP_TYPE == 12)} #IAS(320)
   {($SHIP_ALT > 12000) && ($SHIP_TYPE == 10)} #IAS(280)
   {$SHIP_ALT > 14900} #STATE(DP_DEP_ACC-HANDOFF_ALT-SET)
-  {($LOCAL03 == 1) && ($ROUTE_NAME_TR == 1) && ($SHIP_OVERALT == 5000)} #OVERALTREL(3000)
+;  {($LOCAL03 == 1) && ($ROUTE_NAME_TR == 1) && ($SHIP_OVERALT == 5000)} #OVERALTREL(3000)
   #WAITSTATE(DP_DEP_DEPARTURE_LOOP,5)
 
 ;------------------------------------------------------------------------------------------------------------------------------------------------------
