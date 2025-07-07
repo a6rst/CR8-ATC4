@@ -20,9 +20,11 @@ Schedule is based on timetable dated OCT 1987
 
 
 (LASTEST)
-1.0.1 (02 JUL 25)
-	- (N-1) Fixed potential conflict with static aircraft
+1.0.1.01 (07 JUL 25)
+	- (N-1) Fixed potential conflict with static aircraft (v1.0.1)
+	- (P-1) Fixed potential conflict with static aircraft
 
+1.0.1 (02 JUL 25)
 1.0 (30 JUN 25)
 0.13.2 (22 JUN 25)
 0.13.1.03 (17 JUN 25)
